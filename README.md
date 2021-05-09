@@ -28,7 +28,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 除 Object 以外的所有类型都是不可变的（值本身无法被改变，也称这些类型的值为“原始值” primitive values）。
 
-6 种原始类型：undefined, Boolean, Number, String, BigInt, Symbol
+6 种`原始类型`：undefined, Boolean, Number, String, BigInt, Symbol
 
 - Boolean
 - Null
@@ -48,8 +48,8 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
   - 基于 [IEEE 754](https://en.wikipedia.org/wiki/Double-precision_floating-point_format) 标准的双精度 64 位二进制格式的值（`安全整数`范围[-(2^53 -1), 2^53 -1]）。
   - 还有一些带符号的值：+Infinity，-Infinity 和 NaN, 
-  - MAX_VALUE 属性值接近于 1.79E+308，大于 MAX_VALUE 的值代表 "Infinity"。
-  - MIN_VALUE 属性是 JavaScript 里最接近 0 的正值，而不是最小的负值。值约为 5e-324。小于 MIN_VALUE ("underflow values") 的值将会转换为 0。
+  - `MAX_VALUE` 属性值接近于 1.79E+308，大于 MAX_VALUE 的值代表 "Infinity"。
+  - `MIN_VALUE` 属性是 JavaScript 里最接近 0 的正值，而不是最小的负值。值约为 5e-324。小于 MIN_VALUE ("underflow values") 的值将会转换为 0。
 
 - String
 
@@ -75,7 +75,8 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 以 V8 引擎为例
 
-![v8-complier-process](https://s0.lgstatic.com/i/image/M00/27/29/CgqCHl70ZTqAR9m6AAEz8M57qjs116.png)
+![v8-compiler-process](./res/javascript-compiler-engine.png)
+(image source: https://kaiwu.lagou.com/course/courseInfo.htm?courseId=180)
 
 #### 解析
 
@@ -103,7 +104,7 @@ JavaScript 引擎的内存空间分为堆（Heap）和栈（Stack）。
 
 栈是一个临时存储空间，主要存储局部变量和函数调用（对于全局表达式会创建匿名函数并调用）。
 
-对于基本数据类型（String、Undefined、Null、Boolean、Number、BigInt、Symbol）的局部变量，会直接在栈中创建，而对象数据类型局部变量会存储在堆中，栈中只存储它的引用地址，也就是我们常说的浅拷贝。全局变量以及闭包变量也是只存储引用地址。总而言之栈中存储的数据都是轻量的。
+对于`原始类型`（String、Undefined、Null、Boolean、Number、BigInt、Symbol）的局部变量，会直接在栈中创建，而对象数据类型局部变量会存储在堆中，栈中只存储它的引用地址，也就是我们常说的浅拷贝。全局变量以及闭包变量也是只存储引用地址。总而言之栈中存储的数据都是轻量的。
 
 对于函数，解释器创建了“调用栈”（Call Stack）来记录函数的调用流程。每调用一个函数，解释器就会把该函数添加进调用栈，解释器会为被添加进的函数创建一个栈帧 （Stack Frame，这个栈帧用来保存函数的局部变量以及执行语句）并立即执行。如果正在执行的函数还调用了其它函数，那么新函数也将会被添加进调用栈并执行。一旦这个函数执行结束，对应的栈帧也会被立即销毁。
 
@@ -114,7 +115,7 @@ JavaScript 引擎的内存空间分为堆（Heap）和栈（Stack）。
 
 虽然栈很轻量，只会在使用时创建，使用结束时销毁，但它并不是可以无限增长的。当分配的调用栈空间被占满时，就会引发“栈溢出”错误。（maximum call stack size exceeded）——__编写递归函数的时候一定要注意函数执行边界，也就是退出递归的条件__
 
-##### 扩展——尾调用
+**扩展——尾调用**
 
 尾调用（Tail Call）是指函数的最后一步返回另一个函数的调用。
 
@@ -170,7 +171,45 @@ function fibTail(n, a = 0, b = 1) {
 - toString() 函数会在打印函数的时候调用，比如 console.log
 - valueOf 会在获取函数原始值时调用，比如加法操作
 
-#### 高阶函数
+### 命名提升
+
+对于使用 var 关键字声明的变量以及创建`命名函数`的时候，JavaScript 在解释执行的时候都会将其声明内容提升到作用域顶部，这种机制称为“命名提升”。
+
+```javascript
+console.log(a) // undefined
+var a = 1
+console.log(b) // Error
+let b = 2
+```
+
+函数的命名提升则意味着可以在同级作用域、子级作用域，或者函数定义之前进行调用。
+
+```javascript
+fn()
+function fn() {
+  return 2
+}
+```
+
+结合以上两点，两种函数定义的区别：
+- 方式 1 将函数赋值给变量 f；
+- 方式 2 定义了一个函数 f()。
+
+>方式 1 创建了一个匿名函数，让变量 f 指向它，这里会发生变量的命名提升；如果我们在定义函数之前调用会报错，而方式 2 则不会。
+
+```javascript
+// 方式1
+var f = function() {...}
+// 方式2
+function f() {...}
+```
+
+### 闭包
+
+- 将函数与其所操作的某些数据（环境）关联起来。
+- 在函数内部访问外部函数作用域时就会产生闭包。
+
+### 高阶函数
 
 接收一个函数作为参数，然后返回另一个函数的函数
 
@@ -206,6 +245,7 @@ function fibTail(n, a = 0, b = 1) {
 6. constructor 属性的含义就是指向该对象的构造函数，所有函数（此时看成对象了）最终的构造函数都指向Function。
 
 ![js prototype chain](./res/js-prototype-chain.png)
+(image source: https://chen-cong.blog.csdn.net/article/details/81211729)
 
 ### new 操作符实现了什么？
 
@@ -263,47 +303,10 @@ console.log(c.b()) // 'b'
 console.log(c.a()) // 'a'
 ```
 
-## 命名提升
-
-对于使用 var 关键字声明的变量以及创建命名函数的时候，JavaScript 在解释执行的时候都会将其声明内容提升到作用域顶部，这种机制称为“命名提升”。
-
-```javascript
-console.log(a) // undefined
-var a = 1
-console.log(b) // 报错
-let b = 2
-```
-
-函数的命名提升则意味着可以在同级作用域或者子级作用域里，在函数定义之前进行调用。
-
-```javascript
-fn() // 2
-function fn() {
-  return 2
-}
-```
-
-结合以上两点，两种函数定义的区别：
-- 方式 1 将函数赋值给变量 f；
-- 方式 2 定义了一个函数 f()。
-
->方式 1 创建了一个匿名函数，让变量 f 指向它，这里会发生变量的命名提升；如果我们在定义函数之前调用会报错，而方式 2 则不会。
-
-```javascript
-// 方式1
-var f = function() {...}
-// 方式2
-function f() {...}
-```
-
-## 闭包
-
-- 将函数与其所操作的某些数据（环境）关联起来。
-- 在函数内部访问外部函数作用域时就会产生闭包。
-
-
 ## 参考
 
+- [ECMAScript® 2015 Language Specification](https://262.ecma-international.org/6.0/)
 - [JavaScript reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference)
 - [ES6 入门教程](https://es6.ruanyifeng.com/)
 - [帮你彻底搞懂JS中的prototype、__proto__与constructor](https://chen-cong.blog.csdn.net/article/details/81211729)
+- [前端高手进阶](https://kaiwu.lagou.com/course/courseInfo.htm?courseId=180)
