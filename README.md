@@ -303,6 +303,81 @@ console.log(c.b()) // 'b'
 console.log(c.a()) // 'a'
 ```
 
+## proxy
+
+ES6 原生提供 Proxy 构造函数，用来生成 Proxy 实例。
+
+Proxy 的构造函数如下，
+
+```javascript
+// target 参数表示所要拦截的目标对象，handler 参数也是一个对象，用来定制拦截行为。
+var proxy = new Proxy(target, handler);
+```
+
+Proxy 可以理解成，在目标对象之前架设一层“拦截”，外界对该对象的访问，都必须先通过这层拦截，因此提供了一种机制，可以对外界的访问进行**过滤**和**改写**。Proxy 实际上重载（overload）了`点运算符`。
+
+Proxy 支持的拦截操作一共 13 种，同一个拦截器函数，可以设置拦截多个操作。
+
+```javascript
+var handler = {
+  // 拦截对象属性的读取
+  get: function (target, propKey, receiver) {
+    // 可以接受三个参数，依次为目标对象、属性名和 proxy 实例本身，其中最后一个参数可选（通常 receiver === obj ）
+
+    console.log(`getting ${propKey}!`);
+    if (propKey === 'prototype') {
+      return Object.prototype;
+    }
+    return Reflect.get(target, propKey, receiver);
+  },
+  // 拦截对象属性的读取
+  set: function (target, propKey, value, receiver) {
+    // 可以接受四个参数，依次为目标对象、属性名、属性值和 Proxy 实例本身，其中最后一个参数可选
+
+    console.log(`setting ${propKey}!`);
+    return Reflect.set(target, propKey, value, receiver);
+  },
+  // 拦截 Proxy 实例作为构造函数调用的操作
+  apply: function (target, thisBinding, args) {
+    // 可以接受三个参数，分别是目标对象、目标对象的上下文对象（this）和目标对象的参数数组
+
+    console.log('calling proxy apply!')
+    return target.apply(thisBinding, args)
+  },
+  // 拦截 new 命令
+  construct: function (target, args, newTarget) {
+    // 方法返回的必须是一个对象，否则会报错
+
+    console.log('calling proxy construct!')
+    return { newResult: target.apply(newTarget, args) }
+  },
+  // ...
+}
+
+let obj = new Proxy({}, handler);
+obj.count = 1
+++obj.count
+obj.count
+
+let proxy = new Proxy(function (x, y) {
+  return { result: x + y }
+}, handler);
+
+// `构造函数`调用
+console.log(proxy(1, 2))
+console.log(new proxy(1, 2))
+proxy.prototype === Object.prototype
+```
+
+使用 Proxy 的几个注意事项：
+
+- 如果 handler 没有设置任何拦截，那就等同于直接通向原对象，即 proxy.x === target.x
+- 如果一个属性不可配置（configurable）且不可写（writable），则 Proxy 不能修改该属性
+- Proxy.revocable() 方法返回一个可取消的 Proxy 实例。它的一个使用场景是，目标对象不允许直接访问，必须通过代理访问，一旦访问结束，就收回代理权，不允许再次访问。
+- 虽然 Proxy 可以代理针对目标对象的访问，但它不是目标对象的透明代理，即不做任何拦截的情况下，也无法保证与目标对象的行为一致。主要原因就是在 Proxy 代理的情况下，目标对象内部的 this 关键字会指向 Proxy 代理。
+
+[更多示例代码即使用场景](./proxy.js)，或移步 [notebook](https://runkit.com/ylh/javascript---proxy)。
+
 ## 参考
 
 - [ECMAScript® 2015 Language Specification](https://262.ecma-international.org/6.0/)
