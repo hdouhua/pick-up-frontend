@@ -1,11 +1,51 @@
 # the fundament of JS
 
-## 强类型 vs 弱类型
+## JavaScript 语言特性
+
+弱类型、动态类型语言。
+
+一门面向对象的语言。（JavaScript 标准中写明的）
+
+最初，JavaScript 设计是基于原型的面向对象能力的语言。
+ES6 中引入了 class 关键字，并且在标准中删除了所有[[class]]相关的私有属性描述，类的概念正式从属性升级成语言的基础设施，从此，基于类的编程方式成为了 JavaScript 的官方编程范式。
+
+**扩展：JavaScript 是面向对象的语言？**
+
+JavaScript 中的“类”仅仅是运行时对象的一个私有属性，而 JavaScript 中是无法自定义类型的。
+我们必须认识到 3 与 new Number(3) 是完全不同的值，它们一个是 Number 类型，一个是对象类型。
+
+相对于其它面向对象的语言，对象的基本特征是 标识性、状态和行为。在 JavaScript 将状态和行为统一抽象为“属性”，把函数设计成一种特殊对象。
+
+JavaScript 中对象独有的特色是：对象具有高度的动态性，因为其中的对象被赋予了运行时添改状态和行为的能力。
+
+JavaScript 属性是有别于其它语言的。JS 用一组特征（attribute）来描述属性（property）。两类属性：
+- 数据属性，它比较接近于其它语言的属性概念。有四个特征：
+  - value：就是属性的值
+  - writable：决定属性能否被赋值
+  - enumerable：决定 for in 能否枚举该属性
+  - configurable：决定该属性能否被删除或者改变特征值。
+- 访问器（getter/setter）属性，它也有四个特征：
+  - getter：函数或 undefined，在取属性值时被调用。
+  - setter：函数或 undefined，在设置属性值时被调用。
+  - enumerable：决定 for in 能否枚举该属性。
+  - configurable：决定该属性能否被删除或者改变特征值。
+
+我们理解为 JavaScript 对象的运行时是一个“属性的集合”，属性以字符串或者 Symbol 为 key，以数据属性特征值或者访问器属性特征值为 value。
+
+嗯，JavaScript 的对象设计跟目前主流基于类的面向对象差异非常大——JavaScript 不是面向对象的语言
+
+呃，这样的对象系统设计虽然特别，但是 它提供了完全运行时的对象系统，可以模仿多数面向对象编程范式（两种面向对象编程的范式：**基于类**和**基于原型**）——JavaScript 也是面向对象的语言
+
+**JavaScript 的高度*动态性*的*对象系统*是它是一门面向对象的语言的有力支持！**
+
+**扩展：语言特性**
+
+### 强类型 vs 弱类型
 
 - 在强类型语言中，不允许改变变量的数据类型，除了强制转换
 - 在弱类型语言中，变量可以被赋予不同的数据类型。（这也是一个既灵活又可怕的特性）
 
-## 静态类型语言 vs 动态类型语言
+### 静态类型语言 vs 动态类型语言
 
 - 静态类型语言：在编译阶段确定所有的变量的类型
 - 动态类型语言：在执行阶段确定所有变量的类型。（也就是在运行期间才做数据类型检查）
@@ -13,10 +53,6 @@
 **动态类型语言灵活，但是性能和可读性较差**
 
 几种常见的编程语言中，python 是强类型的动态类型语言。c/c++是静态类型语言，但非完全的强类型语言。
-
-## JS 语言特性
-
-弱类型、动态类型语言
 
 ### 基于这些 JS 语言的弱点推出 Typescript
 
@@ -28,12 +64,12 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 除 Object 以外的所有类型都是不可变的（值本身无法被改变，也称这些类型的值为“原始值” primitive values）。
 
-6 种`原始类型`：undefined, Boolean, Number, String, BigInt, Symbol
+6 种`原始类型`：Undefined, Boolean, Number, BigInt, String, Symbol
 
 - Boolean
 - Null
 
-  只有一个值 null，值 null 是一个字面量，不像 undefined，它不是全局对象的一个属性。
+  只有一个值 null，值 null 是一个关键字。（区别于 undefined）
 
   ```javascript
   typeof undefined // undefined
@@ -42,14 +78,21 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 - Undefined
 
-  只有一个值 undefined，是一个全局属性。一个没有被赋值的变量会有个默认值 undefined。
+  只有一个值 undefined，是一个全局属性（在 ES5 之前，这个全局属性是一个变量），而非关键字。
+  一个没有被赋值的变量会有个默认值 undefined。
 
 - Number
 
   - 基于 [IEEE 754](https://en.wikipedia.org/wiki/Double-precision_floating-point_format) 标准的双精度 64 位二进制格式的值（`安全整数`范围[-(2^53 -1), 2^53 -1]）。
-  - 还有一些带符号的值：+Infinity，-Infinity 和 NaN, 
+  - 还有一些带符号的值：`+Infinity`，`-Infinity` 和 `NaN`, 
   - `MAX_VALUE` 属性值接近于 1.79E+308，大于 MAX_VALUE 的值代表 "Infinity"。
   - `MIN_VALUE` 属性是 JavaScript 里最接近 0 的正值，而不是最小的负值。值约为 5e-324。小于 MIN_VALUE ("underflow values") 的值将会转换为 0。
+  - 非整数的 Number 类型无法用 ==/=== 来比较，这是浮点数运算的精度问题
+
+    ```javascript
+    console.log( 0.1 + 0.2 == 0.3);
+    console.log( Math.abs(0.1 + 0.2 - 0.3) <= Number.EPSILON);
+    ```
 
 - String
 
@@ -63,11 +106,40 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
    console.log(str)
    ```
 
+   String 有最大长度是多少？2^53 - 1。要知道这个长度并非“字符串”的字符数，而是字符串的 UTF16 编码的长度。
+
 - Symbol
+
+  ES6 中引入的新类型，它是一切非字符串的对象 key 的集合。
+  我们可以使用 Symbol.iterator 来自定义 `for-of` 在对象上的行为。
+  全局的 Symbol 函数无法使用 new 来调用。
 
 - Object
 
-  除了`原始类型`的值以外，其他都是对象。对象是键值对的集合，值可以是原始值，也可以是对象。
+  一切有形和无形物体的总称。除了`原始类型`的值以外，其他都是对象。对象是键值对的集合，值可以是原始值，也可以是对象。
+
+
+**扩展 JavaScript 的 Object**
+
+JavaScript 中的对象分类我们可以把对象分成几类。
+- 宿主对象（host Objects）：由 JavaScript 宿主环境提供的对象，它们的行为完全由宿主环境决定。在浏览器环境中全局对象 window
+- 内置对象（Built-in Objects）：由 JavaScript 语言提供的对象。
+  - 固有对象（Intrinsic Objects ）：由标准规定，随着 JavaScript 运行时创建而自动创建的对象实例。JS 提供了 *150+ 个固有对象*[参考](https://262.ecma-international.org/9.0/#sec-well-known-intrinsic-objects)
+  - 原生对象（Native Objects）：可以由用户通过 Array、RegExp 等内置构造器或者特殊语法创建的对象。能够通过语言本身的构造器创建的对象称作原生对象，JS 提供了 *30 多个构造器*。
+  - 普通对象（Ordinary Objects）：由{}语法、Object 构造器或者 class 关键字定义类创建的对象，它能够被原型继承。
+
+*函数对象的定义是：具有` [[call]]` 私有字段的对象，构造器对象的定义是：具有私有字段`[[construct]]`的对象。*
+- 任何对象只需要实现 `[[call]]`，它就是一个函数对象，可以去作为函数被调用。而如果它能实现 `[[construct]]`，它就是一个构造器对象，可以作为构造器被调用。
+- 对于宿主和内置对象来说，它们实现 `[[call]]`（作为函数被调用）和 `[[construct]]`（作为构造器被调用）不总是一致的。
+- 用户用 `function` 关键字创建的函数必定同时是函数和构造器。
+
+### 拆箱/装箱
+
+在 JavaScript 标准中，规定了 ToPrimitive 函数，它是`对象类型`到`基本类型`（原始类型）的转换（即，拆箱转换）。
+
+JavaScript 中是“先拆箱再转换”，拆箱转换会尝试调用 valueOf 和 toString 来获得拆箱后的基本类型。如果 valueOf 和 toString 都不存在，或者没有返回基本类型，则会产生类型错误 TypeError。
+
+在 ES6 之后，还允许对象通过显式指定 @@toPrimitive Symbol 来覆盖原有的行为。
 
 ## JavaScript 引擎的工作机制
 
@@ -173,7 +245,7 @@ function fibTail(n, a = 0, b = 1) {
 
 标记整理算法相对于标记清除算法在回收阶段进行了改进，标记整理对待未标记的对象并不是立即进行回收，而是将存活的对象移动到一边，然后再清理。当然这种移动对象的操作相对而言是比较耗时的，所以执行速度上，比标记清除要慢。
 
-## 函数
+## 函数 —— JS 的一等公民
 
 函数相关的两个隐式转换函数 toString() 和 valueOf()。
 - toString() 函数会在打印函数的时候调用，比如 console.log
@@ -259,10 +331,12 @@ function f() {...}
 
 **文字解释**
 
-1. 创建一个空对象 fn ；
+大致过程：
+
+1. 以 Object.prototype 为原型创建一个新对象 fn；
 2. 将 fn 的 [[prototype]] 属性指向构造函数 ctor 的原型，即 fn.[[prototype]] = ctor.prototype ；
-3. 将构造函数 ctor 内部的 this 绑定到新建的对象 fn ，然后执行 ctor()，即 obj.ctor()；
-4. 如果 构造函数返回的是对象，则返回构造函数执行的结果；否则，返回创建的空对象。
+3. 以这个新对象 fn 为 this，执行构造函数 ctor 生成对象 obj。即，obj = ctor.apply(fn, ...)；
+4. 如果 构造函数返回的 obj 不为空且是对象，则返回 obj；否则，返回第一步创建的新对象 fn。
 
 **代码解释**
 
@@ -384,7 +458,7 @@ proxy.prototype === Object.prototype
 - Proxy.revocable() 方法返回一个可取消的 Proxy 实例。它的一个使用场景是，目标对象不允许直接访问，必须通过代理访问，一旦访问结束，就收回代理权，不允许再次访问。
 - 虽然 Proxy 可以代理针对目标对象的访问，但它不是目标对象的透明代理，即不做任何拦截的情况下，也无法保证与目标对象的行为一致。主要原因就是在 Proxy 代理的情况下，目标对象内部的 this 关键字会指向 Proxy 代理。
 
-[更多示例代码即使用场景](./proxy.js)，或移步 [notebook](https://runkit.com/ylh/javascript---proxy)。
+[更多示例代码即使用场景](./proxy.js)，或移步 [notebook](https://runkit.com/ylh/javascript---proxy)。
 
 ## 参考
 
