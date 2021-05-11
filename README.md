@@ -75,8 +75,16 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 以 V8 引擎为例
 
-![v8-compiler-process](./res/javascript-compiler-engine.png)
-(image source: https://kaiwu.lagou.com/course/courseInfo.htm?courseId=180)
+<div style="display:flex;align-items:center">
+<div>
+<img src="./res/javascript-compiler-engine.png" alt="v8-compiler-engine" />
+(source: https://kaiwu.lagou.com/course/courseInfo.htm?courseId=180)
+</div>
+<div>
+<img src="https://miro.medium.com/max/1400/1*ZIH_wjqDfZn6NRKsDi9mvA.png" alt="v8-compiler-pipeline" />
+(source: https://medium.com/dailyjs/understanding-v8s-bytecode-317d46c94775)
+</div>
+</div>
 
 #### 解析
 
@@ -245,7 +253,7 @@ function f() {...}
 6. constructor 属性的含义就是指向该对象的构造函数，所有函数（此时看成对象了）最终的构造函数都指向Function。
 
 ![js prototype chain](./res/js-prototype-chain.png)
-(image source: https://chen-cong.blog.csdn.net/article/details/81211729)
+(source: https://chen-cong.blog.csdn.net/article/details/81211729)
 
 ### new 操作符实现了什么？
 
@@ -303,7 +311,7 @@ console.log(c.b()) // 'b'
 console.log(c.a()) // 'a'
 ```
 
-## proxy
+## Proxy
 
 ES6 原生提供 Proxy 构造函数，用来生成 Proxy 实例。
 
@@ -316,7 +324,7 @@ var proxy = new Proxy(target, handler);
 
 Proxy 可以理解成，在目标对象之前架设一层“拦截”，外界对该对象的访问，都必须先通过这层拦截，因此提供了一种机制，可以对外界的访问进行**过滤**和**改写**。Proxy 实际上重载（overload）了`点运算符`。
 
-Proxy 支持的拦截操作一共 13 种，同一个拦截器函数，可以设置拦截多个操作。
+Proxy 支持[13 种拦截操作](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy/Proxy#handler_functions)，同一个拦截器函数，可以设置拦截多个操作。
 
 ```javascript
 var handler = {

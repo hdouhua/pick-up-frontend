@@ -1,5 +1,6 @@
 
 // ES6 原生提供 Proxy 构造函数，用来生成 Proxy 实例。
+
 // target参数表示所要拦截的目标对象，handler参数也是一个对象，用来定制拦截行为。
 // var proxy = new Proxy(target, handler);
 
@@ -41,7 +42,7 @@ var handler = {
     return { newResult: target.apply(newTarget, args) }
   },
 
-  // ...
+  // more traps ...
 }
 
 {
@@ -55,8 +56,6 @@ var handler = {
   let proxy = new Proxy(function (x, y) {
     return { result: x + y }
   }, handler);
-
-  // `构造函数`调用
   console.log(proxy(1, 2))
   console.log(new proxy(1, 2))
   proxy.prototype === Object.prototype
@@ -94,7 +93,7 @@ var handler = {
   }
 }
 
-//Proxy.revocable() 方法返回一个可取消的 Proxy 实例。它的一个使用场景是，目标对象不允许直接访问，必须通过代理访问，一旦访问结束，就收回代理权，不允许再次访问。
+// Proxy.revocable() 方法返回一个可取消的 Proxy 实例。它的一个使用场景是，目标对象不允许直接访问，必须通过代理访问，一旦访问结束，就收回代理权，不允许再次访问。
 {
   let target = {};
   let handler = {};
@@ -112,7 +111,7 @@ var handler = {
   }
 }
 
-//虽然 Proxy 可以代理针对目标对象的访问，但它不是目标对象的透明代理，即不做任何拦截的情况下，也无法保证与目标对象的行为一致。主要原因就是在 Proxy 代理的情况下，目标对象内部的this关键字会指向 Proxy 代理。
+// 虽然 Proxy 可以代理针对目标对象的访问，但它不是目标对象的透明代理，即不做任何拦截的情况下，也无法保证与目标对象的行为一致。主要原因就是在 Proxy 代理的情况下，目标对象内部的this关键字会指向 Proxy 代理。
 {
   let target = {
     test: function () {
@@ -131,9 +130,9 @@ var handler = {
 
 let twice = {
   apply(target, ctx, args) {
-    return target.apply(ctx, args) * 2
+    // return target.apply(ctx, args) * 2
     // or
-    // return Reflect.apply(...arguments) * 2;
+    return Reflect.apply(...arguments) * 2;
   }
 };
 function sum(left, right) {
