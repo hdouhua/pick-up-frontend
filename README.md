@@ -7,7 +7,7 @@
 一门面向对象的语言。（JavaScript 标准中写明的）
 
 最初，JavaScript 设计是基于原型的面向对象能力的语言。
-ES6 中引入了 class 关键字，并且在标准中删除了所有[[class]]相关的私有属性描述，类的概念正式从属性升级成语言的基础设施，从此，基于类的编程方式成为了 JavaScript 的官方编程范式。
+ES6 中引入了 `class` 关键字，并且在标准中删除了所有 `[[class]]` 相关的私有属性描述，类的概念正式从属性升级成语言的基础设施，从此，基于类的编程方式成为了 JavaScript 的官方编程范式。
 
 **扩展：JavaScript 是面向对象的语言？**
 
@@ -18,7 +18,7 @@ JavaScript 中的“类”仅仅是运行时对象的一个私有属性，而 Ja
 
 JavaScript 中对象独有的特色是：对象具有高度的动态性，因为其中的对象被赋予了运行时添改状态和行为的能力。
 
-JavaScript 属性是有别于其它语言的。JS 用一组特征（attribute）来描述属性（property）。两类属性：
+JavaScript 属性是有别于其它语言的。JS 用一组特征 `attribute` 来描述属性 `property` 。两类属性：
 - 数据属性，它比较接近于其它语言的属性概念。有四个特征：
   - value：就是属性的值
   - writable：决定属性能否被赋值
@@ -106,7 +106,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
    console.log(str)
    ```
 
-   String 有最大长度是多少？2^53 - 1。要知道这个长度并非“字符串”的字符数，而是字符串的 UTF16 编码的长度。
+   String 的最大长度是多少？2^53 - 1。要知道这个长度并非“字符串”的字符数，而是字符串的 UTF16 编码的长度。
 
 - Symbol
 
@@ -122,11 +122,12 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 **扩展 JavaScript 的 Object**
 
 JavaScript 中的对象分类我们可以把对象分成几类。
-- 宿主对象（host Objects）：由 JavaScript 宿主环境提供的对象，它们的行为完全由宿主环境决定。在浏览器环境中全局对象 window
+- 宿主对象（host Objects）：由 JavaScript 宿主环境提供的对象，它们的行为完全由宿主环境决定。在浏览器环境中全局对象 window。
 - 内置对象（Built-in Objects）：由 JavaScript 语言提供的对象。
-  - 固有对象（Intrinsic Objects ）：由标准规定，随着 JavaScript 运行时创建而自动创建的对象实例。JS 提供了 *150+ 个固有对象*[参考](https://262.ecma-international.org/9.0/#sec-well-known-intrinsic-objects)
+  - 固有对象（Intrinsic Objects）：由标准规定，随着 JavaScript 运行时创建而自动创建的对象实例。
+    JS 提供了 *150+ 个固有对象* [参考1](https://262.ecma-international.org/9.0/#sec-well-known-intrinsic-objects) 和 [参考2](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects)
   - 原生对象（Native Objects）：可以由用户通过 Array、RegExp 等内置构造器或者特殊语法创建的对象。能够通过语言本身的构造器创建的对象称作原生对象，JS 提供了 *30 多个构造器*。
-  - 普通对象（Ordinary Objects）：由{}语法、Object 构造器或者 class 关键字定义类创建的对象，它能够被原型继承。
+  - 普通对象（Ordinary Objects）：由 {} 语法、Object 构造器或者 class 关键字定义类创建的对象，它能够被原型继承。
 
 *函数对象的定义是：具有` [[call]]` 私有字段的对象，构造器对象的定义是：具有私有字段`[[construct]]`的对象。*
 - 任何对象只需要实现 `[[call]]`，它就是一个函数对象，可以去作为函数被调用。而如果它能实现 `[[construct]]`，它就是一个构造器对象，可以作为构造器被调用。

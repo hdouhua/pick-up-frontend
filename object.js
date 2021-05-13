@@ -61,6 +61,10 @@ let dog = new Dog('Mitzie');
 dog.speak();
 
 // the different result from calling intrisic object as a function or as a constructor
+console.log(typeof 3)
+console.log(typeof Number(3))
+console.log(3 === Number(3))
+console.log(typeof new Number(3))
 Object.prototype.toString.call(Date())
 Object.prototype.toString.call(new Date())
 
