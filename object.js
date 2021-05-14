@@ -71,6 +71,7 @@ Object.prototype.toString.call(new Date())
 // print all Intrinsic Objects
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
 var set = new Set();
+// 三个值，九个函数，一堆构造器
 var objects = [
   // value properties
   Infinity,
@@ -207,3 +208,6 @@ for (let i = 0; i < objects.length; i++) {
 }
 console.log(set.size)
 // console.log(set)
+
+// 在 ES6 之后箭头语法 => 创建的函数仅仅是函数，它们无法被当作构造器使用
+new (a => { })
