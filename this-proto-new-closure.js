@@ -1,75 +1,122 @@
-// 1)  浏览器：Window；Node.js：global
-function fn() { console.log(this) }
-function fn2() { fn() }
-
-fn2()
-
-var obj = { fn2 }
-obj.fn2()
-
-// 2)指向“调用它”的对象
-var dx = {
-  arr: [1]
-}
-try {
-  //forEach 函数它有两个参数，第一个是回调函数，第二个是 this 指向的对象
-  dx.arr.forEach(function () {
-    console.log(this)
-  })
-} catch (err) {
-  console.log(err)
-}
-// 正确的做法：传入 `this`
-dx.arr.forEach(function () {
-  console.log(this)
-}, dx)
-
-try {
-  [0].forEach(function () { console.log(this) })
-} catch (err) {
-  console.log(err)
-}
+// this
 //
-[0].forEach(function () { console.log(this) }, 0)
-
-// 3)
-// 这里有个隐藏的知识点。那就是 ES6 下的 class 内部默认采用的是严格模式，
-// 而严格模式下不会指定全局对象为默认调用对象
-class B {
-  fn() {
-    console.log(this)
+// globalThis: browser - Window；Node.js - global
+// 1, general function
+{
+  // ES6 下的 class 设计成了默认按 strict 模式执行。而严格模式下不会指定全局对象为默认调用对象。
+  // 如果要保持普通函数和方法的执行一致，请加上 "use strict";。
+  "use strict";
+  function showThis() {
+    console.log(this);
   }
+  function wrapShowThis() {
+    showThis();
+  }
+  var o = {
+    showThis,
+    // showThis: showThis
+  }
+  var o2 = {
+    showThis: wrapShowThis
+  }
+  showThis(); // globalThis, in strict - undefined
+  o.showThis(); // o
+  o2.showThis(); // globalThis, in strict - undefined
 }
-var b = new B()
-b.fn()
-var fun = b.fn
-fun() // global
+// 2, method in class
+{
+  class C {
+    showThis() {
+      console.log(this);
+    }
+  }
+  var o = new C();
+  var showThis = o.showThis;
+  showThis(); // undefined
+  o.showThis(); // o
+}
+// 3, arrow function
+{
+  const showThis = () => {
+    console.log(this);
+  }
+  var o = {
+    showThis: showThis
+  }
+  showThis(); // globalThis
+  o.showThis(); // globalThis
+}
 
-
-// 4)
 // ES6 新加入的箭头函数不会创建自己的 this，它只会从自己的作用域链的上一层继承 this。
 // 可以简单地理解为箭头函数的 this 继承自上层的 this，但在全局环境下定义仍会指向全局对象。
+// 一句话总结：嵌套的箭头函数中的代码都指向外层 this
+const a = () => console.log(this)
 var arrow = {
   fn: () => {
     console.log(this)
   },
   // to fix the issue from fn()
   fn2() {
-    const a = () => console.log(this)
+    const a1 = () => console.log(this)
+    a1()
+  },
+  fn22() {
     a()
   },
   fn3() {
     console.log(this)
-  }
+  },
 }
-
 try {
-  arrow.fn()
+  arrow.fn() // inherited this, may be globalThis
 } catch (err) {
   console.error(err)
 }
-arrow.fn2()
-arrow.fn3()
+arrow.fn2() // arrow
+arrow.fn22() // inherited this, may be globalThis
+arrow.fn3() // arrow
+
+{
+  // 定义时词法环境
+  var b = 2;
+  function foo() {
+    console.log(b); // 2
+    console.log(a); // error
+  }
+
+  // 运行时词法环境
+  void function () {
+    var a = 1
+    foo()
+  }()
+}
+
+// JS 传参数改变 this 指向
+// forEach 函数的调用对象
+{
+  var dx = {
+    arr: [1]
+  }
+  try {
+    // forEach 函数它有两个参数，第一个是回调函数，第二个是 this 指向的对象
+    dx.arr.forEach(function () {
+      console.log(this)
+    })
+  } catch (err) {
+    console.log(err)
+  }
+  // 正确的做法：传入 `this`
+  dx.arr.forEach(function () {
+    console.log(this)
+  }, dx)
+  //
+  try {
+    [0].forEach(function () { console.log(this) })
+  } catch (err) {
+    console.log(err)
+  }
+  [0].forEach(function () { console.log(this) }, 0)
+}
 
 // 改变 this 指向的常见 3 种方式有 bind、call 和 apply。
 // call 和 apply 用法功能基本类似，都是通过传入 this 指向的对象以及参数来调用函数。
@@ -83,7 +130,16 @@ getName.apply({ name: 'apply' })
 var b = getName.bind({ name: 'bind' })
 b()
 
-//箭头函数
+// 箭头函数 不接受 this ，但不会报错
+const foo = (a, b, c) => {
+  console.log(this); // inherited this
+  console.log(a, b, c); // 1 2 3
+};
+foo.bind({ K: 1 }, 1, 2, 3)();
+
+
+// 箭头函数
+//
 const arrowFn = () => {
   console.log(arguments)
 }
@@ -99,6 +155,7 @@ try {
 }
 
 // 函数相关的两个隐式转换函数 toString() 和 valueOf()
+//
 function add(...args) {
   let arr = args
 
@@ -122,6 +179,7 @@ add(1, 2)(3, 4, 5)(6).valueOf()
 
 
 // 原型和原型链
+//
 var a = {}
 console.log(a.__proto__ === Object.prototype)
 var b = new Object()
@@ -203,6 +261,7 @@ console.log(c.b(), c.a())
 
 
 // var 命名提升，到全局变量
+//
 console.log(a)
 var a = 1
 try {
@@ -232,6 +291,7 @@ console.log(fn2())
 
 
 // 闭包 closure
+//
 
 // singleton instance
 var SingleStudent = (function () {
