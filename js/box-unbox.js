@@ -1,7 +1,8 @@
 // box/unbox
 //
 
-// Javascript 中是对象类型转换是“先拆箱再转换”，通过拆箱转换，把对象变成基本类型，再从基本类型转换为对应的对象类型。拆箱转换会尝试调用 valueOf 和 toString 来获得拆箱后的基本类型。如果 valueOf 和 toString 都不存在，或者没有返回基本类型，则会产生类型错误 TypeError。
+// Javascript 中是对象类型转换是“先拆箱再转换”，通过拆箱转换，把对象变成基本类型，再从基本类型转换为对应的对象类型。
+// 拆箱转换会尝试调用 valueOf 和 toString 来获得拆箱后的基本类型。如果 valueOf 和 toString 都不存在，或者没有返回基本类型，则会产生类型错误 TypeError。
 var o = {
   valueOf: () => { console.log("valueOf"); return {} },
   toString: () => { console.log("toString"); return {} }

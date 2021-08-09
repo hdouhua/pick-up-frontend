@@ -55,8 +55,8 @@
 
 一门面向对象的语言。（JavaScript 标准中写明的）
 
-最初，JavaScript 设计是 基于原型的面向对象能力 的语言。
-ES6 中引入了 `class` 关键字，并且在标准中删除了所有 `[[class]]` 相关的私有属性描述，类的概念正式从属性升级成语言的基础设施，从此，基于类的编程方式成为了 JavaScript 的官方编程范式。
+最初，JavaScript 设计是*基于原型的面向对象能力*的语言。
+ES6 中引入了 `class` 关键字，并且在标准中删除了所有 `[[class]]` 相关的私有属性描述，类的概念正式从属性升级成语言的基础设施，从此，*基于类的编程方式*成为了 JavaScript 的官方编程范式(programming paradigm)。
 
 ### 扩展：编程语言
 
@@ -84,7 +84,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 (JavaScript 中的“类”仅仅是运行时对象的一个私有属性，而 JavaScript 中是无法自定义类型的。——需要解释）
 
-其它面向对象的语言，对象的基本特征是 标识性、状态和行为。
+其它面向对象的语言，对象的基本特征是：标识性、状态和行为。
 在 JavaScript 将状态和行为统一抽象为“属性”，把函数设计成一种特殊对象。
 
 JavaScript 中对象独有的特色是：对象具有高度的动态性，对象被赋予了运行时添改状态和行为的能力。
@@ -177,7 +177,7 @@ JS 用一组特征 `attribute` 来描述属性 `property` 。两类属性：
 ### 扩展：JavaScript 的 Object
 
 JavaScript 中的对象分类我们可以把对象分成几类。
-- 宿主对象（host Objects）：由 JavaScript 宿主环境提供的对象，它们的行为完全由宿主环境决定。在浏览器环境中全局对象 window。
+- 宿主对象（Host Objects）：由 JavaScript 宿主环境提供的对象，它们的行为完全由宿主环境决定。在浏览器环境中全局对象 window。
 - 内置对象（Built-in Objects）：由 JavaScript 语言提供的对象。
   - 固有对象（Intrinsic Objects）：由标准规定，随着 JavaScript 运行时创建而自动创建的对象实例。
     JS 提供了 *150+ 个固有对象* [参考1](https://262.ecma-international.org/9.0/#sec-well-known-intrinsic-objects) 和 [参考2](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects)
@@ -203,7 +203,7 @@ JavaScript 中的对象分类我们可以把对象分成几类。
 
 JavaScript 中是“先拆箱再转换”，拆箱转换会尝试调用 `valueOf` 和 `toString` 来获得拆箱后的基本类型。如果这两个函数都不存在，或者没有返回基本类型，则会产生类型错误 `TypeError`。另外，不同类型对象的拆箱调用`valueOf` 和 `toString` 的顺序是不同的。
 
-在 ES6 之后，还允许对象通过显式指定 @@toPrimitive Symbol 来覆盖原有的行为。
+在 ES6 之后，还允许对象通过显式指定 toPrimitive Symbol 来覆盖原有的行为。
 
 [代码参考](./box-unbox.js)
 
@@ -213,10 +213,10 @@ JS 是运行时先编译再执行——JIT（即时编译技术）
 
 以 V8 引擎为例解释 JS 的一段代码如何被执行
 
-<center>
+<p>
 <img src="https://cdn.nlark.com/yuque/0/2020/webp/710492/1595562271385-604ee834-4a1e-4d12-8370-ff1785cbf21a.webp" alt="how-the-js-code-executed" width="80%" />
 <div>(source: https://medium.com/dailyjs/understanding-v8s-bytecode-317d46c94775)</div>
-</center>
+</p>
 
 V8 由许多子模块构成，其中这4个模块是最重要的：
 - Parser：解析器负责将JavaScript源码转换为Abstract Syntax Tree (AST)
@@ -229,10 +229,10 @@ V8 由许多子模块构成，其中这4个模块是最重要的：
 - 如果函数只被调用1次，则 Ignition 将其编译 Bytecode 就直接解释执行了，TurboFan不会进行优化编译。
 - 如果函数被调用多次，则它有可能会被识别为`热点函数`，且 Ignition 收集的类型信息证明可以进行优化编译的话，这时 TurboFan 则会将  Bytecode 编译为 Optimized Machine Code，以提高代码的执行性能。
 
-<center>
+<p>
 <img src="https://miro.medium.com/max/1400/1*ZIH_wjqDfZn6NRKsDi9mvA.png" alt="v8-compiler-pipeline" width="60%" />
 <div>(source: https://medium.com/dailyjs/understanding-v8s-bytecode-317d46c94775)</div>
-</center>
+</p>
 
 ### 编译过程
 
@@ -262,10 +262,10 @@ node --print-bytecode test.js
 
 优化后的机器码的作用和缓存很类似，当解释器再次遇到相同的内容时，就可以直接执行优化后的机器码。当然优化后的代码有时可能会无法运行（比如函数参数类型改变），那么会再次反优化为字节码交给解释器。
 
-<center>
+<p>
 <img src="https://cdn.nlark.com/yuque/0/2020/webp/710492/1595562271430-3aed7fff-1169-4812-9949-f97b5878061e.webp" alt="v8-compiler-turbofan" width="50%" />
 <div>(source: https://www.yuque.com/webqiang/ht5m24/hzurv1)</div>
-</center>
+</p>
 
 node 命令打印出 TurboFan 生成的*汇编代码*
 
@@ -494,18 +494,18 @@ function f() {...}
 
 ```javascript
 function New(ctor, ...args) {
-    // 1,2 fn.__proto__ === ctor.prototype
-    const fn = Object.create(ctor.prototype)
-    // 3. fn.ctor(args)
-    const obj = ctor.apply(fn, args);
-    // 4.
-    return obj && typeof obj === 'object' ? obj : fn;
+  // 1,2 fn.__proto__ === ctor.prototype
+  const fn = Object.create(ctor.prototype)
+  // 3. fn.ctor(args)
+  const obj = ctor.apply(fn, args);
+  // 4.
+  return obj && typeof obj === 'object' ? obj : fn;
 }
 
 // 使用 New
-function Person(name, age){
-	this.name = name;
-	this.age = age;
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
 }
 const person = New(Person, 'Tom', 20)
 console.log(person)
@@ -524,13 +524,13 @@ console.log(new Person('Jerry', 19))
 ```javascript
 function A() { }
 A.prototype.a = function () {
-    return 'a';
+  return 'a';
 }
 function B() { }
 // the key line
 B.prototype = new A()
 B.prototype.b = function () {
-    return 'b';
+  return 'b';
 }
 var c = new B()
 console.log(c.b()) // 'b'
@@ -543,7 +543,7 @@ JavaScript 的异步经历了 Callback -> Promise -> Coroutine
 
 - Promise 解决了 callback hell 的问题，将回调函数的横向加载，改成纵向加载
 - Generator 是 JavaScript Coroutine 的实现，打平了代码层级
-- Async/Wait 是 Generator 的语法糖，简化了Generator 的使用
+- Async/Await 是 Generator 的语法糖，简化了Generator 的使用
 
 ### 任务队列
 
@@ -567,19 +567,20 @@ JavaScript 的异步经历了 Callback -> Promise -> Coroutine
 >"任务队列"是一个事件队列，IO 设备完成一项任务，就在"任务队列"中添加一个事件，表示相关的异步任务可以进入"执行栈"了。<br/>
 >此处，任务队列、回调队列、事件队列及消息队列 都是同一事物的不同表达而已。
 
-<center>
+<p>
 <img src="https://felixgerschau.com/static/79486d91b22a7c1b4044fce88a4cae20/29007/js-event-loop-explained.png" alt="js-event-loop" width="80%" />
 <div>(source: https://felixgerschau.com/javascript-event-loop-call-stack/)</div>
-</center>
+</p>
 
 要更直观地理解这个机制，[请参考示例](http://latentflip.com/loupe/)
 
 ----
 
 JS 中有两类异步任务队列：
-- 宏任务队列（Macro Tasks）和微任务队列（Micro Tasks）。宏任务队列可以有多个，微任务队列只有一个。
+- 宏任务队列（macrotask）和微任务队列（microtask）。宏任务队列可以有多个，微任务队列只有一个。
 - 宏任务：script（全局任务）, setTimeout, setInterval, setImmediate, postMessage, I/O, UI rendering.
 - 微任务：process.nextTick, Promise.then, Object.observer, MutationObserver.
+- 其中 setImmediate 和 process.nextTick 是 NodeJS 的实现
 
 我们把宿主(JS runtime, such as WebAPIs or NodeJS)发起的任务称为宏观任务，把 JavaScript 引擎(JS engine, like V8)发起的任务称为微观任务。
 Promise 产生的是 JavaScript 引擎内部的微任务，setTimeout 是浏览器 API，它产生宏任务。
@@ -637,7 +638,7 @@ NodeJS 的 Event Loop 是基于 libuv 库的支持。
 3. libuv 库负责Node API的执行。它将不同的任务分配给不同的线程，形成一个 Event Loop ，以异步的方式将任务的执行结果返回给 V8 引擎。
 4. V8 引擎再将结果返回给用户。
 
-NodeJS 的 Event Loop 分6个阶段执行：
+[NodeJS 的 Event Loop](https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/) 分6个阶段执行：
 
 ```
    ┌───────────────────────────┐
@@ -660,14 +661,16 @@ NodeJS 的 Event Loop 分6个阶段执行：
    └───────────────────────────┘
 ```
 
-1. timers: 这个阶段执行setTimeout()和setInterval()设定的回调。
+1. timers: 这个阶段执行 setTimeout()和 setInterval() 设定的回调。
 2. pending callbacks: 上一轮循环中有少数的 I/O callback 会被延迟到这一轮的这一阶段执行。
 3. idle, prepare: 仅内部使用。
 4. poll: 执行 I/O callback，在适当的条件下会阻塞在这个阶段
-5. check: 执行setImmediate()设定的回调。
-6. close callbacks: 执行比如socket.on('close', ...)的回调。
+5. check: 执行 setImmediate() 设定的回调。
+6. close callbacks: 执行比如 socket.on('close', ...) 的回调。
 
->每个阶段执行完毕后，都会执行所有微任务（先 nextTick，后其它），然后再进入下一个阶段。
+>每个阶段执行完毕后，都会执行所有微任务（先 nextTick，后其它），然后再进入下一个阶段。<br/>
+>递归的调用 process.nextTick() 会导致 I/O starving，官方推荐使用 setImmediate()。<br/>
+>NodeJS 从 V11 版本开始，event loop 已经与浏览器趋于相同，即每个 macrotask 执行完之后，执行所有的 microtask。<br/>
 
 ### setTimeout 和 setInterval 
 
@@ -788,7 +791,7 @@ g.next(2) // { value: 2, done: true }
 
 ### 扩展：libuv
 
-libuv 是一个扩平台支持 事件驱动的异步I/O模型 的类库。[参考](http://docs.libuv.org/en/v1.x/design.html)
+libuv 是一个跨平台的、支持事件驱动的异步I/O模型类库。[参考](http://docs.libuv.org/en/v1.x/design.html)
 
 ## Proxy
 
