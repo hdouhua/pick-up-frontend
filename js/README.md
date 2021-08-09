@@ -476,7 +476,7 @@ function f() {...}
 5. prototype 属性的作用就是让该函数所实例化的对象们都可以找到公用的属性和方法，即 f1.\_\_proto\_\_ === Foo.prototype。
 6. constructor 属性的含义就是指向该对象的构造函数，所有函数（此时看成对象了）最终的构造函数都指向Function。
 
-![js prototype chain](./res/js-prototype-chain.png)
+![js prototype chain](../res/js-prototype-chain.png)
 (source: https://chen-cong.blog.csdn.net/article/details/81211729)
 
 ### new 操作符实现了什么？
