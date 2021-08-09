@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>flex::equal height</title>
+  <style>
+    .parent {
+      display: flex;
+      outline: blue solid 1px;
+      width: 300px;
+      justify-content: center;
+      /* align-items: stretch; */
+    }
+
+    .child {
+      width: 100px;
+      outline: red solid 1px;
+    }
+
+
+    .parent2 {
+      display: flex;
+      width: 300px;
+      height: 200px;
+      outline: solid 1px;
+
+    }
+
+    .child1 {
+      width: 100px;
+      background-color: lightblue;
+      outline: lightblue solid 1px;
+    }
+
+    .child2 {
+      width: 100px;
+      flex: 1;
+      background-color: pink;
+      outline: pink solid 1px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="parent">
+    <div class="child" style="height:300px;">
+    </div>
+    <div class="child">
+    </div>
+  </div>
+  <br />
+  <div class="parent2">
+    <div class="child1">
+    </div>
+    <div class="child2">
+    </div>
+  </div>
+
+</body>
+
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>typography</title>
+</head>
+<style>
+  .outer {
+    /*
+    outer 中的字号为 0，否则两个盒子间会有间隙（由 html div 换行导致的），导致盒子排版换行了
+    */
+    font-size: 0;
+    /* 如果需要可以给盒子专门加一个宽度 */
+    /* width:101px; */
+  }
+
+  .inner {
+    width: 33.33%;
+    height: 300px;
+    display: inline-block;
+    outline: solid 1px blue;
+  }
+</style>
+
+<body>
+
+  <div class="outer">
+    <div class="inner"></div>
+    <div class="inner"></div>
+    <div class="inner"></div>
+  </div>
+
+</body>
+
+</html>

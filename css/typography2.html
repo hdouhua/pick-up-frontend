@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>typography</title>
+  <style>
+    body {
+      margin: 0;
+    }
+
+    .outer {
+      /* special setting */
+      font-size: 0;
+    }
+
+    .fixed {
+      width: 200px;
+      transform: translateZ(0);
+    }
+
+    .fixed,
+    .auto {
+      display: inline-block;
+      height: 300px;
+      outline: solid 1px blue;
+      vertical-align: top;
+      font-size: 20px;
+    }
+
+    /* special setting */
+    .auto {
+      margin-left: -200px;
+      padding-left: 200px;
+      box-sizing: border-box;
+      width: 100%;
+      background-color: aqua;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="outer">
+    <div class="fixed">a</div>
+    <div class="auto">b</div>
+  </div>
+</body>
+
+</html>

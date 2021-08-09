@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>flex</title>
+  <style>
+    .parent {
+      display: flex;
+      width: 400px;
+      height: 400px;
+      outline: solid 1px;
+      /* on main-axis */
+      justify-content: center;
+      /* on cross-axis */
+      align-items: center;
+      /* align-content:center; */
+      flex-wrap: wrap;
+    }
+
+    .child {
+      width: 100px;
+      height: 100px;
+      outline: solid 1px;
+      line-height: 100px;
+      text-align: center;
+      background-color: tomato;
+      color: white;
+    }
+
+    .box {
+      display: flex;
+      flex-wrap: wrap;
+      height: 400px;
+      align-content: space-around;
+      outline: auto;
+    }
+
+    .box div {
+      width: 100px;
+      height: 50px;
+      outline: blue solid 1px;
+      line-height: 50px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <section>
+    <div class="parent">
+      <div class="child">1</div>
+      <div class="child">2</div>
+      <div class="child">3</div>
+      <div class="child">4</div>
+      <!-- <div class="child">5</div> -->
+    </div>
+  </section>
+
+  <section>
+    <div class="box">
+      <div>One</div>
+      <div>Two</div>
+      <div>Three</div>
+      <div>Four</div>
+      <div>Five</div>
+      <div>Six</div>
+      <div>Seven</div>
+      <div>Eight</div>
+    </div>
+  </section>
+
+
+</body>
+
+</html>

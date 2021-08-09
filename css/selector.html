@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS: Selector</title>
+  <style>
+    body {
+      counter-reset: section;
+    }
+
+    .a .b {
+      border: 1px solid red;
+    }
+
+    p::first-letter {
+      text-transform: uppercase;
+    }
+
+    /* p.special::before {
+      display: block;
+      content: "pseudo! ";
+    } */
+
+    p.special::before {
+      display: block;
+      content: counter(chapno, upper-roman) ". ";
+    }
+
+    h3::before {
+      counter-increment: section;
+      content: "Section "counter(section) ": ";
+    }
+
+    ol {
+      counter-reset: lisection;
+      list-style-type: none;
+    }
+
+    li::before {
+      counter-increment: lisection;
+      content: counters(lisection, ".") " ";
+    }
+  </style>
+</head>
+
+<body>
+  <div class="a">
+    <div class="b">1</div>
+    <div>2</div>
+    <div>
+      <div>3.1</div>
+      <div class="b">3.2</div>
+    </div>
+    <div class="b">4</div>
+  </div>
+  <div class="b">5.1</div>
+  <div class="b">5.2</div>
+
+  <p>this is a somewhat long HTML
+    paragraph that will be broken into several
+    lines. The first line will be identified
+    by a fictional tag sequence. The other lines
+    will be treated as ordinary lines in the
+    paragraph.</p>
+
+  <p class="special">I'm a real element.</p>
+  <p class="special"></p>
+
+  <h3>
+    <div>Introduction</div>
+    <div>Introduction</div>
+  </h3>
+  <h3>Body</h3>
+  <h3>Conclusion</h3>
+
+  <ol>
+    <li>item</li> <!-- 1     -->
+    <li>item
+      <!-- 2     -->
+      <ol>
+        <li>item</li> <!-- 2.1   -->
+        <li>item</li> <!-- 2.2   -->
+        <li>item
+          <!-- 2.3   -->
+          <ol>
+            <li>item</li> <!-- 2.3.1 -->
+            <li>item</li> <!-- 2.3.2 -->
+          </ol>
+          <ol>
+            <li>item</li> <!-- 2.3.1 -->
+            <li>item</li> <!-- 2.3.2 -->
+            <li>item</li> <!-- 2.3.3 -->
+          </ol>
+        </li>
+        <li>item</li> <!-- 2.4   -->
+      </ol>
+    </li>
+    <li>item</li> <!-- 3     -->
+    <li>item</li> <!-- 4     -->
+  </ol>
+  <ol>
+    <li>item</li> <!-- 1     -->
+    <li>item</li> <!-- 2     -->
+  </ol>
+
+</body>
+
+</html>
