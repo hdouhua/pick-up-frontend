@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API collector</title>
+</head>
+
+<body>
+
+  <ol id="jsObjects">
+  </ol>
+
+  <script>
+    // please refer to https://developer.mozilla.org/en-US/docs/Web/API
+
+    function getJSObjects() {
+
+      let js = new Set();
+      let objects = ["BigInt", "BigInt64Array", "BigUint64Array", "Infinity", "NaN", "undefined", "eval", "isFinite", "isNaN", "parseFloat", "parseInt", "decodeURI", "decodeURIComponent", "encodeURI", "encodeURIComponent", "Array", "Date", "RegExp", "Promise", "Proxy", "Map", "WeakMap", "Set", "WeakSet", "Function", "Boolean", "String", "Number", "Symbol", "Object", "Error", "EvalError", "RangeError", "ReferenceError", "SyntaxError", "TypeError", "URIError", "ArrayBuffer", "SharedArrayBuffer", "DataView", "Float32Array", "Float64Array", "Int8Array", "Int16Array", "Int32Array", "Uint8Array", "Uint16Array", "Uint32Array", "Uint8ClampedArray", "Atomics", "JSON", "Math", "Reflect", "escape", "unescape"];
+      objects.forEach(o => js.add(o));
+
+      // filter out the properties from window
+      let names = Object.getOwnPropertyNames(window)
+      names = names.filter(e => !js.has(e));
+
+      let windowProps = new Set();
+      objects = ["window", "self", "document", "name", "location", "history", "customElements", "locationbar", "menubar", " personalbar", "scrollbars", "statusbar", "toolbar", "status", "close", "closed", "stop", "focus", " blur", "frames", "length", "top", "opener", "parent", "frameElement", "open", "navigator", "applicationCache", "alert", "confirm", "prompt", "print", "postMessage", "console"];
+      objects.forEach(o => windowProps.add(o));
+      names = names.filter(e => !windowProps.has(e));
+
+      // filter out some specicals
+      // event handler
+      names = names.filter(e => !e.match(/^on/))
+      // webkit related
+      names = names.filter(e => !e.match(/^webkit/i))
+
+      // filter out DOM Node related
+      names = names.filter(e => {
+        try {
+          return !(window[e].prototype instanceof Node)
+        } catch (err) {
+          return true;
+        }
+      }).filter(e => e != "Node")
+
+      // filter out some speicial Interfaces
+      let interfaces = new Set();
+      objects = ["ApplicationCache", "AudioTrack", "AudioTrackList", "BarProp", "BeforeUnloadEvent", "BroadcastChannel", "CanvasGradient", "CanvasPattern", "CanvasRenderingContext2D", "CloseEvent", "CustomElementRegistry", "DOMStringList", "DOMStringMap", "DataTransfer", "DataTransferItem", "DataTransferItemList", "DedicatedWorkerGlobalScope", "Document", "DragEvent", "ErrorEvent", "EventSource", "External", "FormDataEvent", "HTMLAllCollection", "HashChangeEvent", "History", "ImageBitmap", "ImageBitmapRenderingContext", "ImageData", "Location", "MediaError", "MessageChannel", "MessageEvent", "MessagePort", "MimeType", "MimeTypeArray", "Navigator", "OffscreenCanvas", "OffscreenCanvasRenderingContext2D", "PageTransitionEvent", "Path2D", "Plugin", "PluginArray", "PopStateEvent", "PromiseRejectionEvent", "RadioNodeList", "SharedWorker", "SharedWorkerGlobalScope", "Storage", "StorageEvent", "TextMetrics", "TextTrack", "TextTrackCue", "TextTrackCueList", "TextTrackList", "TimeRanges", "TrackEvent", "ValidityState", "VideoTrack", "VideoTrackList", "WebSocket", "Window", "Worker", "WorkerGlobalScope", "WorkerLocation", "WorkerNavigator"];
+      objects.forEach(o => interfaces.add(o));
+      names = names.filter(e => !interfaces.has(e));
+
+      // display
+      let container = document.getElementById('jsObjects')
+      names.forEach(it => {
+        let item = document.createElement("li");
+        item.appendChild(document.createTextNode(it))
+        container.appendChild(item)
+      })
+    }
+
+    getJSObjects()
+  </script>
+</body>
+
+</html>

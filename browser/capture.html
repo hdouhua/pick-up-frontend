@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>event capture</title>
+</head>
+
+<body>
+  <input type="text" id="i">
+  <script>
+    //
+    // event flow: bubbling phase vs capturing phase
+    // https://www.w3.org/TR/DOM-Level-3-Events/images/eventflow.svg
+
+    document.body.addEventListener("mousedown", () => {
+      console.log("key1")
+    }, false)
+    document.body.addEventListener("mousedown", () => {
+      console.log("key11")
+    }, false)
+
+    // 当点击 文本框 时，文本框处于 “目标阶段”，即既不是冒泡阶段也不是捕获阶段。
+    // 在“目标阶段”的事件会触发该元素（即事件目标）上的所有监听器，
+    // 而不在乎这个监听器到底在注册时 useCapture 参数值是 true 还是 false。
+    // 注意，这时是优先触发 true 的事件监听器。 -- 捕获总是在冒泡之前发生
+    document.getElementById("i").addEventListener("mousedown", () => {
+      console.log("key2")
+    }, true)
+    document.getElementById("i").addEventListener("mousedown", () => {
+      console.log("key22")
+    }, false)
+
+  </script>
+</body>
+
+</html>
