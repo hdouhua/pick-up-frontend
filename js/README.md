@@ -574,6 +574,18 @@ console.log(c.a()) // 'a'
 >
 > for more, please refer to https://nodejs.org/api/esm.html
 
+**ES6 模块加载 CommonJS 模块**
+
+使用 import 引入 module.exports 作为默认输出。
+
+请参考[main.mjs](./module-demo/es6/main.mjs)
+
+**CommonJS 模块加载 ES6 模块**
+
+不能使用 require 命令，而要使用 import() 函数。ES6 模块的所有输出接口，会成为输入对象的属性。
+
+请参考[main.js](./module-demo/commonjs/main.js)
+
 ### ES6 module
 
 ES6 模块有两个重要特性：一个是**值引用**（可以理解为只读引用），另一个是静态声明。

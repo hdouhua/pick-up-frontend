@@ -13,5 +13,9 @@ module.exports = {
   get counter() {
     return counter
   },
+  set counter(val) {
+    console.log('set invoked:', val)
+    counter = val
+  },
   increaseCounter,
 };
