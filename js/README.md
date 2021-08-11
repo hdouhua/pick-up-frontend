@@ -1,51 +1,55 @@
 # the fundament of JS
 
 * [JavaScript 语言特性](#javascript-语言特性)
-    * [扩展：编程语言](#扩展编程语言)
-      * [强类型 vs 弱类型](#强类型-vs-弱类型)
-      * [静态类型语言 vs 动态类型语言](#静态类型语言-vs-动态类型语言)
-      * [基于这些 JS 语言的弱点推出 Typescript](#基于这些-js-语言的弱点推出-typescript)
-    * [扩展：JavaScript 是面向对象的语言？](#扩展javascript-是面向对象的语言)
+  * [扩展：编程语言](#扩展编程语言)
+    * [强类型 vs 弱类型](#强类型-vs-弱类型)
+    * [静态类型语言 vs 动态类型语言](#静态类型语言-vs-动态类型语言)
+    * [基于这些 JS 语言的弱点推出 Typescript](#基于这些-js-语言的弱点推出-typescript)
+  * [扩展：JavaScript 是面向对象的语言？](#扩展javascript-是面向对象的语言)
 * [基本数据类型](#基本数据类型)
-    * [扩展：JavaScript 的 Object](#扩展javascript-的-object)
-    * [拆箱/装箱](#拆箱装箱)
+  * [扩展：JavaScript 的 Object](#扩展javascript-的-object)
+  * [拆箱/装箱](#拆箱装箱)
 * [JavaScript 引擎的工作机制](#javascript-引擎的工作机制)
-    * [编译过程](#编译过程)
-      * [解析](#解析)
-      * [解释](#解释)
-      * [优化](#优化)
-    * [内存管理](#内存管理)
-      * [栈](#栈)
-          * [扩展——尾调用](#扩展尾调用)
-      * [堆](#堆)
-          * [新生代](#新生代)
-          * [老生代](#老生代)
+  * [编译过程](#编译过程)
+    * [解析](#解析)
+    * [解释](#解释)
+    * [优化](#优化)
+  * [内存管理](#内存管理)
+    * [栈](#栈)
+        * [扩展——尾调用](#扩展尾调用)
+    * [堆](#堆)
+        * [新生代](#新生代)
+        * [老生代](#老生代)
 * [函数 —— JS 的一等公民](#函数--js-的一等公民)
-    * [ES2018 下复杂的函数体系](#es2018-下复杂的函数体系)
-    * [执行上下文](#执行上下文)
-      * [this 的行为](#this-的行为)
-      * [this 的机制](#this-的机制)
-    * [命名提升](#命名提升)
-    * [闭包](#闭包)
-    * [高阶函数](#高阶函数)
-    * [柯里化](#柯里化)
-    * [箭头函数](#箭头函数)
+  * [ES2018 下复杂的函数体系](#es2018-下复杂的函数体系)
+  * [执行上下文](#执行上下文)
+    * [this 的行为](#this-的行为)
+    * [this 的机制](#this-的机制)
+  * [命名提升](#命名提升)
+  * [闭包](#闭包)
+  * [高阶函数](#高阶函数)
+  * [柯里化](#柯里化)
+  * [箭头函数](#箭头函数)
 * [什么是原型和原型链？](#什么是原型和原型链)
-    * [new 操作符实现了什么？](#new-操作符实现了什么)
-    * [怎么通过原型链实现多层继承？](#怎么通过原型链实现多层继承)
+  * [new 操作符实现了什么？](#new-操作符实现了什么)
+  * [怎么通过原型链实现多层继承？](#怎么通过原型链实现多层继承)
+* [Module](#module)
+  * [ES6 module](#es6-module)
+  * [CommonJS module](#commonjs-module)
+  * [其他模块定义](#其他模块定义)
 * [异步](#异步)
-    * [任务队列](#任务队列)
-    * [事件循环 Event Loop](#事件循环-event-loop)
-      * [浏览器的事件循环 Event Loop](#浏览器的事件循环-event-loop)
-      * [NodeJS 事件循环 Event Loop](#nodejs-事件循环-event-loop)
-    * [setTimeout 和 setInterval](#settimeout-和-setinterval)
-    * [事件队列优先级](#事件队列优先级)
-    * [异步并行](#异步并行)
-    * [异常处理](#异常处理)
-    * [Promise 的局限性](#promise-的局限性)
-    * [async / await](#async--await)
-    * [扩展：JS 引擎 engine vs 运行时 runtime](#扩展js-引擎-engine-vs-运行时-runtime)
-    * [扩展：libuv](#扩展libuv)
+  * [任务队列](#任务队列)
+  * [事件循环 Event Loop](#事件循环-event-loop)
+    * [浏览器的事件循环 Event Loop](#浏览器的事件循环-event-loop)
+    * [NodeJS 事件循环 Event Loop](#nodejs-事件循环-event-loop)
+  * [setTimeout 和 setInterval](#settimeout-和-setinterval)
+  * [事件队列优先级](#事件队列优先级)
+  * [异步并行](#异步并行)
+  * [异常处理](#异常处理)
+  * [Promise 的局限性](#promise-的局限性)
+  * [async / await](#async--await)
+  * [扩展：JS 引擎 engine vs 运行时 runtime](#扩展js-引擎-engine-vs-运行时-runtime)
+  * [扩展：libuv](#扩展libuv)
 * [Proxy](#proxy)
 * [参考](#参考)
 
@@ -536,6 +540,95 @@ var c = new B()
 console.log(c.b()) // 'b'
 console.log(c.a()) // 'a'
 ```
+
+## Module
+
+目前，JS 主要有两种格式的模块：一种是 ES6 模块，简称 ESM；另一种是 CommonJS 模块，简称 CJS。
+
+**兼容性**
+
+- 在 Node.js 环境中，我们遵循 CommonJS 规范来组织模块。
+
+  CommonJS 属于内置模块系统，不存在环境支持问题，只需要直接遵循标准使用 require 和 module.exports 即可。
+
+- 在浏览器环境中，我们遵循 ES Modules 规范。
+
+  ES Modules 模块系统存在环境兼容问题。ES Modules 是 ECMAScript 2015（ES6）中才定义的模块系统，使用时可能需要打包工具或者 bable 支持。
+
+*CommonJS 加载的是一个对象（即 module.exports 属性），该对象只有在脚本运行完才会生成。而 ES6 模块不是对象，它的对外接口只是一种静态定义，在代码静态解析阶段就会生成。*
+
+**在 NodeJS 中使用 ESM**
+
+如果要在 Node.js 下使用 ES6 模块，需要将文件名后缀改为 ".mjs" ，用来和默认使用的 CommonJS 规范模块作区分。
+如果不希望将后缀名改成 ".mjs"，可以在项目的 package.json 文件中，指定 type 字段为 module。(在这种情况下，如果又需要 CommonJS 模块，可以使用 ".cjs" 扩展名)
+
+```js
+// - module -- .js files are treated as an ES module
+// - commonjs -- treated as a CommonJS module
+{
+  "type": "module"
+}
+```
+
+> 建议：ES6 模块与 CommonJS 模块尽量不要混用！
+>
+> for more, please refer to https://nodejs.org/api/esm.html
+
+### ES6 module
+
+ES6 模块有两个重要特性：一个是**值引用**（可以理解为只读引用），另一个是静态声明。
+
+- 值引用是指 export 语句输出的接口
+- 模块对于引用声明有严格的要求，首先必须在文件的首部，不允许使用变量或表达式，不允许被嵌入到其他语句中。
+
+```javascript
+// a.mjs
+export var a = 'null';
+setTimeout(() => a = 'a', 500);
+
+// b.mjs
+import { a } from './a.mjs'
+console.log(a)
+setTimeout(() => console.log(a), 1000)
+```
+
+>ES6 模块强制自动采用严格模式，不管有没有 "user strict" 声明都是一样的，换言之，编写代码的时候不必再刻意声明了。
+
+### CommonJS module
+
+通过 require 函数引用模块，它的基本功能是，读入并执行一个 JavaScript 文件，然后返回该模块的 exports 对象。
+
+与 ES6 模块不同的是 CommonJS 模块采用**值拷贝**和动态声明。值拷贝和值引用相反，一旦输出一个值，模块内部的变化就影响不到这个值了，可以简单地理解为变量浅拷贝。
+
+```javascript
+// a.js
+var a = 'null';
+setTimeout(() => a = 'a', 500);
+module.exports = a
+
+// b.js
+var a = require('./a')
+console.log(a)
+setTimeout(() => console.log(a), 1000)
+```
+
+CommonJS 规定每个文件就是一个模块，有独立的作用域。每个模块内部，都有一个 module 对象，代表当前模块。通过它来导出 API，它有以下属性：
+
+- id 模块的识别符，通常是带有绝对路径的模块文件名；
+- filename 模块的文件名，带有绝对路径；
+- loaded 返回一个布尔值，表示模块是否已经完成加载；
+- parent 返回一个对象，表示调用该模块的模块；
+- children 返回一个数组，表示该模块要用到的其他模块；
+- exports 表示模块对外输出的值。
+
+### 其他模块定义
+
+- AMD
+  Asynchronous Module Definition 异步模块定义，早期专门为浏览器端重新设计的。典型实现类库就是 require.js
+- CMD
+  整合了 CommonJS 和 AMD 规范的特点。典型实现 sea.js
+- UMD
+  Universal Module Definition，统一模块定义，其实并不是模块管理规范，而是带有前后端同构思想的模块封装工具——让 CommonJS 和 AMD 模块跨端运行。
 
 ## 异步
 
