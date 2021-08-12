@@ -1,0 +1,31 @@
+<!-- Child -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Child Page</title>
+</head>
+
+<body>
+  <h3>child</h3>
+  <script>
+    // http://localhost:1234/parent.html
+    // http://localhost:5678/child.html
+
+    // 子页面监听 "message" 事件可得到父页面发来的数据
+    window.addEventListener('message', function (e) {
+      console.log('message from parent:', e.data);
+
+      if (e.data === 'hi') {
+        // 子页面通过 window.opener 回复消息 hello 给父页面
+        window.opener.postMessage('hello', 'http://localhost:1234');
+      }
+    }, false);
+
+  </script>
+</body>
+
+</html>

@@ -1,5 +1,32 @@
 # 浏览器
 
+* [浏览器 进程 vs 线程](#浏览器-进程-vs-线程)
+* [HTTP 发展](#http-发展)
+  * [HTTP/0.9](#http09)
+  * [HTTP/1.0](#http10)
+  * [HTTP/1.1](#http11)
+    * [局限性](#局限性)
+  * [HTTP/2](#http2)
+    * [局限性](#局限性-1)
+  * [HTTP/3](#http3)
+  * [扩展——TCP的“三次握手”和“四次挥手”](#扩展tcp的三次握手和四次挥手)
+  * [总结](#总结)
+* [HTTP 缓存](#http-缓存)
+    * [强制缓存](#强制缓存)
+    * [协商缓存](#协商缓存)
+    * [总结](#总结-1)
+* [跨域方案](#跨域方案)
+  * [浏览器的同源策略（Same Origin Policy）](#浏览器的同源策略same-origin-policy)
+  * [请求跨域解决方案](#请求跨域解决方案)
+    * [跨域资源共享](#跨域资源共享)
+    * [JSONP](#jsonp)
+    * [Websocket](#websocket)
+    * [代理转发](#代理转发)
+  * [页面跨域解决方案](#页面跨域解决方案)
+    * [postMessage](#postmessage)
+    * [改域](#改域)
+* [参考](#参考)
+
 ## 浏览器 进程 vs 线程
 
 进程是操作系统进行资源分配和调度的基本单位，线程是操作系统进行运算的最小单位。一个程序至少有一个进程，一个进程至少有一个线程。线程需要由进程来启动和管理。
@@ -68,13 +95,51 @@ HTTP/2 由于采用二进制分帧进行多路复用，通常只使用一个 TCP
 ### 扩展——TCP的“三次握手”和“四次挥手”
 
 three-way handshake: SYN, SYN + ACK, ACK
-four-way handshake: FIN + ACK, ACK, FIN + ACK, ACK
+
+four-way handshake: FIN, ACK, FIN + ACK, ACK
+
+![tcp-handshake-state](https://res-static.hc-cdn.cn/fms/img/858c53a36898590f06378f5087854fc31603447450545)
+
+(图片来源于网络)
+
+**半连接队列**
+
+服务器第一次收到客户端的 SYN 之后，就会处于 SYN_RCVD 状态，此时双方还没有完全建立其连接，服务器会把此种状态下请求连接放在一个队列里，我们把这种队列称之为半连接队列。
+
+补充一点关于SYN-ACK 重传次数的问题：
+
+服务器发送完 SYN-ACK 包，如果未收到客户确认包，服务器进行首次重传，等待一段时间仍未收到客户确认包，进行第二次重传。如果重传次数超过系统规定的最大重传次数，系统将该连接信息从半连接队列中删除。每次重传等待的时间一般会是指数增长，例如间隔时间为 1s，2s，4s，8s …
+
+**全连接队列**
+
+已经完成三次握手，建立起请求连接的就会放在全连接队列中，如果队列满了就有可能会出现丢包现象。
+
+**SYN flood attack**
+- 客户端在短时间内伪造大量不存在的 IP 地址，并向服务端疯狂发送 SYN；
+- 服务器端处理大量的 SYN 包并返回对应 ACK, 大量连接处于 SYN_RCVD 状态，占满整个半连接队列，无法处理正常的请求；
+- 由于是不存在的 IP，服务端长时间收不到客户端的 ACK，会导致服务端不断重发数据，直到耗尽服务端的资源。
+
+查看命令
+
+```shell
+netstat -n -p TCP | grep SYN_RECV
+```
 
 **为什么建立连接只通信了三次，而断开连接却用了四次？**
 
-因为当服务端收到客户端的 FIN 报文后，发送的 ACK 报文只是用来应答的，并不表示服务端也希望立即关闭连接。
+这由 TCP 的半关闭（half-close）造成的。所谓的半关闭，其实就是 TCP 提供了连接的一端在结束它的发送后还能接收来自另一端数据的能力。
 
-当只有服务端把所有的报文都发送完了，才会发送 FIN 报文，告诉客户端可以断开连接了，因此在断开连接时需要四次挥手。
+当服务端收到客户端的 FIN 报文后，发送的 ACK 报文只是用来应答的，并不表示服务端也希望立即关闭连接。
+只有服务端把所有的报文都发送完了，才会发送 FIN 报文，告诉客户端可以断开连接了。
+这样就是四次挥手了。
+
+**2ML**
+
+Maximum Segment Lifetime 最长报文段寿命，它是任何报文在网络上存在的最长时间，超过这个时间报文将被丢弃。
+
+为了保证客户端发送的最后一个 ACK 报文段能够到达服务器。因为这个 ACK 有可能丢失，从而导致处在 LAST-ACK 状态的服务器收不到对 FIN-ACK 的确认报文。服务器会超时重传这个 FIN-ACK，接着客户端再重传一次确认，重新启动时间等待计时器。最后客户端和服务器都能正常的关闭。假设客户端不等待 2MSL，而是在发送完 ACK 之后直接释放关闭，一但这个 ACK 丢失的话，服务器就无法正常的进入关闭连接状态。
+
+客户端的 TIME_WAIT 状态就是用来重发可能丢失的 ACK 报文。
 
 ### 总结
 
@@ -99,6 +164,8 @@ HTTP 支持的缓存策略有两种：**强制缓存**和**协商缓存**。
 1. Expires
 
    HTTP/1.0 时期的，局限性是服务器和客户端时间的不一致性。
+   
+   >其值是一个 date 格式，如：Wed, 11 Aug 2021 08:36:18 GMT
 
 2. Cache-Control
 
@@ -135,7 +202,7 @@ HTTP 支持的缓存策略有两种：**强制缓存**和**协商缓存**。
 
   局限性：依赖于依赖于修改时间，有精度问题和准度问题
 
--  ETag 和 If-None-Match
+- ETag 和 If-None-Match
 
   不依赖于修改时间，而依赖于文件哈希值的精确判断缓存的方式，那就是响应头部字段 ETag 和请求头部字段 If-None-Match。
 
@@ -143,7 +210,9 @@ HTTP 支持的缓存策略有两种：**强制缓存**和**协商缓存**。
 
 #### 总结
 
-强制缓存的优先级高于协商缓存，在强制缓存中，max-age 优先级高于 expires；在协商缓存中，Etag 优先级高于 Last-Modified 。
+- 强制缓存的优先级高于协商缓存；
+- 在强制缓存中，max-age 优先级高于 expires ；
+- 在协商缓存中，Etag 优先级高于 Last-Modified 。
 
 ## 跨域方案
 
@@ -258,28 +327,45 @@ location /api {
 
 HTML5 推出了一个新的函数 postMessage() 用来实现父子页面之间通信，而且不论这两个页面是否同源。
 
-举例来说，比如父页面 https://abc.com 要向子页面 https://www.abc.com 发消息
+举例来说，比如父页面 http://localhost:1234/parent.html 要向子页面 http://localhost:5678/child.html 发消息
 
 ```javascript
-// https://abc.com/parent.html
-var child = window.open('https://www.abc.com/child.html');
-child.postMessage('hi', 'https://www.abc.com');
-// 父页面也可以监听“message”事件来接收子页面发送的数据。
-window.addEventListener('message', function(e) {
-  console.log(e.data);
-},false);
+// parent page
+var child = window.open('http://localhost:5678/child.html', 'child');
+  // 父页面可以监听 "message" 事件来接收子页面发送的数据
+  window.addEventListener('message', function (e) {
+    console.log('reply from child:', e.data);
+  }, false);
 
-// https://www.abc.com/child.html
-// 在子页面中，只需要监听“message”事件即可得到父页面的数据
-window.addEventListener('message', function(e) {
-  console.log(e.data);
-},false);
-// 子页面通过 window.opener 发送消息 hello 给父页面
-window.opener.postMessage('hello', 'https://abc.com');
+(function () {
+  document.querySelector('input').addEventListener('click', function () {
+    child.postMessage('hi', 'http://localhost:5678');
+  }, false)
+
+})()
+
+// child page
+// 子页面监听 "message" 事件可得到父页面发来的数据
+window.addEventListener('message', function (e) {
+  console.log('message from parent:', e.data);
+
+  if (e.data === 'hi') {
+    // 子页面通过 window.opener 回复消息 hello 给父页面
+    window.opener.postMessage('hello', 'http://localhost:1234');
+  }
+}, false);
 ```
+
+参考[代码](./page-cross-domain/)
 
 #### 改域
 
 对于主域名相同，子域名不同的情况，可以通过修改 document.domain 的值来进行跨域。
 
-举例说明，父页面 https://www.abc.com/parent.html 里面有一个 iframe，其 src 是 https://assets.abc.com/child.html。这时只要把这两个页面的 document.domain 都设成相同的域名 abc.com，那么父子页面之间就可以进行跨域通信了，同时还可以共享 cookie。
+举例说明，
+父页面 https://www.abc.com/parent.html 里面有一个 iframe，其 src 是 https://assets.abc.com/child.html。
+这时只要把这两个页面的 document.domain 都设成相同的域名 abc.com，那么父子页面之间就可以进行跨域通信了，同时还可以共享 cookie。
+
+## 参考
+
+- [TCP三次握手，四次挥手](https://www.huaweicloud.com/articles/a5ade3fe6835161e23ff064dc8f5e1f9.html)

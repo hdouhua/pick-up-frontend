@@ -1,0 +1,37 @@
+<!-- Parent -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parent Page</title>
+</head>
+
+<body>
+  <h2>parent</h2>
+  <div>
+    <input type="button" value="send">
+  </div>
+  <iframe name="child"></iframe>
+  <script>
+    // http://localhost:1234/parent.html
+    // http://localhost:5678/child.html
+
+    var child = window.open('http://localhost:5678/child.html', 'child');
+    // 父页面可以监听 "message" 事件来接收子页面发送的数据
+    window.addEventListener('message', function (e) {
+      console.log('reply from child:', e.data);
+    }, false);
+
+    (function () {
+      document.querySelector('input').addEventListener('click', function () {
+        child.postMessage('hi', 'http://localhost:5678');
+      }, false)
+    })()
+
+  </script>
+</body>
+
+</html>
