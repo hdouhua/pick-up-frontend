@@ -1,22 +1,25 @@
 {
   "compilerOptions": {
-    "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictBindCallApply": true,
-    "strictPropertyInitialization": true,
-    "noImplicitThis": true,
-    "alwaysStrict": false,
+    /* Basic Options */
+    "declaration": true,
+    "declarationDir": "./lib/types",
     "module": "CommonJS",
+    "outDir": "./lib",
+    /* Strict Type-Checking Options */
+    "alwaysStrict": false,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strict": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    /* Module Resolution Options */
     "baseUrl": "./",
     "paths": {
       "*": [
         "types/*"
       ]
     },
-    "outDir": "./lib",
-    "declaration": true,
-    "declarationDir": "./lib/types",
   }
 }
