@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Child</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <div id="msgLabel">...</div>
+    <script>
+        function parseToJson(str) {
+            try {
+                let json = JSON.parse(str);
+                return json
+            } catch (e) {
+                return null;
+            }
+        }
+        function changeColor() {
+            document.body.style.backgroundColor = '#C1FF33';
+        }
+        window.addEventListener('message', function (e) {
+            if (e.source !== window.parent) {
+                return;
+            }
+            if (e.data) {
+                let data = parseToJson(e.data)
+                if (data) {
+                    switch (data.type) {
+                        case 'text':
+                            document.getElementById('msgLabel').textContent = 'message from parent: ' + data.text
+                            break;
+                        case 'action':
+                            if (data.action === 'changeColor') {
+                                changeColor()
+                            }
+                            break;
+                    }
+                }
+            }
+        }, false);
+    </script>
+</body>
+
+</html>

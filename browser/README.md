@@ -356,7 +356,7 @@ window.addEventListener('message', function (e) {
 }, false);
 ```
 
-参考[代码](./page-cross-domain/)
+[代码参考](./page-cross-domain/)
 
 #### 改域
 

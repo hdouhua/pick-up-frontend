@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Parent</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <div>
+        <input type="text" multiple="true">
+        <button id="sendMessageBtn">send message</button>
+    </div>
+    <div>
+        <button id="changeColorBtn">send action</button>
+    </div>
+    <iframe src="http://localhost:5003/child2.html"></iframe>
+
+    <script>
+        function sendMessage(message) {
+            let targetOrigin = 'http://localhost:5003/';
+            if (message) {
+                window.frames[0].postMessage(JSON.stringify(message), targetOrigin);
+            }
+        }
+
+        // {type: 'text', text: content}
+        document.querySelector("#sendMessageBtn")
+            .addEventListener("click", function () {
+                let content = document.querySelector('input').value;
+                sendMessage({
+                    text: content,
+                    type: 'text'
+                })
+            })
+
+        // {type: 'action', action: action_name}
+        document.querySelector("#changeColorBtn")
+            .addEventListener("click", function () {
+                sendMessage({
+                    action: 'changeColor',
+                    type: 'action'
+                })
+            })
+    </script>
+
+</body>
+
+</html>
