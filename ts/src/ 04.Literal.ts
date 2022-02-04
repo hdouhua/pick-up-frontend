@@ -12,7 +12,5 @@ function move(dir: Direction) {
   // ...
 }
 move('up'); // ok
-move('right'); // ts(2345)
+// move('right'); // ts(2345)
 move('down')
-
-
