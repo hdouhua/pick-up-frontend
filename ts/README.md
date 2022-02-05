@@ -16,7 +16,7 @@ install `ts-node`
 npm i -g ts-node
 ```
 
-init ts config
+init ts config, reference - <https://aka.ms/tsconfig.json>
 
 ```
 tsc --init
@@ -47,34 +47,42 @@ function say(word: string) {
 say('Hello World!')
 ```
 
-compile
+compile to js first then run js with node
 
-```
+```shell
 tsc HelloWorld.ts --strict --alwaysStrict false
 # or
 tsc HelloWorld.ts --strict --alwaysStrict false --watch
+# or use tsconfig.json with option --project or -p
+tsc --project tsconfig.json HelloWorld.ts
+# or use default tsconfig.json
+tsc HelloWorld.ts
 ```
 
 or run directly
 
-```
+```shell
 ts-node HelloWorld.ts
 ```
 
 ## 特性
 
-TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和基础类型对象进行区分，采用了小写的形式，比如 Number 类型对应的是 number。
+TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和基础类型对象进行区分，采用了**小写的形式**，比如 Number 类型对应的是 number。
 
 下面列出一些 TS 的特性：
 
 - 类型推导：根据上下文自动推导
 - 类型注解：`: type`
 
+### 基本数据类型
+
 - 数组
 
   ```ts
+  // type[]
   let numArr: number[] = [1,2,3];
   let strArr: string[] = ['x','y','z'];
+
   // 使用 Array 泛型
   let numArrWithGeneric: Array<number> = [1,2,3];
   let strArrWithGeneric: Array<string> = ['x','y','z'];
@@ -82,7 +90,15 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 - 元组
 
+  限定了元素个数和数据类型的数组 
+
   ```ts
+  let tuple: [number, string] = [0, 'str']
+  // 越界了
+  tuple.push(2)
+  console.log(tuple)
+  console.log(tuple[2])//error TS2493
+
   // React Hooks useState 示例：
   const x: [State, SetState] = [state, setState];
   const y: [SetState, State] = [setState, state];
@@ -90,47 +106,59 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
   (state: State) => [State, SetState]
   ```
 
-- 枚举
-
-  有名字的常量集合
-
-- any
-
-   any 类型代表可以是任何一种类型，所以会跳过类型检查，相当于让变量或返回值又变成弱类型。
-   选择性地忽略静态类型检测。
-
-   记住：Any is Hell.
-
-- unknown
-  
-  是 TypeScript 3.0 中添加的一个类型，它主要用来描述类型并不确定的变量。
-
-  与 any 不同的是，unknown 在类型上更安全。
-  - 我们可以将任意类型的值赋值给 unknown，但 unknown 类型的值只能赋值给 unknown 或 any。
+- 函数
 
   ```ts
-  let result: unknown;
-  let num: number = result;
-  let anything: any = result;
+  let add = (x: number, y: number): number => x + y
+  // 或者，省略返回值类型，运用了 ts 的类型推断功能
+  let add = (x: number, y: number) => x + y
+
+  // 定义函数类型
+  let compute: (x: number, y: number) => number
+  // 实现函数
+  compute = (a, b) => a + b
+  console.log(add(1, 2))
+  console.log(compute(1, 2))
   ```
 
-  - 而所有的类型缩小(Type Narrowing)手段对 unknown 都有效
+- 对象
 
   ```ts
-  let result: unknown;
-  if (typeof result === 'number') {
-    //
-    result.toFixed();
-  }
+  let obj: { x: number, y: string } = { x: 1, y: 'abc' }
+  obj.x = 2
+  console.log(obj)
   ```
+
+- symbol
+
+  ```ts
+  // 显示声明 symbol 类型，然后赋值
+  let s1: symbol = Symbol()
+  //
+  let s2 = Symbol()
+  // s1 和 s2 是不相同的
+  console.log(s1 === s2)
+  ```
+
 - void、undefined、null
 
-   void 表示没有任何类型，常用于描述无返回值的函数。
+   ```ts
+   // undefined (未定义), null (没有值)
+   let un: undefined = undefined
+   let nu: null = null
+   // it works when set "strictNullChecks": false in tsconfig.json
+   // num = undefined
+
+   // void (没有返回值)
+   let noReturn = () => { }
+   ```
+
+   void 表示<u>没有任何类型</u>，常用于描述无返回值的函数。
 
    它们实际上并没有太大的用处，尤其是在本专栏中强烈推荐并要求的 strict 模式下，它们是名副其实的“废柴”。
    
    类型守卫既能通过类型缩小影响 TypeScript 的类型检测，也能保障 JavaScript 运行时的安全性，如下代码所示：
-   
+
    ```ts
    const userInfo: {
      id?: number;
@@ -148,7 +176,21 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
    // 比非空断言更安全、类型守卫更方便的做法是使用单问号（Optional Chain）、双问号（空值合并）
    // 我们可以使用它们来保障代码的安全性
    userInfo.id?.toFixed(); // Optional Chain
-   const myName = userInfo.name?? `my name is ${info.name}`; // 空值合并
+   const myName = userInfo.name?? 'default name'; // 空值合并
+   ```
+
+- any
+
+   any 类型代表可以是任何一种类型，所以会跳过类型检查，相当于让变量或返回值又变成弱类型。
+   选择性地忽略静态类型检测。
+
+   记住：Any is Hell.
+
+   ```ts
+   let x
+   x = 1
+   x = []
+   x = () => { }
    ```
 
 - never
@@ -156,6 +198,16 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
    never 表示用于永远不会发生的值类型，一般用作执行不到 return 的函数返回值类型。never 是任意类型的子类型，却没有任意类型是 never 的子类型。
    
    ```typescript
+   // never 永远不会有返回值的类型
+   let error = () => {
+     throw new Error()
+   }
+   let endless = () => {
+     while (true) {
+       //
+     }
+   }
+
    let u: 'a'|'b'|'c'
    //...
    if(u === 'a') {
@@ -201,31 +253,140 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
    props.name = 1; // ts(2322)
    ```
 
-- interface & type
+### 枚举
 
-   接口的作用和类型非常相似，在大多数情况下可以通用，只存在一些细小的区别。比如，同名接口可以自动合并，而类型不能
-   
-   ```typescript
-   /* 声明 */
-   interface IA {
-     id: string
-   }
-   type TA = {
-     id: string
-   }
-   /* 继承 */
-   interface IA2 extends IA {
-       name: string
-   }
-   type TA2 = TA & { name: string }
-   /* 实现 */
-   class A implements IA {
-       id: string = ''
-   }
-   class A2 implements TA {
-       id: string = ''
-   }
-   ```
+有名字的常量集合
+
+- 数字枚举
+
+  ```ts
+  enum Role {
+    Reporter = 1,
+    Developer,
+    Maintainer,
+    Owner,
+    Guest
+  }
+  console.log(Role.Owner)
+  // 看上去是 对象 类型
+  console.log(Role)
+  ```
+
+- 字符串枚举
+
+  ```ts
+  enum Message {
+    Success = 'Congratulations',
+    Fail = 'Sorry'
+  }
+  console.log(Message.Success)
+  ```
+
+- 异构枚举
+
+  ```ts
+  enum Answer {
+    N,
+    Y = 'Yes'
+  }
+  console.log(Answer.N)
+  ```
+
+- 需要被计算的枚举 (computed)
+
+  表达式保留到程序执行阶段。
+
+  ```ts
+  enum Char {
+    a,
+    b = Char.a,
+    c = 1+ 3,
+    d = Math.random()
+  }
+  console.log(Char)
+  ```
+
+- 常量枚举
+
+  用 `const` 声明的枚举，与 `computed enum` 不同，它的特点是在编译后会被移除。那么它的作用是什么呢？当我们不需要枚举，而是只需要它的值的时候就可以使用常量枚举，这样可以减少编译后的代码。
+
+  ```ts
+  const enum Month {
+    Jan,
+    Feb,
+    Mar
+  }
+  // 常量枚举只可以使用属性
+  // console.log(Month) //error TS2475
+  console.log(Month.Jan)
+  ```
+
+- 枚举类型
+
+  ```ts
+  enum E { a, b }
+  enum F { a = 1, b }
+  enum G { a = 'banana', b = 'apple' }
+  // 定义枚举变量，赋值可以超出枚举限制
+  let e: E = 3
+  console.log(e)
+  // 不同类型的枚举不可以进行比较
+  let f: F = 3
+  // console.log(e === f)//error TS2367
+  // 可以定义枚举成员类型
+  let ea: E.a
+  let eb: E.b
+  ```
+
+###  interface & type
+
+接口的作用和类型非常相似，在大多数情况下可以通用，只存在一些细小的区别。比如，同名接口可以自动合并，而类型不能
+
+```typescript
+/* 声明 */
+interface IA {
+  id: string
+}
+type TA = {
+  id: string
+}
+/* 继承 */
+interface IA2 extends IA {
+    name: string
+}
+type TA2 = TA & { name: string }
+/* 实现 */
+class A implements IA {
+    id: string = ''
+}
+class A2 implements TA {
+    id: string = ''
+}
+```
+
+
+- unknown
+  
+  是 TypeScript 3.0 中添加的一个类型，它主要用来描述类型并不确定的变量。
+
+  与 any 不同的是，unknown 在类型上更安全。
+  - 我们可以将任意类型的值赋值给 unknown，但 unknown 类型的值只能赋值给 unknown 或 any。
+
+  ```ts
+  let result: unknown;
+  let num: number = result;
+  let anything: any = result;
+  ```
+
+  - 而所有的类型缩小(Type Narrowing)手段对 unknown 都有效
+
+  ```ts
+  let result: unknown;
+  if (typeof result === 'number') {
+    //
+    result.toFixed();
+  }
+  ```
 
 - 泛型
 
