@@ -1,4 +1,4 @@
-# typescript
+# TypeScript
 
 现阶段，TypeScript 是一门中间语言，最终它还需要转译为纯 JavaScript，再交给各种终端解释、执行。
 
@@ -78,7 +78,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 - 数组
 
-  ```ts
+  ```typescript
   // type[]
   let numArr: number[] = [1,2,3];
   let strArr: string[] = ['x','y','z'];
@@ -92,7 +92,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
   限定了元素个数和数据类型的数组 
 
-  ```ts
+  ```typescript
   let tuple: [number, string] = [0, 'str']
   // 越界了
   tuple.push(2)
@@ -108,9 +108,9 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 - 函数
 
-  ```ts
+  ```typescript
   let add = (x: number, y: number): number => x + y
-  // 或者，省略返回值类型，运用了 ts 的类型推断功能
+  // 或者，省略返回值类型，运用了 TS 的类型推断功能
   let add = (x: number, y: number) => x + y
 
   // 定义函数类型
@@ -123,7 +123,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 - 对象
 
-  ```ts
+  ```typescript
   let obj: { x: number, y: string } = { x: 1, y: 'abc' }
   obj.x = 2
   console.log(obj)
@@ -131,7 +131,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 - symbol
 
-  ```ts
+  ```typescript
   // 显示声明 symbol 类型，然后赋值
   let s1: symbol = Symbol()
   //
@@ -142,7 +142,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 - void、undefined、null
 
-   ```ts
+   ```typescript
    // undefined (未定义), null (没有值)
    let un: undefined = undefined
    let nu: null = null
@@ -159,7 +159,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
    
    类型守卫既能通过类型缩小影响 TypeScript 的类型检测，也能保障 JavaScript 运行时的安全性，如下代码所示：
 
-   ```ts
+   ```typescript
    const userInfo: {
      id?: number;
      name?: null | string
@@ -186,7 +186,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
    记住：Any is Hell.
 
-   ```ts
+   ```typescript
    let x
    x = 1
    x = []
@@ -221,7 +221,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
    
    再比如，以下异常类型函数因为永远不会有返回值，所以它的返回值类型就是 never。   
 
-   ```ts
+   ```typescript
    function ThrowError(msg: string): never {
      throw Error(msg);
    }
@@ -229,7 +229,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
    never 是所有类型的子类型，它可以给所有类型赋值，如下代码所示。   
 
-   ```ts
+   ```typescript
    let Unreachable: never = 1; // ts(2322)
    Unreachable = 'string'; // ts(2322)
    Unreachable = true; // ts(2322)
@@ -240,7 +240,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
    
    基于 never 的特性，我们可以把 never 作为接口类型下的属性类型，用来禁止写接口下特定的属性（那么这样有什么用？）   
 
-   ```ts
+   ```typescript
    const props: {
      id: number,
      //实际效果等同于 name 只读
@@ -253,13 +253,36 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
    props.name = 1; // ts(2322)
    ```
 
+- unknown
+  
+  是 TypeScript 3.0 中添加的一个类型，它主要用来描述类型并不确定的变量。
+
+  与 any 不同的是，unknown 在类型上更安全。
+  - 我们可以将任意类型的值赋值给 unknown，但 unknown 类型的值只能赋值给 unknown 或 any。
+
+  ```typescript
+  let result: unknown;
+  let num: number = result;
+  let anything: any = result;
+  ```
+
+  - 而所有的类型缩小(Type Narrowing)手段对 unknown 都有效
+
+  ```typescript
+  let result: unknown;
+  if (typeof result === 'number') {
+    //
+    result.toFixed();
+  }
+  ```
+
 ### 枚举
 
 有名字的常量集合
 
 - 数字枚举
 
-  ```ts
+  ```typescript
   enum Role {
     Reporter = 1,
     Developer,
@@ -274,7 +297,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 - 字符串枚举
 
-  ```ts
+  ```typescript
   enum Message {
     Success = 'Congratulations',
     Fail = 'Sorry'
@@ -284,7 +307,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 - 异构枚举
 
-  ```ts
+  ```typescript
   enum Answer {
     N,
     Y = 'Yes'
@@ -296,7 +319,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
   表达式保留到程序执行阶段。
 
-  ```ts
+  ```typescript
   enum Char {
     a,
     b = Char.a,
@@ -310,7 +333,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
   用 `const` 声明的枚举，与 `computed enum` 不同，它的特点是在编译后会被移除。那么它的作用是什么呢？当我们不需要枚举，而是只需要它的值的时候就可以使用常量枚举，这样可以减少编译后的代码。
 
-  ```ts
+  ```typescript
   const enum Month {
     Jan,
     Feb,
@@ -323,7 +346,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 - 枚举类型
 
-  ```ts
+  ```typescript
   enum E { a, b }
   enum F { a = 1, b }
   enum G { a = 'banana', b = 'apple' }
@@ -338,7 +361,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
   let eb: E.b
   ```
 
-###  interface & type
+###  接口 和 类
 
 接口的作用和类型非常相似，在大多数情况下可以通用，只存在一些细小的区别。比如，同名接口可以自动合并，而类型不能
 
@@ -364,33 +387,37 @@ class A2 implements TA {
 }
 ```
 
+#### 类
 
-- unknown
-  
-  是 TypeScript 3.0 中添加的一个类型，它主要用来描述类型并不确定的变量。
+支持抽象类、继承和多态，类成员支持访问限制 (`public`, `private`, `protected`, `readonly`)、静态成员。
+**类中定义的属性是实例属性而不是原型属性，方法是原型方法**。实例属性必须在构造函数中赋值，或者被定义为可选属性。
 
-  与 any 不同的是，unknown 在类型上更安全。
-  - 我们可以将任意类型的值赋值给 unknown，但 unknown 类型的值只能赋值给 unknown 或 any。
+- 类的链式操作。(return this)
+- 类实现接口时必须实现接口中的所有操作。
+- 接口只能约束类的**公有成员**。(接口不能约束类的构造函数)
+- 接口的继承：一个接口可以继承多个接口。
+- TS 的接口可以继承类。（好绕）
 
-  ```ts
-  let result: unknown;
-  let num: number = result;
-  let anything: any = result;
-  ```
+### 函数
 
-  - 而所有的类型缩小(Type Narrowing)手段对 unknown 都有效
+函数支持可选参数（定义放最后）、默认参数（在必选参数前，不可省略，可以传入 undefined；在必选参数后，可以省略）、剩余参数和函数重载。
 
-  ```ts
-  let result: unknown;
-  if (typeof result === 'number') {
-    //
-    result.toFixed();
-  }
-  ```
+### 泛型
 
-- 泛型
+为了函数参数/返回值可以支持多种类型，可以使用函数重载、联合类型、any 类型，泛型。
 
-   泛型是对类型的一种抽象，一般用于函数，能让调用者动态地指定部分数据类型。泛型可以对函数成员或类成员产生约束关系。
+泛型是对类型的一种抽象，一般用于函数，能让调用者动态地指定部分数据类型。
+（一般的、广泛的、不需要确定数据类型，具体的类型在使用时才确定。）
+
+泛型可以对函数成员或类成员产生约束关系。但是泛型不可以约束类的静态成员。
+
+泛型的应用：
+- 泛型函数
+- 泛型接口
+- 泛型类
+- 泛型约束
+
+### 高级类型
 
 - 类型组合
   
@@ -451,31 +478,12 @@ class A2 implements TA {
    type simpleTask = Pick<task, 'title' | 'description'>
    ```
 
-类型断言
+- 字面量类型
 
-- 使用 as 语法做类型断言
-
-   ```ts
-   const arrayNumber: number[] = [1, 2, 3, 4];
-   const greaterThan2: number = arrayNumber.find(num => num > 2) as number;
-   ```
-
-- 使用尖括号 + 类型的格式
-
-   ```ts
-   const arrayNumber: number[] = [1, 2, 3, 4];
-   const greaterThan2: number = <number>arrayNumber.find(num => num > 2);
-   ```
-
-基于赋值表达式推断类型的能力称之为“类型推断”。
-
-上下文推断
-
-字面量类型
 字面量不仅可以表示值，还可以表示类型，即所谓的字面量类型。
 TypeScript 支持 3 种字面量类型：字符串字面量类型、数字字面量类型、布尔字面量类型，对应的字符串字面量、数字字面量、布尔字面量分别拥有与其值一样的字面量类型
 
-```ts
+```typescript
 {
   let specifiedStr: 'this is string' = 'this is string';
   let specifiedNum: 1 = 1;
@@ -486,7 +494,7 @@ TypeScript 支持 3 种字面量类型：字符串字面量类型、数字字面
 字面量类型是集合类型的子类型，它是集合类型的一种更具体的表达。
 比如 'this is string' （这里表示一个字符串字面量类型）类型是 string 类型（确切地说是 string 类型的子类型），而 string 类型不一定是 'this is string'（这里表示一个字符串字面量类型）类型，如下具体示例：
 
-```ts
+```typescript
 {
   let specifiedStr: 'this is string' = 'this is string';
   let str: string = 'any string';
@@ -496,3 +504,51 @@ TypeScript 支持 3 种字面量类型：字符串字面量类型、数字字面
 ```
 
 相较于直接使用 string 类型，使用字符串字面量类型（组合的联合类型）可以将函数的参数限定为更具体的类型。这不仅提升了程序的可读性，还保证了函数的参数类型，可谓一举两得。
+
+### 类型检查机制
+
+#### 类型推断
+
+有时我们不需要指定变量的类型或者函数的返回值类型，TS 可以根据某些规则自动为其推断出一个类型。
+
+赋值表达式的 右侧推断左侧，事件绑定表达式 左侧推断右侧；函数返回值的类型推断。
+
+基于赋值表达式推断类型的能力称之为“类型推断”。
+
+#### 类型断言
+
+- 使用 as 语法做类型断言
+
+   ```typescript
+   const arrayNumber: number[] = [1, 2, 3, 4];
+   const greaterThan2: number = arrayNumber.find(num => num > 2) as number;
+   ```
+
+- 使用尖括号 + 类型的格式
+
+   ```typescript
+   const arrayNumber: number[] = [1, 2, 3, 4];
+   const greaterThan2: number = <number>arrayNumber.find(num => num > 2);
+   ```
+
+#### 类型兼容性
+
+当一个类型 Y 可以被赋值给另一个类型 X 时，我们可以说 X 类型兼容 Y 类型。
+
+X 兼容 Y： X（目标类型） =（赋值）Y（源类型）
+
+- 接口兼容
+  成员少的兼容成员多的
+
+- 函数兼容
+
+- 枚举兼容
+  - 枚举类型和数字类型相互兼容
+  - 枚举类型之间不兼容
+
+- 类兼容
+  - 静态成员和构造函数不在比较范围
+  - 两个类具有相同实例成员
+  - 类中包含私有成员或受保护的成员
+
+- 泛型兼容
