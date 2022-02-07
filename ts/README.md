@@ -552,3 +552,19 @@ X 兼容 Y： X（目标类型） =（赋值）Y（源类型）
   - 类中包含私有成员或受保护的成员
 
 - 泛型兼容
+
+
+## TS 模块化
+
+TS 可以很好的支持 ES6 模块和 CommonJS 模块（典型代表是 nodejs）。但是尽可能不要混用两种模块。
+
+- [ES6 代码参考](./demo01/src/es6)
+  - export
+  - import
+  - default
+  - as
+
+- [CommonJS 代码参考](./demo01/src/node)
+  - exports
+  - module.exports
+  - require
