@@ -568,3 +568,20 @@ TS 可以很好的支持 ES6 模块和 CommonJS 模块（典型代表是 nodejs�
   - exports
   - module.exports
   - require
+
+## 命名空间
+
+因为有 module ，目前 namespace 的使用较少了。
+
+引入不同的 namespace ，可以使用 `///reference` 语法
+
+```typescript
+/// <reference path="..." />
+```
+
+### 声明合并
+
+命名空间可以和 函数、类、枚举 等声明合并。
+
+TS 命名空间转换成 JS 代码时使用的是 变量 + 闭包 形式。因此要注意函数、类等与命名空间的顺序。
+
