@@ -596,4 +596,11 @@ TS 命名空间转换成 JS 代码时使用的是 变量 + 闭包 形式。因�
 
 官方参考 <https://www.typescriptlang.org/tsconfig>
 
+## 构建
+
+构建工具主要有 
+1. `tsc`，[参考](./demo02/README.md)
+2. `loader`，[参考](./demo03/README.md)
+3. `babel`，[参考](./demo04/README.md)
+
 ##

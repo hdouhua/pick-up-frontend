@@ -1,6 +1,8 @@
 {
-  "workspaces":[
+  "workspaces": [
     "./hello",
-    "./demo01"
+    "./demo01",
+    "./demo03",
+    "./demo04"
   ]
 }
