@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "CommonJS",
+    "strict": true,
+
+    // 未使用工程化构建时，指定输出文件夹
+    // "outDir": "./dist",
+
+    // 工程化构建
+    "composite": true, /* 工程可以被引用，也可以增量编译 */
+    "declaration": true, /* 声明文件，这是工程引用所必需的 */
+  }
+}
