@@ -1,0 +1,62 @@
+{
+  /* 要编译的文件 */
+  "files": [
+    "src/index.ts"
+  ],
+  // "include": [
+  //   "src/*/*"
+  // ],
+  // "exclude": [
+  //   "src/es6"
+  // ],
+  "compilerOptions": {
+    /* 增量编译——提高编译速度*/
+    // "incremental": true,
+    /*增量编译信息文件的存储位置*/
+    // "tsBuildInfoFile": ".tsbuildinfo",
+    /* 打印诊断信息（含执行时间）*/
+    // "diagnostics": true,
+
+    /* 将多个相互依赖的文件编译输出到一个文件 */
+    // "outFile": "app.js",
+    /* 查看生成的 amd 模块文件 */
+    // "module": "amd",
+    /* 目标语言的版本*/
+    "target": "ES5",
+    /* TS 引用的一些类库，即 声明 文件。es5 （target） 默认是 dom，es5，scripthost */
+    "lib": [
+      "DOM",
+    ],
+
+    /* 允许编译 JS 文件 */
+    "allowJs": true,
+    /* 在 JS 文件中会出现报错 */
+    "checkJs": false,
+    /* 指定输出文件目录 */
+    "outDir": "./out",
+    /* 指定输入文件的目录 */
+    "rootDir": "./",
+
+    /* 生成声明文件 */
+    // "declaration": true,
+    // "declarationDir": "./types",
+    // "emitDeclarationOnly": true,
+
+    /* 发生错误时 */
+    "noEmit": true,
+    "noEmitOnError": true,
+    "noEmitHelpers": false,
+
+    /* Strict Type-Checking Options */
+    "strict": true,
+    "alwaysStrict": true,
+
+    /* Additional Checks */
+    // "noUnusedLocals": true,                      /* Report errors on unused locals. */
+    // "noUnusedParameters": true,                  /* Report errors on unused parameters. */
+    // "noImplicitReturns": true,                   /* Report error when not all code paths in function return a value. */
+    // "noFallthroughCasesInSwitch": true,          /* Report errors for fallthrough cases in switch statement. */
+    // "noUncheckedIndexedAccess": true,            /* Include 'undefined' in index signature results */
+    // "noPropertyAccessFromIndexSignature": true,  /* Require undeclared properties from index signatures to use element accesses. */
+  },
+}

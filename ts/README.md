@@ -585,3 +585,15 @@ TS 可以很好的支持 ES6 模块和 CommonJS 模块（典型代表是 nodejs�
 
 TS 命名空间转换成 JS 代码时使用的是 变量 + 闭包 形式。因此要注意函数、类等与命名空间的顺序。
 
+## 声明文件
+
+`.d.ts`
+
+
+## 配置 tsconfig
+
+[参考代码](./demo01/tsconfig.json)
+
+官方参考 <https://www.typescriptlang.org/tsconfig>
+
+##
