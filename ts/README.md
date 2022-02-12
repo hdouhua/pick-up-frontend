@@ -603,4 +603,11 @@ TS 命名空间转换成 JS 代码时使用的是 变量 + 闭包 形式。因�
 2. `loader`，[参考](./demo03/README.md)
 3. `babel`，[参考](./demo04/README.md)
 
-##
+## TS lint
+
+使用 `typescript-eslint`, [参考](./demo05/README.md)
+
+## 单元测试
+
+- 非 babel 系的 `ts-jest`，[参考](./demo06/README.md)
+- babel 系的 `babel-jest`，[参考](./demo07/README.md)
