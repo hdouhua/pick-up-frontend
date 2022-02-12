@@ -2,8 +2,11 @@
   "workspaces": [
     "./hello",
     "./demo01",
-    "./demo03",
     "./demo04",
-    "./demo05"
+    "./demo05",
+    "./demo06",
+    "./demo07",
+    "./practice01a",
+    "./practice01b"
   ]
 }
