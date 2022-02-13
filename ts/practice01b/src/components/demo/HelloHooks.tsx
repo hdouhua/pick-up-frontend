@@ -15,8 +15,10 @@ const HelloHooks = (props: Greeting) => {
   const [text, setText] = useState<string | null>(null)
 
   useEffect(() => {
-    if (count > 5) {
+    if (count > 0 && count % 5 === 0) {
       setText('please take rest!')
+    } else {
+      setText('')
     }
   }, [count])
 
