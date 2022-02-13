@@ -28,4 +28,12 @@ npm i -D customize-cra react-app-rewired babel-plugin-import
 - 高阶 组件，[参考](./src/components/demo/HelloHOC.tsx)
 - Hooks 组件，[参考](./src/components/demo/HelloHooks.tsx)
 
-## 
+## jest error
+
+>Error: Failed to initialize watch plugin "node_modules/jest-watch-typeahead/filename.js":
+
+```
+npm i -D --exact jest-watch-typeahead@0.6.5
+```
+
+please refer to <https://github.com/facebook/create-react-app/issues/11792>
