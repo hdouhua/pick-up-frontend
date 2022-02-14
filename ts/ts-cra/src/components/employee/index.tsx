@@ -4,7 +4,6 @@ import { Table } from 'antd';
 import './index.css';
 
 import QueryForm from './QueryForm';
-
 import { employeeColumns } from './columns';
 import { EmployeeResponse } from '../../interfaces/employee';
 

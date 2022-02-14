@@ -7,6 +7,7 @@ import React, { Component } from "react";
 
 import HelloClass from './HelloClass'
 
+
 interface Loading {
   loading: boolean;
 }

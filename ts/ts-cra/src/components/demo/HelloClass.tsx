@@ -2,9 +2,9 @@
 // 类组件
 //
 
-
 import React, { Component } from 'react'
 import { Button } from 'antd'
+
 
 interface Greeting {
   name: string;

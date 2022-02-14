@@ -7,8 +7,9 @@ import { Link, useLocation } from "react-router-dom";
 import { Layout, Menu, ConfigProvider } from "antd";
 import zh_CN from 'antd/lib/locale-provider/zh_CN';
 
-import { AppRouter } from "../routers";
 import './App.css';
+import { AppRouter } from "../routers";
+
 
 const { Header, Content, Footer } = Layout;
 
