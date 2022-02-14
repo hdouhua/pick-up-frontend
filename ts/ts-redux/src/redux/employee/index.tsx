@@ -29,7 +29,7 @@ const initialState: State = {
   employeeList: undefined
 }
 
-// actions:
+// action creators:
 export function getEmployee(param: EmployeeRequest) {
   return (dispatch: Dispatch) => {
     get(URL_GET_EMPLOYEE, param).then(res => {
