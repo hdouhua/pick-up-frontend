@@ -3,7 +3,7 @@ import { Form, Input, Select, Button } from 'antd';
 import { FormProps } from 'antd/lib/form';
 
 import { EmployeeRequest } from '../../interfaces/employee'
-
+import RerenderChecker from '../RerenderChecker'
 
 const { Option } = Select;
 
@@ -12,6 +12,8 @@ interface Props extends FormProps {
 }
 
 class QueryForm extends Component<Props, EmployeeRequest> {
+  static displayName = 'QueryForm'
+
   state: EmployeeRequest = {
     name: '',
     departmentId: undefined
@@ -70,4 +72,5 @@ class QueryForm extends Component<Props, EmployeeRequest> {
   }
 }
 
-export default QueryForm;
+// export default QueryForm;
+export default RerenderChecker(QueryForm);
