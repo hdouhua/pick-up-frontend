@@ -12,6 +12,7 @@
   "devDependencies": {
     "awesome-typescript-loader": "^5.2.1",
     "clean-webpack-plugin": "^4.0.0",
+    "esbuild-loader": "^2.18.0",
     "fork-ts-checker-webpack-plugin": "^7.2.0",
     "html-webpack-plugin": "^5.5.0",
     "ts-loader": "^9.2.6",

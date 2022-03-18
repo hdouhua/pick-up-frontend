@@ -11,12 +11,24 @@
     {
       // 1)
       loader: 'ts-loader',
-      // 2)
-      // loader: 'awesome-typescript-loader',
       options: {
         // 是否只构建，而不做类型检查
         transpileOnly: true,
       }
+
+      // 2)
+      loader: 'awesome-typescript-loader',
+      options: {
+        transpileOnly: true,
+      }
+
+      // 3) esbuild-loader
+      loader: 'esbuild-loader',
+      options: {
+        loader: 'tsx',
+        target: 'es2015',
+      }
+          
     }
   ],
   exclude: /node_modules/
@@ -36,3 +48,9 @@
 
 ### 结论
 **比较两种 ts loader，还是推荐使用 ts-loader**
+
+### 附加：使用 webpack 加 esbuild-loader
+
+`esbuild-loader` 和 `babel-loader` 都是基于 loader 的解决方案，前者在编译速度上优于后者。
+
+由于本项目代码过少，无法从测试结果比较出 `esbuild-loader` 的优势。
