@@ -18,6 +18,8 @@ reportWebVitals(console.log)
 ReactDOM.render(
   <ErrorBoundary>
     {/* <Hello name="Typescript" /> */}
+
+    {/* Provider acts as a lightweight dependency injection */}
     <Provider store={store}>
       <RootRouter />
     </Provider>

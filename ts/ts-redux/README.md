@@ -20,3 +20,8 @@ npm i redux react-redux redux-thunk
 - 改写业务部分，把访问 API 部分移入 redux action creator thunk 中 ；
 - 连接 项目 和 store 用 Provider ；
 - 连接 react 组件 和 redux store 。
+
+## reference
+
+- [presentations](https://blog.isquaredsoftware.com/presentations)
+- [redux-fundamentals](https://blog.isquaredsoftware.com/presentations/workshops/redux-fundamentals/react-redux.html)
