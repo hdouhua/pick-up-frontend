@@ -611,3 +611,9 @@ TS 命名空间转换成 JS 代码时使用的是 变量 + 闭包 形式。因�
 
 - 非 babel 系的 `ts-jest`，[参考](./demo06/README.md)
 - babel 系的 `babel-jest`，[参考](./demo07/README.md)
+
+## TS 实战
+
+1. 自定义 React 项目，[参考](./ts-customized/README.md)
+2. 使用 CRA 创建 React 项目，[参考](./ts-cra/README.md)
+3. 使用 CRA 创建 React 项目，结合 redux 管理 state，[参考](./ts-redux/README.md)
