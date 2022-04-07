@@ -26,14 +26,14 @@ tsc --init
 >```json
 >{
 >  "compilerOptions": {
->    "strict": true,
 >    "noImplicitAny": true,
->    "strictNullChecks": true,
->    "strictFunctionTypes": true,
->    "strictBindCallApply": true,
->    "strictPropertyInitialization": true,
 >    "noImplicitThis": true,
+>    "strict": true,
 >    "alwaysStrict": false,
+>    "strictBindCallApply": true,
+>    "strictFunctionTypes": true,
+>    "strictNullChecks": true,
+>    "strictPropertyInitialization": true,
 >  }
 >}
 >```
