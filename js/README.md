@@ -1,57 +1,61 @@
 # the fundament of JS
 
 * [JavaScript 语言特性](#javascript-语言特性)
-  * [扩展：编程语言](#扩展编程语言)
-    * [强类型 vs 弱类型](#强类型-vs-弱类型)
-    * [静态类型语言 vs 动态类型语言](#静态类型语言-vs-动态类型语言)
-    * [基于这些 JS 语言的弱点推出 TypeScript](#基于这些-js-语言的弱点推出-typescript)
-  * [扩展：JavaScript 是面向对象的语言？](#扩展javascript-是面向对象的语言)
+    * [扩展：编程语言](#扩展编程语言)
+      * [强类型 vs 弱类型](#强类型-vs-弱类型)
+      * [静态类型语言 vs 动态类型语言](#静态类型语言-vs-动态类型语言)
+      * [基于这些 JS 语言的弱点推出 TypeScript](#基于这些-js-语言的弱点推出-typescript)
+    * [扩展：JavaScript 是面向对象的语言？](#扩展javascript-是面向对象的语言)
 * [基本数据类型](#基本数据类型)
-  * [扩展：JavaScript 的 Object](#扩展javascript-的-object)
-  * [拆箱/装箱](#拆箱装箱)
-* [JavaScript 引擎的工作机制](#javascript-引擎的工作机制)
-  * [编译过程](#编译过程)
-    * [解析](#解析)
-    * [解释](#解释)
-    * [优化](#优化)
-  * [内存管理](#内存管理)
-    * [栈](#栈)
-        * [扩展——尾调用](#扩展尾调用)
-    * [堆](#堆)
-        * [新生代](#新生代)
-        * [老生代](#老生代)
+    * [原始值类型](#原始值类型)
+    * [对象 Object](#对象-object)
+    * [拆箱/装箱](#拆箱装箱)
+    * [扩展：JavaScript 的 Object](#扩展javascript-的-object)
 * [函数 —— JS 的一等公民](#函数--js-的一等公民)
-  * [ES2018 下复杂的函数体系](#es2018-下复杂的函数体系)
-  * [执行上下文](#执行上下文)
-    * [this 的行为](#this-的行为)
-    * [this 的机制](#this-的机制)
-  * [命名提升](#命名提升)
-  * [闭包](#闭包)
-  * [高阶函数](#高阶函数)
-  * [柯里化](#柯里化)
-  * [箭头函数](#箭头函数)
+    * [ES2018 下复杂的函数体系](#es2018-下复杂的函数体系)
+    * [闭包](#闭包)
+    * [高阶函数](#高阶函数)
+    * [柯里化](#柯里化)
+    * [箭头函数](#箭头函数)
 * [什么是原型和原型链？](#什么是原型和原型链)
-  * [new 操作符实现了什么？](#new-操作符实现了什么)
-  * [怎么通过原型链实现多层继承？](#怎么通过原型链实现多层继承)
-* [Module](#module)
-  * [ES6 module](#es6-module)
-  * [CommonJS module](#commonjs-module)
-  * [其他模块定义](#其他模块定义)
+    * [new 操作符实现了什么？](#new-操作符实现了什么)
+    * [怎么通过原型链实现多层继承？](#怎么通过原型链实现多层继承)
+* [JavaScript 引擎的工作机制](#javascript-引擎的工作机制)
+    * [执行上下文](#执行上下文)
+      * [this 的行为](#this-的行为)
+      * [this 的机制](#this-的机制)
+    * [命名提升 Hoisting](#命名提升-hoisting)
+    * [编译过程](#编译过程)
+      * [以 V8 引擎为例解释 JS 的一段代码如何被执行](#以-v8-引擎为例解释-js-的一段代码如何被执行)
+      * [解析](#解析)
+      * [解释](#解释)
+      * [优化](#优化)
+    * [内存管理](#内存管理)
+      * [栈](#栈)
+          * [扩展——尾调用](#扩展尾调用)
+      * [堆](#堆)
+          * [新生代](#新生代)
+          * [老生代](#老生代)
+* [模块化 Module](#模块化-module)
+    * [ES6 module](#es6-module)
+    * [CommonJS module](#commonjs-module)
+    * [其他模块定义](#其他模块定义)
 * [异步](#异步)
-  * [任务队列](#任务队列)
-  * [事件循环 Event Loop](#事件循环-event-loop)
-    * [浏览器的事件循环 Event Loop](#浏览器的事件循环-event-loop)
-    * [NodeJS 事件循环 Event Loop](#nodejs-事件循环-event-loop)
-  * [setTimeout 和 setInterval](#settimeout-和-setinterval)
-  * [事件队列优先级](#事件队列优先级)
-  * [异步并行](#异步并行)
-  * [异常处理](#异常处理)
-  * [Promise 的局限性](#promise-的局限性)
-  * [async / await](#async--await)
-  * [扩展：JS 引擎 engine vs 运行时 runtime](#扩展js-引擎-engine-vs-运行时-runtime)
-  * [扩展：libuv](#扩展libuv)
+    * [任务队列](#任务队列)
+    * [事件循环 Event Loop](#事件循环-event-loop)
+      * [浏览器的事件循环 Event Loop](#浏览器的事件循环-event-loop)
+      * [NodeJS 事件循环 Event Loop](#nodejs-事件循环-event-loop)
+    * [setTimeout 和 setInterval](#settimeout-和-setinterval)
+    * [事件队列优先级](#事件队列优先级)
+    * [异步并行](#异步并行)
+    * [异常处理](#异常处理)
+    * [Promise 的局限性](#promise-的局限性)
+    * [async / await](#async--await)
+    * [扩展：JS 引擎 engine vs 运行时 runtime](#扩展js-引擎-engine-vs-运行时-runtime)
+    * [扩展：libuv](#扩展libuv)
 * [Proxy](#proxy)
 * [参考](#参考)
+* [工具](#工具)
 
 ## JavaScript 语言特性
 
@@ -65,7 +69,7 @@ ES6 中引入了 `class` 关键字，并且在标准中删除了所有 `[[class]
 ### 扩展：编程语言
 
 <p>
-<img src="../res/language-category.png" alt="language category" width="80%" />
+<img src="../res/language-category.png" alt="language category" width="50%" />
 <div>(source: )</div>
 </p>
 
@@ -128,9 +132,16 @@ JS 用一组特征 `attribute` 来描述属性 `property` 。两类属性：
 
 ## 基本数据类型
 
+JavaScript 中的数据类型可以分为两类：对象数据类型（Objects）和原始数据类型（Primitive values）。
+
 除 Object 以外的所有类型都是不可变的（immutable, 值本身无法被改变，也称这些类型的值为“原始值” primitive values）。
 
-7 种`原始类型` primitive data types ：Boolean, Null, Undefined, Number, BigInt, String, Symbol
+### 原始值类型
+
+7 种`原始类型` primitive data types : boolean, null, undefined, number, bigint, string, symbol。
+
+- 所有原始类型的值都是不可变的。
+- 除了 `null` 和 `undefined` 之外，所有原始类型都有其对应的`包装对象`：`Boolean`, `Number`, `BigInt`, `String`, `Symbol`。这些 `包装对象` 的 `valueOf` 将返回 原始类型的值。
 
 - Boolean
 - Null
@@ -149,7 +160,7 @@ JS 用一组特征 `attribute` 来描述属性 `property` 。两类属性：
   只有一个值 undefined，是一个全局属性（在 ES5 之前，这个全局属性是一个变量 writable & configurable），而非关键字。
   一个没有被赋值的变量会有个默认值 undefined。
 
-- Number
+- number
 
   - 基于 [IEEE 754](https://en.wikipedia.org/wiki/Double-precision_floating-point_format) 标准的双精度 64 位二进制格式的值（`安全整数`范围[-(2^53 -1), 2^53 -1]）。
   - 还有一些常量值：`POSITIVE_INFINITY` ，`NEGATIVE_INFINITY` 和 `NaN`, 
@@ -162,7 +173,7 @@ JS 用一组特征 `attribute` 来描述属性 `property` 。两类属性：
     console.log( Math.abs(0.1 + 0.2 - 0.3) <= Number.EPSILON);
     ```
 
-- String
+- string
 
    多行字符串换行使用 反斜杠 \
    
@@ -184,11 +195,22 @@ JS 用一组特征 `attribute` 来描述属性 `property` 。两类属性：
 
   [代码参考](./symbol.js)
 
-- Object
+### 对象 Object
 
   一切有形和无形物体的总称。除了`原始类型`的值以外，其他都是对象。对象是键值对的集合，键是字符串或 Symbol，值可以是原始值，也可以是对象。
 
   [代码参考](./object.js)
+
+
+### 拆箱/装箱
+
+在 JavaScript 标准中，规定了 ToPrimitive 函数，它是`对象类型`到`原始类型`的转换（即，拆箱转换）。
+
+JavaScript 中是“先拆箱再转换”，拆箱转换会尝试调用 `valueOf` 和 `toString` 来获得拆箱后的基本类型。如果这两个函数都不存在，或者没有返回基本类型，则会产生类型错误 `TypeError`。另外，不同类型对象的拆箱调用`valueOf` 和 `toString` 的顺序是不同的。
+
+在 ES6 之后，还允许对象通过显式指定 toPrimitive Symbol 来覆盖原有的行为。
+
+[代码参考](./box-unbox.js)
 
 ### 扩展：JavaScript 的 Object
 
@@ -213,21 +235,250 @@ JavaScript 中的对象分类我们可以把对象分成几类。
 
 - 用户用 `function` 关键字创建的函数必定同时是函数和构造器。在 ES6 之后箭头语法 => 创建的函数仅仅是函数，它们无法被当作构造器使用。比如，new(a=>) 抛出错误。
 
-### 拆箱/装箱
+## 函数 —— JS 的一等公民
 
-在 JavaScript 标准中，规定了 ToPrimitive 函数，它是`对象类型`到`原始类型`的转换（即，拆箱转换）。
+函数相关的两个隐式转换函数 toString() 和 valueOf()。
+- toString() 函数会在打印函数的时候调用，比如 console.log
+- valueOf 会在获取函数原始值时调用，比如加法操作
 
-JavaScript 中是“先拆箱再转换”，拆箱转换会尝试调用 `valueOf` 和 `toString` 来获得拆箱后的基本类型。如果这两个函数都不存在，或者没有返回基本类型，则会产生类型错误 `TypeError`。另外，不同类型对象的拆箱调用`valueOf` 和 `toString` 的顺序是不同的。
+### ES2018 下复杂的函数体系
 
-在 ES6 之后，还允许对象通过显式指定 toPrimitive Symbol 来覆盖原有的行为。
+1. 普通函数：用 function 关键字定义的函数
+2. 箭头函数：用 => 运算符定义的函数
+3. 方法：在 class 中定义的函数
+4. 生成器函数：用 function * 定义的函数
+5. 类：用 class 定义的类，实际上也是函数
+6. 异步函数：普通函数、箭头函数和生成器函数加上 async 关键字
 
-[代码参考](./box-unbox.js)
+### 闭包
+
+闭包其实只是一个绑定了执行环境的函数。
+闭包与普通函数的区别是，它携带了执行的环境，就像人在外星中需要自带吸氧的装备一样，这个函数也带有在程序中生存的环境。
+
+在 JavaScript 中找到古典的闭包定义所对应的闭包组成部分：
+1. 环境部分环境：函数的词法环境（执行上下文的一部分）；
+2. 标识符列表：函数中用到的未声明的变量；
+3. 表达式部分：函数体。
+
+>闭包是指有权访问另一个函数作用域中的变量的函数 --《JavaScript高级程序设计》
+
+小结：
+- 创建闭包的最常见的方式就是在一个函数内创建另一个函数，通过另一个函数访问这个函数的局部变量
+- 一般函数执行完毕后，局部对象就被销毁，内存中仅仅保存全局作用域。但闭包的情况不同！这是闭包的缺点——常驻内存。这会增大内存使用量，使用不当很容易造成内存泄露。
+
+### 高阶函数
+
+接收一个函数作为参数，然后返回另一个函数的函数
+
+### 柯里化
+
+- 在一个函数中预先填入几个参数
+- 这个函数返回另一个函数
+- 这个返回的新函数将其参数和预先填充的参数进行合并，再执行函数逻辑
+
+### 箭头函数
+
+箭头函数和普通函数相比，有以下几个区别，在开发中应特别注意：
+
+- 不绑定 arguments 对象，也就是说在箭头函数内访问 arguments 对象会报错；
+- 不能用作构造器，也就是说不能通过关键字 new 来创建实例；
+- 默认不会创建 prototype 原型属性；
+- 不能用作 Generator() 函数，不能使用 yeild 关键字。
+
+
+## 什么是原型和原型链？
+
+简单地理解，原型就是对象的属性，包括被称为隐式原型的 \_\_proto\_\_ 属性和被称为显式原型的 prototype 属性。
+
+显式原型是内置函数（比如 Date() 函数）的默认属性，在自定义函数时（箭头函数除外）也会默认生成，生成的显式原型对象只有一个属性 constructor ，该属性指向函数自身。
+
+>Following the ECMAScript standard, the notation someObject.[[Prototype]] is used to designate the prototype of someObject. Since ECMAScript 2015, the [[Prototype]] is accessed using the accessors Object.getPrototypeOf() and Object.setPrototypeOf(). This is equivalent to the JavaScript property \_\_proto\_\_ which is non-standard but de-facto implemented by many browsers.
+
+牢记以下几点：
+1. \_\_proto\_\_ 和 constructor 属性是**对象**所独有的；
+2. prototype 属性是**函数**（**类**）所独有的；
+3. 由于 JS 中**函数**也是一种对象，所以函数也拥有 \_\_proto\_\_ 和 constructor 属性——这点是致使我们产生困惑的很大原因之一。
+4. \_\_proto\_\_ 属性的作用就是当访问一个对象的属性时，如果该对象内部不存在这个属性，那么就会去它的 \_\_proto\_\_ 属性所指向的那个对象（父对象）里找，一直找，直到 \_\_proto\_\_ 属性的终点 null ，再往上找就相当于在 null 上取值，会报错。通过 \_\_proto\_\_ 属性将对象连接起来的这条链路即我们所谓的原型链。
+   >Object.prototype.__ proto__ = null 表示原型链顶端
+5. prototype 属性的作用就是让该函数所实例化的对象们都可以找到公用的属性和方法，因为 f1.\_\_proto\_\_ === Foo.prototype。
+6. constructor 属性的含义就是指向该对象的构造函数，所有函数（此时看成对象了）最终的构造函数都指向Function。
+
+![js prototype chain](../res/js-prototype-chain.png)
+(source: https://chen-cong.blog.csdn.net/article/details/81211729)
+
+### new 操作符实现了什么？
+
+**文字解释**
+
+大致过程：
+
+1. 以 Object.prototype 为原型创建一个新对象 fn；
+2. 将 fn 的 [[prototype]] 属性指向构造函数 ctor 的原型，即 fn.[[prototype]] = ctor.prototype ；
+3. 以这个新对象 fn 为 this，执行构造函数 ctor 生成对象 obj。即，obj = ctor.apply(fn, ...)；
+4. 如果 构造函数返回的 obj 不为空且是对象，则返回 obj；否则，返回第一步创建的新对象 fn。
+
+**代码解释**
+
+```javascript
+function New(ctor, ...args) {
+  // 1,2 fn.__proto__ === ctor.prototype
+  const fn = Object.create(ctor.prototype)
+  // 3. fn.ctor(args)
+  const obj = ctor.apply(fn, args);
+  // 4.
+  return obj && typeof obj === 'object' ? obj : fn;
+}
+
+// 使用 New
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+}
+const person = New(Person, 'Tom', 20)
+console.log(person)
+console.log(new Person('Jerry', 19))
+```
+
+**两个关键点**
+
+- 将新创建对象的原型链设置正确，这样我们才能使用原型链上的方法。
+- 将新创建的对象作为构造函数执行的上下文，这样我们才能正确地进行一些初始化操作。
+
+### 怎么通过原型链实现多层继承？
+
+结合原型链和 new 操作符的相关知识，就可以实现多层继承特性了。
+
+```javascript
+function A() { }
+A.prototype.a = function () {
+  return 'a';
+}
+function B() { }
+// the key line
+B.prototype = new A()
+B.prototype.b = function () {
+  return 'b';
+}
+var c = new B()
+console.log(c.b()) // 'b'
+console.log(c.a()) // 'a'
+```
 
 ## JavaScript 引擎的工作机制
 
 JS 是运行时先编译再执行——JIT（即时编译技术）
 
-以 V8 引擎为例解释 JS 的一段代码如何被执行
+### 执行上下文
+
+在编译阶段，变量和函数会被存放到变量环境中，变量的默认值会被设置为 undefined；
+在代码执行阶段，JavaScript 引擎会从变量环境中去查找自定义的变量和函数。
+如果在编译阶段，存在两个相同的函数，那么最终存放在变量环境中的是最后定义的那个，这是因为后定义的会覆盖掉之前定义的。
+
+作用域
+
+- 全局
+- 函数
+- 块级
+
+在 JavaScript 标准中，为函数规定了用来保存定义时上下文的私有属性 `[[Environment]]`。当一个函数执行时，会创建一条新的执行环境记录，记录的外层词法环境（outer lexical environment）会被设置成函数的 `[[Environment]]`。——这就是执行上下文。
+
+在 JavaScript，切换上下文最主要的场景是函数调用。
+JavaScript 用一个栈来管理执行上下文，这个栈中的每一项又包含一个链表。
+
+#### this 的行为
+
+同一个函数调用方式不同，得到的 this 值也不同。
+1. 普通函数的 this 值由“调用它所使用的引用”决定。当我们获取函数的表达式，它实际上返回的并非函数本身，而是一个 Reference 类型（它由两部分组成：一个对象和一个属性值）。
+2. 箭头函数的 this 不同于普通函数，不论用什么引用来调用它，都不影响它的 this 值。
+
+>- 生成器函数、异步生成器函数和异步普通函数跟普通函数行为是一致的，异步箭头函数与箭头函数行为是一致的。
+>- 方法的行为跟普通函数有差异，是因为 ES6 的 class 设计成了默认按 strict 模式执行。如果要保持普通函数和方法的执行一致，请加上 `"use strict";`。
+
+#### this 的机制
+
+函数能记住 this 因为函数内部有一个机制来保存这些信息。
+- 在 JavaScript 标准中，为函数规定了用来保存定义时上下文的私有属性 [[Environment]]。当一个函数执行时，会创建一条新的执行环境记录，记录的外层词法环境（outer lexical environment）会被设置成函数的 [[Environment]]。——这就是执行上下文。
+  - 定义时词法环境
+  - 运行时词法环境
+- 为了实现 this 的机制，JS 定义了 [[thisMode]] 私有属性，它有三个取值。
+  - lexical：表示从上下文中找 this，这对应了箭头函数。
+  - global：表示当 this 为 undefined 时，取全局对象，对应了普通函数。
+  - strict：当严格模式时使用，this 严格按照调用时传入的值，可能为 null 或者 undefined。
+- 函数创建新的执行上下文中的词法环境记录时，会根据 [[thisMode]] 来标记新纪录的 [[ThisBindingStatus]] 私有属性。
+代码执行遇到 this 时，会逐层检查当前词法环境记录中的 [[ThisBindingStatus]] ，当找到有 this 的环境记录时获取 this 的值。
+
+改变 this 指向的常见 3 种方式有 bind、call 和 apply。
+- call 和 apply 用法功能基本类似，都是通过传入 this 指向的对象以及参数来调用函数。
+- 区别在于传参方式，前者为逐个参数传递，后者将参数放入一个数组，以数组的形式传递。
+- bind 有些特殊，它不但可以绑定 this 指向也可以绑定函数参数并返回一个新的函数
+- call、bind 和 apply 用于不接受 this 的函数类型如箭头、class 都不会报错。
+
+[代码参考](./this-proto-new-closure.js#L0-L138)
+
+### 命名提升 Hoisting
+
+JavaScript 代码执行过程中，需要先做变量提升，而之所以需要实现变量提升，是因为 JavaScript 代码在执行之前需要先编译。
+
+**变量命名提升**
+
+对于使用 var 关键字声明的变量以及创建`命名函数`的时候，JavaScript 在解释执行的时候都会*将其声明内容提升到作用域顶部*，这种机制称为“命名提升”。
+
+- 'var 变量赋值'：创建和初始化（初始化为 undefined）被提升，赋值不会被提升；
+- 'var = function() {}'：创建、初始化和赋值均会被提升。
+
+```javascript
+console.log(a) // undefined
+var a = 1
+console.log(b) // Error
+let b = 2
+```
+
+变量提升可能导致不可预见的结果，看下面的示例，使用调用栈的执行上下文来分析结果。
+
+```javascript
+var myName = "dao"
+function showName(){
+  console.log(myName);
+  if(0){
+   var myName = "xyz"
+  }
+  console.log(myName);
+}
+showName()
+```
+
+解决变量命名提升带来的一系列问题的主要方法是使用 let / const。
+
+进入块内代码 let 和 const 声明的变量就会被创建，但变量没有赋值之前访问会抛出错误 （暂时性死区的概念）。
+
+**函数的命名提升**
+
+意味着可以在同级作用域、子级作用域，或者函数定义之前进行调用。
+
+```javascript
+fn()
+function fn() {
+  return 2
+}
+```
+
+区别以下两种函数的定义方式：
+
+- 方式 1 将函数赋值给变量 f；
+- 方式 2 定义了一个函数 f()。
+
+>方式 1 创建了一个匿名函数，让变量 f 指向它，这里会发生变量的命名提升；如果我们在定义函数之前调用会报错，而方式 2 则不会。
+
+```javascript
+// 方式1
+var f = function() {...}
+// 方式2
+function f() {...}
+```
+
+### 编译过程
+
+#### 以 V8 引擎为例解释 JS 的一段代码如何被执行
 
 <p>
 <img src="https://cdn.nlark.com/yuque/0/2020/webp/710492/1595562271385-604ee834-4a1e-4d12-8370-ff1785cbf21a.webp" alt="how-the-js-code-executed" width="80%" />
@@ -249,8 +500,6 @@ V8 由许多子模块构成，其中这4个模块是最重要的：
 <img src="https://miro.medium.com/max/1400/1*ZIH_wjqDfZn6NRKsDi9mvA.png" alt="v8-compiler-pipeline" width="60%" />
 <div>(source: https://medium.com/dailyjs/understanding-v8s-bytecode-317d46c94775)</div>
 </p>
-
-### 编译过程
 
 #### 解析
 
@@ -358,234 +607,7 @@ function fibTail(n, a = 0, b = 1) {
 
 标记整理算法相对于标记清除算法在回收阶段进行了改进，标记整理对待未标记的对象并不是立即进行回收，而是将存活的对象移动到一边，然后再清理。当然这种移动对象的操作相对而言是比较耗时的，所以执行速度上，比标记清除要慢。
 
-## 函数 —— JS 的一等公民
-
-函数相关的两个隐式转换函数 toString() 和 valueOf()。
-- toString() 函数会在打印函数的时候调用，比如 console.log
-- valueOf 会在获取函数原始值时调用，比如加法操作
-
-### ES2018 下复杂的函数体系
-
-1. 普通函数：用 function 关键字定义的函数
-2. 箭头函数：用 => 运算符定义的函数
-3. 方法：在 class 中定义的函数
-4. 生成器函数：用 function * 定义的函数
-5. 类：用 class 定义的类，实际上也是函数
-6. 异步函数：普通函数、箭头函数和生成器函数加上 async 关键字
-
-### 执行上下文
-
-作用域
-
-- 全局
-- 函数
-- 块级
-
-在 JavaScript 标准中，为函数规定了用来保存定义时上下文的私有属性 `[[Environment]]`。当一个函数执行时，会创建一条新的执行环境记录，记录的外层词法环境（outer lexical environment）会被设置成函数的 `[[Environment]]`。——这就是执行上下文。
-
-在 JavaScript，切换上下文最主要的场景是函数调用。
-JavaScript 用一个栈来管理执行上下文，这个栈中的每一项又包含一个链表。
-
-#### this 的行为
-
-同一个函数调用方式不同，得到的 this 值也不同。
-1. 普通函数的 this 值由“调用它所使用的引用”决定。当我们获取函数的表达式，它实际上返回的并非函数本身，而是一个 Reference 类型（它由两部分组成：一个对象和一个属性值）。
-2. 箭头函数的 this 不同于普通函数，不论用什么引用来调用它，都不影响它的 this 值。
-
->- 生成器函数、异步生成器函数和异步普通函数跟普通函数行为是一致的，异步箭头函数与箭头函数行为是一致的。
->- 方法的行为跟普通函数有差异，是因为 ES6 的 class 设计成了默认按 strict 模式执行。如果要保持普通函数和方法的执行一致，请加上 `"use strict";`。
-
-#### this 的机制
-
-函数能记住 this 因为函数内部有一个机制来保存这些信息。
-- 在 JavaScript 标准中，为函数规定了用来保存定义时上下文的私有属性 [[Environment]]。当一个函数执行时，会创建一条新的执行环境记录，记录的外层词法环境（outer lexical environment）会被设置成函数的 [[Environment]]。——这就是执行上下文。
-  - 定义时词法环境
-  - 运行时词法环境
-- 为了实现 this 的机制，JS 定义了 [[thisMode]] 私有属性，它有三个取值。
-  - lexical：表示从上下文中找 this，这对应了箭头函数。
-  - global：表示当 this 为 undefined 时，取全局对象，对应了普通函数。
-  - strict：当严格模式时使用，this 严格按照调用时传入的值，可能为 null 或者 undefined。
-- 函数创建新的执行上下文中的词法环境记录时，会根据 [[thisMode]] 来标记新纪录的 [[ThisBindingStatus]] 私有属性。
-代码执行遇到 this 时，会逐层检查当前词法环境记录中的 [[ThisBindingStatus]] ，当找到有 this 的环境记录时获取 this 的值。
-
-改变 this 指向的常见 3 种方式有 bind、call 和 apply。
-- call 和 apply 用法功能基本类似，都是通过传入 this 指向的对象以及参数来调用函数。
-- 区别在于传参方式，前者为逐个参数传递，后者将参数放入一个数组，以数组的形式传递。
-- bind 有些特殊，它不但可以绑定 this 指向也可以绑定函数参数并返回一个新的函数
-- call、bind 和 apply 用于不接受 this 的函数类型如箭头、class 都不会报错。
-
-[代码参考](./this-proto-new-closure.js#L0-L138)
-
-### 命名提升
-
-**变量命名提升**
-
-对于使用 var 关键字声明的变量以及创建`命名函数`的时候，JavaScript 在解释执行的时候都会*将其声明内容提升到作用域顶部*，这种机制称为“命名提升”。
-
-- 'var 变量赋值'：创建和初始化（初始化为 undefined）被提升，赋值不会被提升；
-- 'var = function() {}'：创建、初始化和赋值均会被提升。
-
-```javascript
-console.log(a) // undefined
-var a = 1
-console.log(b) // Error
-let b = 2
-```
-
-变量提升可能导致不可预见的结果，看下面的示例，使用调用栈的执行上下文来分析结果。
-
-```javascript
-var myName = "dao"
-function showName(){
-  console.log(myName);
-  if(0){
-   var myName = "xyz"
-  }
-  console.log(myName);
-}
-showName()
-```
-
-解决变量命名提升带来的一系列问题的主要方法是使用 let / const。
-
-进入块内代码 let 和 const 声明的变量就会被创建，但变量没有赋值之前访问会抛出错误 （暂时性死区的概念）。
-
-**函数的命名提升**
-
-意味着可以在同级作用域、子级作用域，或者函数定义之前进行调用。
-
-```javascript
-fn()
-function fn() {
-  return 2
-}
-```
-
-区别以下两种函数的定义方式：
-
-- 方式 1 将函数赋值给变量 f；
-- 方式 2 定义了一个函数 f()。
-
->方式 1 创建了一个匿名函数，让变量 f 指向它，这里会发生变量的命名提升；如果我们在定义函数之前调用会报错，而方式 2 则不会。
-
-```javascript
-// 方式1
-var f = function() {...}
-// 方式2
-function f() {...}
-```
-
-### 闭包
-
-闭包其实只是一个绑定了执行环境的函数。
-闭包与普通函数的区别是，它携带了执行的环境，就像人在外星中需要自带吸氧的装备一样，这个函数也带有在程序中生存的环境。
-
-在 JavaScript 中找到古典的闭包定义所对应的闭包组成部分：
-1. 环境部分环境：函数的词法环境（执行上下文的一部分）；
-2. 标识符列表：函数中用到的未声明的变量；
-3. 表达式部分：函数体。
-
-小结：
-- 创建闭包的最常见的方式就是在一个函数内创建另一个函数，通过另一个函数访问这个函数的局部变量
-- 一般函数执行完毕后，局部对象就被销毁，内存中仅仅保存全局作用域。但闭包的情况不同！这是闭包的缺点，也就是常驻内存。这会增大内存使用量，使用不当很容易造成内存泄露。
-
-### 高阶函数
-
-接收一个函数作为参数，然后返回另一个函数的函数
-
-### 柯里化
-
-- 在一个函数中预先填入几个参数
-- 这个函数返回另一个函数
-- 这个返回的新函数将其参数和预先填充的参数进行合并，再执行函数逻辑
-
-### 箭头函数
-
-箭头函数和普通函数相比，有以下几个区别，在开发中应特别注意：
-
-- 不绑定 arguments 对象，也就是说在箭头函数内访问 arguments 对象会报错；
-- 不能用作构造器，也就是说不能通过关键字 new 来创建实例；
-- 默认不会创建 prototype 原型属性；
-- 不能用作 Generator() 函数，不能使用 yeild 关键字。
-
-## 什么是原型和原型链？
-
-简单地理解，原型就是对象的属性，包括被称为隐式原型的 \_\_proto\_\_ 属性和被称为显式原型的 prototype 属性。
-
-显式原型是内置函数（比如 Date() 函数）的默认属性，在自定义函数时（箭头函数除外）也会默认生成，生成的显式原型对象只有一个属性 constructor ，该属性指向函数自身。
-
->Following the ECMAScript standard, the notation someObject.[[Prototype]] is used to designate the prototype of someObject. Since ECMAScript 2015, the [[Prototype]] is accessed using the accessors Object.getPrototypeOf() and Object.setPrototypeOf(). This is equivalent to the JavaScript property \_\_proto\_\_ which is non-standard but de-facto implemented by many browsers.
-
-牢记以下几点：
-1. \_\_proto\_\_ 和 constructor 属性是**对象**所独有的；
-2. prototype 属性是**函数**所独有的；
-3. 由于 JS 中**函数**也是一种对象，所以函数也拥有 \_\_proto\_\_ 和 constructor 属性——这点是致使我们产生困惑的很大原因之一。
-4. \_\_proto\_\_ 属性的作用就是当访问一个对象的属性时，如果该对象内部不存在这个属性，那么就会去它的 \_\_proto\_\_ 属性所指向的那个对象（父对象）里找，一直找，直到 \_\_proto\_\_ 属性的终点 null，再往上找就相当于在null上取值，会报错。通过 \_\_proto\_\_ 属性将对象连接起来的这条链路即我们所谓的原型链。
-5. prototype 属性的作用就是让该函数所实例化的对象们都可以找到公用的属性和方法，即 f1.\_\_proto\_\_ === Foo.prototype。
-6. constructor 属性的含义就是指向该对象的构造函数，所有函数（此时看成对象了）最终的构造函数都指向Function。
-
-![js prototype chain](../res/js-prototype-chain.png)
-(source: https://chen-cong.blog.csdn.net/article/details/81211729)
-
-### new 操作符实现了什么？
-
-**文字解释**
-
-大致过程：
-
-1. 以 Object.prototype 为原型创建一个新对象 fn；
-2. 将 fn 的 [[prototype]] 属性指向构造函数 ctor 的原型，即 fn.[[prototype]] = ctor.prototype ；
-3. 以这个新对象 fn 为 this，执行构造函数 ctor 生成对象 obj。即，obj = ctor.apply(fn, ...)；
-4. 如果 构造函数返回的 obj 不为空且是对象，则返回 obj；否则，返回第一步创建的新对象 fn。
-
-**代码解释**
-
-```javascript
-function New(ctor, ...args) {
-  // 1,2 fn.__proto__ === ctor.prototype
-  const fn = Object.create(ctor.prototype)
-  // 3. fn.ctor(args)
-  const obj = ctor.apply(fn, args);
-  // 4.
-  return obj && typeof obj === 'object' ? obj : fn;
-}
-
-// 使用 New
-function Person(name, age) {
-  this.name = name;
-  this.age = age;
-}
-const person = New(Person, 'Tom', 20)
-console.log(person)
-console.log(new Person('Jerry', 19))
-```
-
-**两个关键点**
-
-- 将新创建对象的原型链设置正确，这样我们才能使用原型链上的方法。
-- 将新创建的对象作为构造函数执行的上下文，这样我们才能正确地进行一些初始化操作。
-
-### 怎么通过原型链实现多层继承？
-
-结合原型链和 new 操作符的相关知识，就可以实现多层继承特性了。
-
-```javascript
-function A() { }
-A.prototype.a = function () {
-  return 'a';
-}
-function B() { }
-// the key line
-B.prototype = new A()
-B.prototype.b = function () {
-  return 'b';
-}
-var c = new B()
-console.log(c.b()) // 'b'
-console.log(c.a()) // 'a'
-```
-
-## Module
+## 模块化 Module
 
 目前，JS 主要有两种格式的模块：一种是 ES6 模块，简称 ESM；另一种是 CommonJS 模块，简称 CJS。
 
@@ -1025,3 +1047,9 @@ proxy.prototype === Object.prototype
 - [V8 执行原理](https://www.yuque.com/webqiang/ht5m24/hzurv1)
 - [帮你彻底搞懂JS中的prototype、__proto__与constructor](https://chen-cong.blog.csdn.net/article/details/81211729)
 - [前端高手进阶](https://kaiwu.lagou.com/course/courseInfo.htm?courseId=180)
+- [JavaScript Visualized: Event Loop](https://dev.to/lydiahallie/javascript-visualized-event-loop-3dif)
+
+## 工具
+
+- [JavaScript Execution Visualization](https://pythontutor.com/visualize.html#mode=edit)
+- [JavaScript-visualizer](https://ui.dev/javascript-visualizer)
