@@ -138,10 +138,10 @@ JavaScript 中的数据类型可以分为两类：对象数据类型（Objects�
 
 ### 原始值类型
 
-7 种`原始类型` primitive data types : boolean, null, undefined, number, bigint, string, symbol。
+7 种`原始值类型` primitive data types : boolean, null, undefined, number, bigint, string, symbol。
 
-- 所有原始类型的值都是不可变的。
-- 除了 `null` 和 `undefined` 之外，所有原始类型都有其对应的`包装对象`：`Boolean`, `Number`, `BigInt`, `String`, `Symbol`。这些 `包装对象` 的 `valueOf` 将返回 原始类型的值。
+- 所有原始值类型的值都是不可变的。
+- 除了 `null` 和 `undefined` 之外，所有原始值类型都有其对应的`包装对象`：`Boolean`, `Number`, `BigInt`, `String`, `Symbol`。这些 `包装对象` 的 `valueOf` 将返回 原始值类型的值。
 
 - Boolean
 - Null
@@ -153,7 +153,7 @@ JavaScript 中的数据类型可以分为两类：对象数据类型（Objects�
   typeof null // object
   ```
 
-  >因为 typeof null 是 object，也有种说法是，Null 是伪原始类型。
+  >因为 typeof null 是 object，也有种说法是，Null 是伪原始值类型。
 
 - Undefined
 
@@ -197,14 +197,13 @@ JavaScript 中的数据类型可以分为两类：对象数据类型（Objects�
 
 ### 对象 Object
 
-  一切有形和无形物体的总称。除了`原始类型`的值以外，其他都是对象。对象是键值对的集合，键是字符串或 Symbol，值可以是原始值，也可以是对象。
+  一切有形和无形物体的总称。除了`原始值类型`的值以外，其他都是对象。对象是键值对的集合，键是字符串或 Symbol，值可以是原始值，也可以是对象。
 
   [代码参考](./object.js)
 
-
 ### 拆箱/装箱
 
-在 JavaScript 标准中，规定了 ToPrimitive 函数，它是`对象类型`到`原始类型`的转换（即，拆箱转换）。
+在 JavaScript 标准中，规定了 ToPrimitive 函数，它是`对象类型`到`原始值类型`的转换（即，拆箱转换）。
 
 JavaScript 中是“先拆箱再转换”，拆箱转换会尝试调用 `valueOf` 和 `toString` 来获得拆箱后的基本类型。如果这两个函数都不存在，或者没有返回基本类型，则会产生类型错误 `TypeError`。另外，不同类型对象的拆箱调用`valueOf` 和 `toString` 的顺序是不同的。
 
@@ -237,7 +236,7 @@ JavaScript 中的对象分类我们可以把对象分成几类。
 
 ## 函数 —— JS 的一等公民
 
-函数相关的两个隐式转换函数 toString() 和 valueOf()。
+通用的两个隐式转换函数 toString() 和 valueOf()。
 - toString() 函数会在打印函数的时候调用，比如 console.log
 - valueOf 会在获取函数原始值时调用，比如加法操作
 
@@ -250,21 +249,132 @@ JavaScript 中的对象分类我们可以把对象分成几类。
 5. 类：用 class 定义的类，实际上也是函数
 6. 异步函数：普通函数、箭头函数和生成器函数加上 async 关键字
 
+#### 箭头函数
+
+引入箭头函数有两个方面的作用：更简短的函数并且不绑定this。
+
+箭头函数和普通函数相比，有以下几个区别：
+
+- 没有单独的 this ；
+- 不绑定 arguments 对象，也就是说在箭头函数内访问 arguments 对象会报错；
+- 不能用作构造器，也就是说不能通过关键字 new 来创建实例；
+  ```javascript
+  var Foo = () => {};
+  var foo = new Foo(); // TypeError: Foo is not a constructor
+  ```
+- 没有prototype属性（默认不会创建 prototype 原型属性）；
+  ```javascript
+  var Foo = () => {};
+  console.log(Foo.prototype); // undefined
+  ```
+- 不能用作 Generator() 函数，不能使用 yeild 关键字。
+- 返回对象字面量
+  ```javascript
+  var func = () => { foo: 1 };
+  // Calling func() returns undefined!
+  
+  var func = () => { foo: function() {} };
+  // SyntaxError: function statement requires a name
+  
+  var func = () => ({foo: 1}); // correct!!!
+  ```
+
 ### 闭包
 
-闭包其实只是一个绑定了执行环境的函数。
-闭包与普通函数的区别是，它携带了执行的环境，就像人在外星中需要自带吸氧的装备一样，这个函数也带有在程序中生存的环境。
+#### 闭包的定义
 
-在 JavaScript 中找到古典的闭包定义所对应的闭包组成部分：
-1. 环境部分环境：函数的词法环境（执行上下文的一部分）；
-2. 标识符列表：函数中用到的未声明的变量；
-3. 表达式部分：函数体。
+函数和声明该函数的词法环境 (lexical environment) 的组合。-- MDN 闭包的定义
 
->闭包是指有权访问另一个函数作用域中的变量的函数 --《JavaScript高级程序设计》
+在 JavaScript 中，根据词法作用域 (lexical scope) 的规则，内部函数总是可以访问其外部函数中声明的变量，当通过调用一个外部函数返回一个内部函数后，即使该外部函数已经执行结束了，但是内部函数引用外部函数的变量依然保存在内存中，我们就把这些变量的集合称为闭包。比如，外部函数是 foo，那么这些变量的集合就称为 foo 函数的闭包。
 
-小结：
-- 创建闭包的最常见的方式就是在一个函数内创建另一个函数，通过另一个函数访问这个函数的局部变量
-- 一般函数执行完毕后，局部对象就被销毁，内存中仅仅保存全局作用域。但闭包的情况不同！这是闭包的缺点——常驻内存。这会增大内存使用量，使用不当很容易造成内存泄露。
+闭包是指有权访问另一个函数作用域中的变量的函数。 --《JavaScript高级程序设计》
+
+同时有两个函数的作用域链指针（外函数和内函数）指向了同一个变量环境对象，所以无论你删除其中任何一个指针，该变量环境对象都无法被垃圾回收（无论是标记清除还是计数法清除），所以保存在了内存中。所以就有了所谓的”闭包“。
+
+闭包的出现是因为词法作用域规则——内部函数总是可以访问其外部函数中的变量。它是持有变量引用的函数所独有的。
+
+#### 闭包的回收
+
+通常，如果引用闭包的函数是一个全局变量，那么闭包会一直存在直到页面关闭；但如果这个闭包以后不再使用的话，就会造成内存泄漏。
+
+如果引用闭包的函数是个局部变量，等函数销毁后，在下次 JavaScript 引擎执行垃圾回收时，判断闭包这块内容如果已经不再被使用了，那么 JavaScript 引擎的垃圾回收器就会回收这块内存。
+
+在使用闭包的时候，你要尽量注意一个原则：如果该闭包会一直使用，那么它可以作为全局变量而存在；但如果使用频率不高，而且占用内存又比较大的话，那就尽量让它成为一个局部变量。
+
+#### 示例分析
+
+```javascript
+function applePrice() {
+  var fruit = 'apple';
+  let price = 10;
+  let discount = 0.05;
+
+  var util = {
+    getPrice: function () {
+      console.log(fruit);
+      return price;
+    },
+    setPrice: function (newPrice) {
+      price = newPrice;
+    }
+  }
+
+  return util;
+}
+
+var price = applePrice();
+price.setPrice(20);
+console.log(price.getPrice())
+```
+**代码解析**
+
+1. 在 util 返回并分配给 price 变量之前，调用堆栈如下：
+
+  <p>
+  <img src="../res/js-closure-1.png" width="50%" />
+  </p>
+
+2. 返回 util 后，applePrice 函数执行结束，函数的执行上下文被删除；同时，变量环境和词法环境消失，其中的变量将被销毁。
+此时，JavaScript 的词法作用域规则开始生效——内部函数始终可以访问其外部函数中的变量。
+  - 这里的内部函数是 getPrice 和 setPrice，外部函数是 applePrice
+  - getPrice 函数使用两个变量： fruit 和 price
+  - setPrice 函数使用 price
+  - 遵循规则，fruit 变量 price 保存在单独的区域中，它是一个只能被函数 getPrice 和 setPrice 访问的专有区域。也  称为闭包。
+  - discount 变量被销毁，因为没有方法持有对它的引用。
+
+  <p>
+  <img src="../res/js-closure-2.png" width="50%" />
+  </p>
+
+3. 接下来，继续执行并调用 setPrice 函数。JavaScript 引擎通过作用域链查找，定位到闭包中的 price 变量，设置其值为“20”。
+
+  <p>
+  <img src="../res/js-closure-3.png" width="50%" />
+  </p>
+
+4. 在最后一行，调用 getPrice 函数。同上 JavaScript 引擎通过作用域链查找，定位到闭包中的 fruit 和 price 变量，并相应地打印出“apple”和“20”。
+
+执行结束。
+
+借助 Chrome 调试代码，可以看到闭包 closure：
+
+<p>
+<img src="../res/js-closure-4.png" width="50%" />
+</p>
+
+#### 小结
+- 闭包是在函数被调用执行的时候才被确认创建的。
+- 闭包的形成，与作用域链的访问顺序有直接关系。
+- 只有内部函数访问了上层作用域链中的变量时，才会形成闭包，因此，我们可以利用闭包来访问函数内部的变量。
+- 一般函数执行完毕后，局部对象就被销毁，内存中仅仅保存全局作用域。但闭包的情况不同！这是**闭包的缺点——常驻内存**。这会增大内存使用量，使用不当很容易造成内存泄露。
+
+[代码参考](./closure.js)
+
+#### 扩展 - Chrome 开发者工具
+
+- 可以查看闭包的情况
+当调用 bar.getName 的时候，右边 Scope 项就体现出了作用域链的情况：Local 就是当前的 getName 函数的作用域，Closure(foo) 是指 foo 函数的闭包，最下面的 Global 就是指全局作用域，从“Local–>Closure(foo)–>Global”就是一个完整的作用域链。
+- 可以通过 Scope 来查看实际代码作用域链的情况
 
 ### 高阶函数
 
@@ -273,6 +383,7 @@ JavaScript 中的对象分类我们可以把对象分成几类。
 
 ### 柯里化
 
+柯里化是一种将使用多个参数的一个函数转换成一系列使用一个参数的函数的技术。
 通俗地讲，柯里化是把一个大函数拆分成很多的具体的功能。
 
 - 在一个函数中预先填入几个参数
@@ -280,16 +391,6 @@ JavaScript 中的对象分类我们可以把对象分成几类。
 - 这个返回的新函数将其参数和预先填充的参数进行合并，再执行函数逻辑
 
 [代码参考](./curry.js)
-
-### 箭头函数
-
-箭头函数和普通函数相比，有以下几个区别，在开发中应特别注意：
-
-- 不绑定 arguments 对象，也就是说在箭头函数内访问 arguments 对象会报错；
-- 不能用作构造器，也就是说不能通过关键字 new 来创建实例；
-- 默认不会创建 prototype 原型属性；
-- 不能用作 Generator() 函数，不能使用 yeild 关键字。
-
 
 ## 什么是原型和原型链？
 
@@ -369,60 +470,79 @@ console.log(c.b()) // 'b'
 console.log(c.a()) // 'a'
 ```
 
-## JavaScript 引擎的工作机制
+## 一段 JS 代码怎么被执行的？ 
 
-JS 是运行时先编译再执行——JIT（即时编译技术）
+运行一段 JS 代码，会经过两个步骤：编译和执行；会生成两部分内容：执行上下文和可执行代码。
 
-### 执行上下文
+编译时，一个执行上下文被创建；当执行上下文准备好时，执行步骤开始——逐行运行所有的可执行代码。
 
-在编译阶段，变量和函数会被存放到变量环境中，变量的默认值会被设置为 undefined；
-在代码执行阶段，JavaScript 引擎会从变量环境中去查找自定义的变量和函数。
+<p>
+<img src="../res/js-how-it-run-1.png" width="50%" />
+<div>(<a href="https://cabulous.medium.com/javascript-execution-context-part-1-from-compiling-to-execution-84c11c0660f5">source</a>)</div>
+</p>
+
+### 执行上下文 execution context
+
+执行上下文主要由以下几部分组成：
+- 变量环境 Variable environment
+- 词法环境 Lexical environment
+- Outer 指针
+- this 指针
+
+<p>
+<img src="../res/js-how-it-run-2.png" width="50%" />
+<div>(<a href="https://cabulous.medium.com/javascript-execution-context-part-1-from-compiling-to-execution-84c11c0660f5">source</a>)</div>
+</p>
+
+**在编译阶段**，变量和函数会被存放到变量环境中，变量的默认值会被设置为 undefined；
 如果在编译阶段，存在两个相同的函数，那么最终存放在变量环境中的是最后定义的那个，这是因为后定义的会覆盖掉之前定义的。
 
-作用域
+**在代码执行阶段**，JavaScript 引擎会从变量环境中去查找自定义的变量和函数。
 
-- 全局
-- 函数
-- 块级
+变量赋值实际上分为两个步骤：
+- 编译步骤负责变量声明
+- 执行步骤执行变量的赋值和其余代码
+// From the compiling to the execution, a variable goes through three steps:
+//     Creation
+//     Initialization
+//     Assignment
 
-在 JavaScript 标准中，为函数规定了用来保存定义时上下文的私有属性 `[[Environment]]`。当一个函数执行时，会创建一条新的执行环境记录，记录的外层词法环境（outer lexical environment）会被设置成函数的 `[[Environment]]`。——这就是执行上下文。
+#### 词法环境 lexical environment
 
-在 JavaScript，切换上下文最主要的场景是函数调用。
-JavaScript 用一个栈来管理执行上下文，这个栈中的每一项又包含一个链表。
+//     The lexical environment is another component of an execution environment.
+//     let and const variables in a block scope are created at the execution step instead of the compiling.
+//     These variables are stored in the lexical environment.
+//     Multiple block scopes are maintained as a stack structure in the lexical environment.
+//     When the JavaScript engine executes all codes in a block scope, the related let and const variables are removed.
 
-#### this 的行为
-
-同一个函数调用方式不同，得到的 this 值也不同。
-1. 普通函数的 this 值由“调用它所使用的引用”决定。当我们获取函数的表达式，它实际上返回的并非函数本身，而是一个 Reference 类型（它由两部分组成：一个对象和一个属性值）。
-2. 箭头函数的 this 不同于普通函数，不论用什么引用来调用它，都不影响它的 this 值。
-
->- 生成器函数、异步生成器函数和异步普通函数跟普通函数行为是一致的，异步箭头函数与箭头函数行为是一致的。
->- 方法的行为跟普通函数有差异，是因为 ES6 的 class 设计成了默认按 strict 模式执行。如果要保持普通函数和方法的执行一致，请加上 `"use strict";`。
-
-#### this 的机制
-
-函数能记住 this 因为函数内部有一个机制来保存这些信息。
-- 在 JavaScript 标准中，为函数规定了用来保存定义时上下文的私有属性 [[Environment]]。当一个函数执行时，会创建一条新的执行环境记录，记录的外层词法环境（outer lexical environment）会被设置成函数的 [[Environment]]。——这就是执行上下文。
-  - 定义时词法环境
-  - 运行时词法环境
-- 为了实现 this 的机制，JS 定义了 [[thisMode]] 私有属性，它有三个取值。
-  - lexical：表示从上下文中找 this，这对应了箭头函数。
-  - global：表示当 this 为 undefined 时，取全局对象，对应了普通函数。
-  - strict：当严格模式时使用，this 严格按照调用时传入的值，可能为 null 或者 undefined。
-- 函数创建新的执行上下文中的词法环境记录时，会根据 [[thisMode]] 来标记新纪录的 [[ThisBindingStatus]] 私有属性。
-代码执行遇到 this 时，会逐层检查当前词法环境记录中的 [[ThisBindingStatus]] ，当找到有 this 的环境记录时获取 this 的值。
-
-改变 this 指向的常见 3 种方式有 bind、call 和 apply。
-- call 和 apply 用法功能基本类似，都是通过传入 this 指向的对象以及参数来调用函数。
-- 区别在于传参方式，前者为逐个参数传递，后者将参数放入一个数组，以数组的形式传递。
-- bind 有些特殊，它不但可以绑定 this 指向也可以绑定函数参数并返回一个新的函数
-- call、bind 和 apply 用于不接受 this 的函数类型如箭头、class 都不会报错。
-
-[代码参考](./this-proto-new-closure.js#L0-L138)
+**示例：**
+// 每调用一个函数，JavaScript 引擎会为其创建执行上下文，并把该执行上下文压入调用栈，然后 JavaScript 引擎开始执行函数代码。
+// 如果在一个函数 A 中调用了另外一个函数 B，那么 JavaScript 引擎会为 B 函数创建执行上下文，并将 B 函数的执行上下文压入栈顶。
+// 当前函数执行完毕后，JavaScript 引擎会将该函数的执行上下文弹出栈。
+// 当分配的调用栈空间被占满时，会引发“堆栈溢出”问题。
 
 ### 命名提升 Hoisting
 
+>[MDN reference](https://developer.mozilla.org/en-US/docs/Glossary/Hoisting)
+
 JavaScript 代码执行过程中，需要先做变量提升，而之所以需要实现变量提升，是因为 JavaScript 代码在执行之前需要先编译。
+
+// 【分析原因】：在块作用域内，let声明的变量被提升，但变量只是创建被提升，初始化并没有被提升，在初始化之前使用变量，就会形成一个暂时性死区。
+// 【拓展】
+// var的创建和初始化被提升，赋值不会被提升。
+// let的创建被提升，初始化和赋值不会被提升。
+// function的创建、初始化和赋值均会被提升。
+
+// hoisting:
+//     For a let variable, its creation is hoisted, but not initialization and assignment.
+//     For a var variable, its creation and initialization are hoisted, but not the assignment.
+//     For a function, its creation, initialization, and assignment are hoisted at the same time.
+
+// People named the code area before the variable initialization, the temporal dead zone.
+
+//     If you try to access a variable before the creation, you see the error “[variable name] is not defined.”
+//     If you decide to access a variable before the initialization, you see the error “Cannot access [variable name] before initialization.”
+//     If you log a variable before the assignment, you see the value undefined.
 
 **变量命名提升**
 
@@ -480,6 +600,102 @@ var f = function() {...}
 // 方式2
 function f() {...}
 ```
+
+### 作用域及作用域链 scope & scope chain
+
+#### 什么是范围？
+
+JavaScript 中的作用域是指变量的可访问性或可见性。也就是说，程序的哪些部分可以访问变量或变量在哪里可见。
+
+#### 为什么范围很重要？
+
+范围的主要好处是安全性。也就是说，只能从程序的某个区域访问变量。使用作用域，我们可以避免对程序其他部分的变量进行意外修改。
+范围还减少了命名空间冲突。也就是说，我们可以在不同的范围内使用相同的变量名。
+
+#### 3 种作用域
+- 全局
+- 函数
+- 块级
+
+#### 词法作用域
+
+也称为静态作用域，是编译是确定的。相对而言在动态作用域 是执行代码才能确定作用域。
+
+JavaScript 引擎如何执行变量查找 ？
+JavaScript 引擎会遍历作用域链来查找程序中使用的变量。
+
+在 JavaScript 标准中，为函数规定了用来保存定义时上下文的私有属性 `[[Environment]]`。当一个函数执行时，会创建一条新的执行环境记录，记录的外层词法环境（outer lexical environment）会被设置成函数的 `[[Environment]]`。——这就是执行上下文。
+
+在 JavaScript，切换上下文最主要的场景是函数调用。
+JavaScript 用一个栈来管理执行上下文，这个栈中的每一项又包含一个链表。
+
+在块作用域中查看let和const变量时，JavaScript 会为它们创建一个单独的区域。词法环境为其变量维护一个类似堆栈的结构，因此具有相同名称的变量不会相互冲突。
+
+
+// ES6 之前，ES 的作用域只有两种：全局作用域和函数作用域。全局作用域中的对象在代码中的任何地方都能访问，其生命周期伴随着页面的生命周期。函数作用域就是在函数内部定义的变量或者函数，并且定义的变量或者函数只能在函数内部被访问。函数执行结束之后，函数内部定义的变量会被销毁。在 ES6 之前，JavaScript 只支持这两种作用域，相较而言，其他语言则都普遍支持块级作用域。
+
+// 块级作用域就是通过词法环境的栈结构来实现的，而变量提升是通过变量环境来实现，通过这两者的结合，JavaScript 引擎也就同时支持了变量提升和块级作用域了。
+
+// 在 JavaScript 执行过程中，其作用域链是由词法作用域决定的。
+// 词法作用域就是指作用域是由代码中函数声明的位置来决定的，所以词法作用域是静态的作用域，通过它就能够预测代码在执行过程中如何查找标识符。
+
+示例
+
+```javascript
+function bar() {
+    console.log(myName)
+}
+function foo() {
+    var myName = "极客邦"
+    bar()
+}
+var myName = "极客时间"
+foo()
+```
+
+### 闭包 closure
+
+[参考](#闭包)
+
+### this 的行为
+
+同一个函数调用方式不同，得到的 this 值也不同。
+1. 普通函数的 this 值由“调用它所使用的引用”决定。当我们获取函数的表达式，它实际上返回的并非函数本身，而是一个 Reference 类型（它由两部分组成：一个对象和一个属性值）。
+2. 箭头函数的 this 不同于普通函数，不论用什么引用来调用它，都不影响它的 this 值。
+
+>- 生成器函数、异步生成器函数和异步普通函数跟普通函数行为是一致的，异步箭头函数与箭头函数行为是一致的。
+>- 方法的行为跟普通函数有差异，是因为 ES6 的 class 设计成了默认按 strict 模式执行。如果要保持普通函数和方法的执行一致，请加上 `"use strict";`。
+
+#### this 的机制
+
+在箭头函数出现之前，每一个新函数根据它是被如何调用的来定义这个函数的this值：
+
+- 如果该函数是一个构造函数，this指针指向一个新的对象
+- 在严格模式下的函数调用下，this指向undefined
+- 如果该函数是一个对象的方法，则它的this指针指向这个对象
+
+函数能记住 this 因为函数内部有一个机制来保存这些信息。
+- 在 JavaScript 标准中，为函数规定了用来保存定义时上下文的私有属性 [[Environment]]。当一个函数执行时，会创建一条新的执行环境记录，记录的外层词法环境（outer lexical environment）会被设置成函数的 [[Environment]]。——这就是执行上下文。
+  - 定义时词法环境
+  - 运行时词法环境
+- 为了实现 this 的机制，JS 定义了 [[thisMode]] 私有属性，它有三个取值。
+  - lexical：表示从上下文中找 this，这对应了箭头函数。
+  - global：表示当 this 为 undefined 时，取全局对象，对应了普通函数。
+  - strict：当严格模式时使用，this 严格按照调用时传入的值，可能为 null 或者 undefined。
+- 函数创建新的执行上下文中的词法环境记录时，会根据 [[thisMode]] 来标记新纪录的 [[ThisBindingStatus]] 私有属性。
+代码执行遇到 this 时，会逐层检查当前词法环境记录中的 [[ThisBindingStatus]] ，当找到有 this 的环境记录时获取 this 的值。
+
+改变 this 指向的常见 3 种方式有 bind、call 和 apply。
+- call 和 apply 用法功能基本类似，都是通过传入 this 指向的对象以及参数来调用函数。
+- 区别在于传参方式，前者为逐个参数传递，后者将参数放入一个数组，以数组的形式传递。
+- bind 有些特殊，它不但可以绑定 this 指向也可以绑定函数参数并返回一个新的函数
+- call、bind 和 apply 用于不接受 this 的函数类型如箭头、class 都不会报错。
+
+[代码参考](./this.js)
+
+## JavaScript 引擎的工作机制
+
+JS 是运行时先编译再执行——JIT（即时编译技术）
 
 ### 编译过程
 
@@ -551,7 +767,7 @@ JavaScript 引擎的内存空间分为堆（Heap）和栈（Stack）。
 
 栈是一个临时存储空间，主要存储局部变量和函数调用（对于全局表达式会创建匿名函数并调用）。
 
-对于`原始类型`（String、Undefined、Null、Boolean、Number、BigInt、Symbol）的局部变量，会直接在栈中创建，而对象数据类型局部变量会存储在堆中，栈中只存储它的引用地址，也就是我们常说的浅拷贝。全局变量以及闭包变量也是只存储引用地址。总而言之栈中存储的数据都是轻量的。
+对于`原始值类型`（String、Undefined、Null、Boolean、Number、BigInt、Symbol）的局部变量，会直接在栈中创建，而对象数据类型局部变量会存储在堆中，栈中只存储它的引用地址，也就是我们常说的浅拷贝。全局变量以及闭包变量也是只存储引用地址。总而言之栈中存储的数据都是轻量的。
 
 对于函数，解释器创建了“调用栈”（Call Stack）来记录函数的调用流程。每调用一个函数，解释器就会把该函数添加进调用栈，解释器会为被添加进的函数创建一个栈帧 （Stack Frame，这个栈帧用来保存函数的局部变量以及执行语句）并立即执行。如果正在执行的函数还调用了其它函数，那么新函数也将会被添加进调用栈并执行。一旦这个函数执行结束，对应的栈帧也会被立即销毁。
 
@@ -1052,6 +1268,7 @@ proxy.prototype === Object.prototype
 - [V8 执行原理](https://www.yuque.com/webqiang/ht5m24/hzurv1)
 - [帮你彻底搞懂JS中的prototype、__proto__与constructor](https://chen-cong.blog.csdn.net/article/details/81211729)
 - [前端高手进阶](https://kaiwu.lagou.com/course/courseInfo.htm?courseId=180)
+- [JavaScript execution context](https://cabulous.medium.com/javascript-execution-context-part-1-from-compiling-to-execution-84c11c0660f5)
 - [JavaScript Visualized: Event Loop](https://dev.to/lydiahallie/javascript-visualized-event-loop-3dif)
 
 ## 工具
