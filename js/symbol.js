@@ -1,5 +1,5 @@
-
-// symbol
+//
+// Symbol
 //
 
 var o = new Object
