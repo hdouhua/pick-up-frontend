@@ -2,7 +2,7 @@
 
 * [JavaScript 语言特性](#javascript-语言特性)
     * [扩展：编程语言](#扩展编程语言)
-      * [强类型 vs 弱类型](#强类型-vs-弱类型)
+      * [强类型语言 vs 弱类型语言](#强类型语言-vs-弱类型语言)
       * [静态类型语言 vs 动态类型语言](#静态类型语言-vs-动态类型语言)
       * [基于这些 JS 语言的弱点推出 TypeScript](#基于这些-js-语言的弱点推出-typescript)
     * [扩展：JavaScript 是面向对象的语言？](#扩展javascript-是面向对象的语言)
@@ -27,8 +27,13 @@
     * [怎么通过原型链实现多层继承？](#怎么通过原型链实现多层继承)
 * [一段 JS 代码怎么被执行的？](#一段-js-代码怎么被执行的)
     * [执行上下文 execution context](#执行上下文-execution-context)
-      * [词法环境 lexical environment](#词法环境-lexical-environment)
-    * [命名提升 Hoisting](#命名提升-hoisting)
+      * [示例分析](#示例分析-1)
+    * [变量提升 Hoisting](#变量提升-hoisting)
+      * [变量的提升](#变量的提升)
+      * [函数的提升](#函数的提升)
+      * [变量提升可能导致不可预见的结果](#变量提升可能导致不可预见的结果)
+      * [ES6 是如何解决变量提升带来的缺陷](#es6-是如何解决变量提升带来的缺陷)
+    * [词法环境 lexical environment](#词法环境-lexical-environment)
     * [作用域及作用域链 scope &amp; scope chain](#作用域及作用域链-scope--scope-chain)
       * [什么是作用域？](#什么是作用域)
       * [为什么作用域很重要？](#为什么作用域很重要)
@@ -495,8 +500,8 @@ console.log(c.a()) // 'a'
 
 ### 执行上下文 execution context
 
-执行上下文主要由以下几部分组成：
-- 变量环境 Variable environment
+执行上下文是 JavaScript 执行一段代码时的运行环境。执行上下文主要由以下几部分组成：
+- 变量环境 Variable environment：保存了变量提升的内容
 - 词法环境 Lexical environment
 - Outer 指针
 - this 指针
@@ -506,63 +511,129 @@ console.log(c.a()) // 'a'
 (<a href="https://cabulous.medium.com/javascript-execution-context-part-1-from-compiling-to-execution-84c11c0660f5">source</a>)
 </p>
 
-**在编译阶段**，变量和函数会被存放到变量环境中，变量的默认值会被设置为 undefined；
-如果在编译阶段，存在两个相同的函数，那么最终存放在变量环境中的是最后定义的那个，这是因为后定义的会覆盖掉之前定义的。
+**在编译阶段：**
+- 变量和函数会被存放到变量环境中，变量的默认值会被设置为 undefined；
+- 如果存在两个相同的函数，那么最终存放在变量环境中的是最后定义的那个，这是因为后定义的会覆盖掉之前定义的。
+>应该避免使用相同的变量名。
+**在代码执行阶段：**
+- JavaScript 引擎会从变量环境中去查找自定义的变量和函数。
 
-**在代码执行阶段**，JavaScript 引擎会从变量环境中去查找自定义的变量和函数。
+#### 示例分析
 
-变量赋值实际上分为两个步骤：
-- 编译步骤负责变量声明
-- 执行步骤执行变量的赋值和其余代码
-// From the compiling to the execution, a variable goes through three steps:
-//     Creation
-//     Initialization
-//     Assignment
+```javascript
+var apple = 10
+console.log(apple)
+```
 
-#### 词法环境 lexical environment
+- 当这段 JS 代码运行时，第一步是编译：将创建`执行上下文` (`execution context`)；同时，变量 apple 被声明和赋值 `undefined` ，并存储在`变量环境` (`variable environment`) 中。
 
-//     The lexical environment is another component of an execution environment.
-//     let and const variables in a block scope are created at the execution step instead of the compiling.
-//     These variables are stored in the lexical environment.
-//     Multiple block scopes are maintained as a stack structure in the lexical environment.
-//     When the JavaScript engine executes all codes in a block scope, the related let and const variables are removed.
+<p style="text-align: center">
+<img src="../res/js-global-ec-1.jpg" width="50%" /><br/>
+</p>
 
-**示例：**
-// 每调用一个函数，JavaScript 引擎会为其创建执行上下文，并把该执行上下文压入调用栈，然后 JavaScript 引擎开始执行函数代码。
-// 如果在一个函数 A 中调用了另外一个函数 B，那么 JavaScript 引擎会为 B 函数创建执行上下文，并将 B 函数的执行上下文压入栈顶。
-// 当前函数执行完毕后，JavaScript 引擎会将该函数的执行上下文弹出栈。
-// 当分配的调用栈空间被占满时，会引发“堆栈溢出”问题。
+- 编译步骤结束，执行步骤开始。
+  - 执行第一行，给 apple 变量赋值 10，同时更新`变量环境`。
+  - 执行第二行，控制台开始在其变量环境中查找 apple 变量，找到后在控制台打印 10。
 
-### 命名提升 Hoisting
+<p style="text-align: center">
+<img src="../res/js-global-ec-2.jpg" width="50%" /><br/>
+</p>
+
+- 整个过程结束，整个`执行上下文`被删除。
+
+>编译阶段关注声明操作
+
+>变量赋值实际上分为两个步骤：
+>- 编译步骤负责变量声明
+>- 执行步骤执行变量的赋值和其余代码
+
+### 变量提升 Hoisting
 
 >[MDN reference](https://developer.mozilla.org/en-US/docs/Glossary/Hoisting)
 
-JavaScript 代码执行过程中，需要先做变量提升，而之所以需要实现变量提升，是因为 JavaScript 代码在执行之前需要先编译。
+JavaScript 代码执行过程中，需要先做`变量提升` (`hoisting`)，而之所以需要实现变量提升，是因为 JavaScript 代码在执行之前需要先编译。
 
-// 【分析原因】：在块作用域内，let声明的变量被提升，但变量只是创建被提升，初始化并没有被提升，在初始化之前使用变量，就会形成一个暂时性死区。
-// 【拓展】
-// var的创建和初始化被提升，赋值不会被提升。
-// let的创建被提升，初始化和赋值不会被提升。
-// function的创建、初始化和赋值均会被提升。
-
-// hoisting:
-//     For a let variable, its creation is hoisted, but not initialization and assignment.
-//     For a var variable, its creation and initialization are hoisted, but not the assignment.
-//     For a function, its creation, initialization, and assignment are hoisted at the same time.
-
-// People named the code area before the variable initialization, the temporal dead zone.
-
-//     If you try to access a variable before the creation, you see the error “[variable name] is not defined.”
-//     If you decide to access a variable before the initialization, you see the error “Cannot access [variable name] before initialization.”
-//     If you log a variable before the assignment, you see the value undefined.
-
-**变量命名提升**
+所谓的变量提升，是指在 JavaScript 代码执行过程中，JavaScript 引擎把变量的声明部分和函数的声明部分提升到代码开头的“行为”。变量被提升后，会给变量设置默认值，这个默认值就是我们熟悉的 undefined。  -- 《浏览器工作原理与实践》
 
 对于使用 var 关键字声明的变量以及创建`命名函数`的时候，JavaScript 在解释执行的时候都会*将其声明内容提升到作用域顶部*，这种机制称为“命名提升”。
 
-- 'var 变量赋值'：创建和初始化（初始化为 undefined）被提升，赋值不会被提升；
-- 'var = function() {}'：创建、初始化和赋值均会被提升。
+#### 变量的提升
 
+让我们把上面的示例代码做小小的一点改动：
+
+```javascript
+console.log(apple); // undefined
+var apple = 10;
+```
+
+- 在编译步骤中
+  - 第 1 行被跳过，因为它与<u>变量声明</u>无关。 
+  - 然后在`变量环境`中创建第 2 行中的 apple 变量。
+- 编译结束，执行步骤开始
+  - 执行第一行，控制台在其变量环境中查找 apple 变量。 此时，apple =  undefined，所以控制台打印 undefined。
+  - 执行第二行，将 apple 变量更新为 10
+- 整个过程结束，整个`执行上下文`被删除。
+
+我们将此过程称为`变量提升`，因为变量 apple 感觉就像被提升到顶部。 
+
+*但是，从执行上下文的角度来看，没有任何东西被提升。因为变量是在编译步骤中声明的，所谓提升是基于执行结果。*
+
+#### 函数的提升
+
+与变量不同，我们有两种方式来声明函数。区别以下两种函数的定义方式：
+
+- 方式 1 将函数赋值给变量 showName ；
+- 方式 2 定义了一个函数 showNumber 。
+
+```javascript
+showNumber();//Hey, show a number.
+showName();//TypeError: showName is not a function
+// 方式 1, 创建了一个匿名函数，然后赋值给 showName，这里会发生变量的变量提升；
+var showName = function () {
+  console.log('Hi, this is my name.');
+}
+// 方式2
+function showNumber() {
+  console.log('Hey, show a number.');
+}
+```
+
+让我们回顾一下这两个步骤，看看发生了什么。
+- 在编译阶段
+  - 当来到 showName 时，是一个函数赋值语句，所以声明 showName 并赋值 undefined （直到执行步骤才分配 showName 函数块）
+  - showNumber 是一个通过 function 定义的函数，所以它将函数定义存储到堆 (HEAP）中，并在`变量环境`中创建一个 showNumber 的属性，然后将该属性值指向堆中函数的位置。
+
+<p style="text-align: center">
+<img src="../res/js-global-ec-func-hoisting-1.jpg" width="50%" /><br/>
+</p>
+
+- 执行阶段
+
+<p style="text-align: center">
+<img src="../res/js-global-ec-func-hoisting-2.jpg" width="50%" /><br/>
+<img src="../res/js-global-ec-func-hoisting-3.jpg" width="50%" /><br/>
+</p>
+
+*在此处，值得一提的另一件事是，函数块（函数定义）实际上是保存在堆栈 (HEAP) 的，而不是变量环境中。*
+
+<p style="text-align: center">
+<img src="../res/js-global-ec-func-in-heap.jpg" width="50%" /><br/>
+</p>
+
+命名函数的提升，意味着可以在同级作用域、子级作用域，或者函数定义之前进行调用。
+
+```javascript
+fn()
+function fn() {
+  return 2
+}
+```
+
+#### 变量提升可能导致不可预见的结果
+
+看下面的示例，使用调用栈的执行上下文来分析结果。
+
+1.
 ```javascript
 console.log(a) // undefined
 var a = 1
@@ -570,8 +641,7 @@ console.log(b) // Error
 let b = 2
 ```
 
-变量提升可能导致不可预见的结果，看下面的示例，使用调用栈的执行上下文来分析结果。
-
+2. 变量被覆盖掉
 ```javascript
 var myName = "dao"
 function showName(){
@@ -584,34 +654,63 @@ function showName(){
 showName()
 ```
 
-解决变量命名提升带来的一系列问题的主要方法是使用 let / const。
-
-进入块内代码 let 和 const 声明的变量就会被创建，但变量没有赋值之前访问会抛出错误 （暂时性死区的概念）。
-
-**函数的命名提升**
-
-意味着可以在同级作用域、子级作用域，或者函数定义之前进行调用。
-
+3. 变量没有被销毁
 ```javascript
-fn()
-function fn() {
-  return 2
+function foo(){
+  for (var i = 0; i < 5; i++) {
+  }
+  console.log(i); 
 }
+foo()
 ```
 
-区别以下两种函数的定义方式：
+#### ES6 是如何解决变量提升带来的缺陷
 
-- 方式 1 将函数赋值给变量 f；
-- 方式 2 定义了一个函数 f()。
+解决变量提升带来的一系列问题的主要方法是使用 let / const。
 
->方式 1 创建了一个匿名函数，让变量 f 指向它，这里会发生变量的命名提升；如果我们在定义函数之前调用会报错，而方式 2 则不会。
+>`块级作用域`就是通过`词法环境`的`栈结构`来实现的，而`变量提升`是通过`变量环境`来实现，通过这两者的结合，JavaScript 引擎也就同时支持了变量提升和块级作用域了。
+
+>从编译到执行，一个变量要经过三个步骤：
+>1. 创建
+>2. 初始化
+>3. 赋值
+>
+>在变量初始化之前，将代码区命名为暂时性死区。
+
+**代码分析**
 
 ```javascript
-// 方式1
-var f = function() {...}
-// 方式2
-function f() {...}
+let apple = 'apple';
+{
+  console.log(apple);// Cannot access 'apple' before initialization
+  let apple = 'banana';
+}
+// 在块作用域内，let/const 声明的变量被提升，但变量只是创建被提升，初始化并没有被提升
 ```
+
+- 对于 var 变量，它的创建和初始化被提升，但赋值不会被提升。
+- 对于 let 变量，它的创建被提升，但初始化和赋值不会被提升。
+- 对于 function，它的创建、初始化和赋值同时被提升。
+
+- 如果在创建之前尝试访问变量，会得到错误 "xxx is not defined"
+- 如果在初始化之前访问一个变量，会得到错误 "Cannot access 'xxx' before initialization"
+- 如果在赋值之前访问一个变量，会得到值 `undefined`
+
+[代码参考](./execution-context.js)
+
+### 词法环境 lexical environment
+
+//     The lexical environment is another component of an execution environment.
+//     let and const variables in a block scope are created at the execution step instead of the compiling.
+//     These variables are stored in the lexical environment.
+//     Multiple block scopes are maintained as a stack structure in the lexical environment.
+//     When the JavaScript engine executes all codes in a block scope, the related let and const variables are removed.
+
+**示例：**
+// 每调用一个函数，JavaScript 引擎会为其创建执行上下文，并把该执行上下文压入调用栈，然后 JavaScript 引擎开始执行函数代码。
+// 如果在一个函数 A 中调用了另外一个函数 B，那么 JavaScript 引擎会为 B 函数创建执行上下文，并将 B 函数的执行上下文压入栈顶。
+// 当前函数执行完毕后，JavaScript 引擎会将该函数的执行上下文弹出栈。
+// 当分配的调用栈空间被占满时，会引发“堆栈溢出”问题。
 
 ### 作用域及作用域链 scope & scope chain
 
