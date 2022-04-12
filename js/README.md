@@ -13,18 +13,31 @@
     * [扩展：JavaScript 的 Object](#扩展javascript-的-object)
 * [函数 —— JS 的一等公民](#函数--js-的一等公民)
     * [ES2018 下复杂的函数体系](#es2018-下复杂的函数体系)
+      * [箭头函数](#箭头函数)
     * [闭包](#闭包)
+      * [闭包的定义](#闭包的定义)
+      * [闭包的回收](#闭包的回收)
+      * [示例分析](#示例分析)
+      * [小结](#小结)
+      * [扩展：Chrome 开发者工具](#扩展chrome-开发者工具)
     * [高阶函数](#高阶函数)
     * [柯里化](#柯里化)
-    * [箭头函数](#箭头函数)
 * [什么是原型和原型链？](#什么是原型和原型链)
     * [new 操作符实现了什么？](#new-操作符实现了什么)
     * [怎么通过原型链实现多层继承？](#怎么通过原型链实现多层继承)
-* [JavaScript 引擎的工作机制](#javascript-引擎的工作机制)
-    * [执行上下文](#执行上下文)
-      * [this 的行为](#this-的行为)
-      * [this 的机制](#this-的机制)
+* [一段 JS 代码怎么被执行的？](#一段-js-代码怎么被执行的)
+    * [执行上下文 execution context](#执行上下文-execution-context)
+      * [词法环境 lexical environment](#词法环境-lexical-environment)
     * [命名提升 Hoisting](#命名提升-hoisting)
+    * [作用域及作用域链 scope &amp; scope chain](#作用域及作用域链-scope--scope-chain)
+      * [什么是作用域？](#什么是作用域)
+      * [为什么作用域很重要？](#为什么作用域很重要)
+      * [3 种作用域](#3-种作用域)
+      * [词法作用域](#词法作用域)
+    * [闭包 closure](#闭包-closure)
+    * [this](#this)
+      * [this 的机制](#this-的机制)
+* [JavaScript 引擎的工作机制](#javascript-引擎的工作机制)
     * [编译过程](#编译过程)
       * [以 V8 引擎为例解释 JS 的一段代码如何被执行](#以-v8-引擎为例解释-js-的一段代码如何被执行)
       * [解析](#解析)
@@ -68,12 +81,12 @@ ES6 中引入了 `class` 关键字，并且在标准中删除了所有 `[[class]
 
 ### 扩展：编程语言
 
-<p>
-<img src="../res/language-category.png" alt="language category" width="50%" />
-<div>(source: )</div>
+<p style="text-align:center">
+<img src="../res/language-category.png" alt="language category" width="50%" /><br/>
+(source: )
 </p>
 
-#### 强类型 vs 弱类型
+#### 强类型语言 vs 弱类型语言
 
 - 在强类型语言中，不允许改变变量的数据类型，除了强制类型转换
 - 在弱类型语言中，变量可以被赋予不同的数据类型。（这也是一个既灵活又可怕的特性）
@@ -126,15 +139,15 @@ JS 用一组特征 `attribute` 来描述属性 `property` 。两类属性：
 
 嗯，基于JavaScript 的对象设计跟目前主流基于类的面向对象差异非常大——JavaScript 不是面向对象的语言
 
-呃，这样的对象系统设计虽然特别，但是 它提供了完全运行时的对象系统，可以模仿多数面向对象编程范式（两种面向对象编程的范式 paradigm ：**基于类**和**基于原型**）——JavaScript 也是面向对象的语言
+呃，这样的对象系统设计虽然特别，但是，它提供了完全运行时的对象系统，可以模仿多数面向对象编程范式——JavaScript 也是面向对象的语言。（两种面向对象编程的范式 paradigm ：**基于类**和**基于原型**）
 
 **JavaScript 的高度*动态性*的*对象系统*是它是一门面向对象的语言的有力支持！**
 
 ## 数据类型
 
-JavaScript 中的数据类型可以分为两类：对象数据类型（Objects）和原始数据类型（Primitive values）。
+JavaScript 中的数据类型可以分为两类：对象数据类型（Objects）和原始值数据类型（Primitive values）。
 
-除 Object 以外的所有类型都是不可变的（immutable, 值本身无法被改变，也称这些类型的值为“原始值” primitive values）。
+除 Object 以外的其它类型都是不可变的（immutable, 值本身无法被改变，也称这些类型的值为“原始值” primitive values）。
 
 ### 原始值类型
 
@@ -166,7 +179,7 @@ JavaScript 中的数据类型可以分为两类：对象数据类型（Objects�
   - 还有一些常量值：`POSITIVE_INFINITY` ，`NEGATIVE_INFINITY` 和 `NaN`, 
   - `MAX_VALUE` 属性值接近于 1.79e+308，大于 MAX_VALUE 的值代表 "Infinity"。
   - `MIN_VALUE` 属性是 JavaScript 里最接近 0 的正值，而不是最小的负值。值约为 5e-324。小于 MIN_VALUE ("underflow values") 的值将会转换为 0。
-  - 非整数的 Number 类型无法用 ==/=== 来比较，这是浮点数运算的精度问题
+  - 非整数的 Number 类型无法用 == 或 === 来比较，这是浮点数运算的精度问题
 
     ```javascript
     console.log( 0.1 + 0.2 == 0.3);
@@ -197,7 +210,7 @@ JavaScript 中的数据类型可以分为两类：对象数据类型（Objects�
 
 ### 对象 Object
 
-  一切有形和无形物体的总称。除了`原始值类型`的值以外，其他都是对象。对象是键值对的集合，键是字符串或 Symbol，值可以是原始值，也可以是对象。
+  一切有形和无形物体的总称。除了`原始值类型`以外，其他都是对象。对象是键值对的集合，键是字符串或 Symbol，值可以是原始值，也可以是对象。
 
   [代码参考](./object.js)
 
@@ -244,8 +257,8 @@ JavaScript 中的对象分类我们可以把对象分成几类。
 
 1. 普通函数：用 function 关键字定义的函数
 2. 箭头函数：用 => 运算符定义的函数
-3. 方法：在 class 中定义的函数
 4. 生成器函数：用 function * 定义的函数
+3. 方法：在 class 中定义的函数
 5. 类：用 class 定义的类，实际上也是函数
 6. 异步函数：普通函数、箭头函数和生成器函数加上 async 关键字
 
@@ -283,13 +296,11 @@ JavaScript 中的对象分类我们可以把对象分成几类。
 
 #### 闭包的定义
 
-函数和声明该函数的词法环境 (lexical environment) 的组合。-- MDN 闭包的定义
+函数和声明该函数的词法环境 (lexical environment) 的组合。-- MDN
 
-在 JavaScript 中，根据词法作用域 (lexical scope) 的规则，内部函数总是可以访问其外部函数中声明的变量，当通过调用一个外部函数返回一个内部函数后，即使该外部函数已经执行结束了，但是内部函数引用外部函数的变量依然保存在内存中，我们就把这些变量的集合称为闭包。比如，外部函数是 foo，那么这些变量的集合就称为 foo 函数的闭包。
+在 JavaScript 中，根据词法作用域 (lexical scope) 的规则，内部函数总是可以访问其外部函数中声明的变量，当通过调用一个外部函数返回一个内部函数后，即使该外部函数已经执行结束了，但是内部函数引用外部函数的变量依然保存在内存中，我们就把这些变量的集合称为闭包。比如，外部函数是 foo，那么这些变量的集合就称为 foo 函数的闭包。-- 《浏览器工作原理与实践》
 
 闭包是指有权访问另一个函数作用域中的变量的函数。 --《JavaScript高级程序设计》
-
-同时有两个函数的作用域链指针（外函数和内函数）指向了同一个变量环境对象，所以无论你删除其中任何一个指针，该变量环境对象都无法被垃圾回收（无论是标记清除还是计数法清除），所以保存在了内存中。所以就有了所谓的”闭包“。
 
 闭包的出现是因为词法作用域规则——内部函数总是可以访问其外部函数中的变量。它是持有变量引用的函数所独有的。
 
@@ -299,7 +310,7 @@ JavaScript 中的对象分类我们可以把对象分成几类。
 
 如果引用闭包的函数是个局部变量，等函数销毁后，在下次 JavaScript 引擎执行垃圾回收时，判断闭包这块内容如果已经不再被使用了，那么 JavaScript 引擎的垃圾回收器就会回收这块内存。
 
-在使用闭包的时候，你要尽量注意一个原则：如果该闭包会一直使用，那么它可以作为全局变量而存在；但如果使用频率不高，而且占用内存又比较大的话，那就尽量让它成为一个局部变量。
+在使用闭包的时候，要尽量注意一个原则：如果该闭包会一直使用，那么它可以作为全局变量而存在；但如果使用频率不高，而且占用内存又比较大的话，那就尽量让它成为一个局部变量。
 
 #### 示例分析
 
@@ -326,51 +337,52 @@ var price = applePrice();
 price.setPrice(20);
 console.log(price.getPrice())
 ```
+
 **代码解析**
 
 1. 在 util 返回并分配给 price 变量之前，调用堆栈如下：
 
-  <p>
-  <img src="../res/js-closure-1.png" width="50%" />
-  </p>
+<p style="text-align: center">
+<img src="../res/js-closure-1.jpg" width="50%" />
+</p>
 
 2. 返回 util 后，applePrice 函数执行结束，函数的执行上下文被删除；同时，变量环境和词法环境消失，其中的变量将被销毁。
 此时，JavaScript 的词法作用域规则开始生效——内部函数始终可以访问其外部函数中的变量。
-  - 这里的内部函数是 getPrice 和 setPrice，外部函数是 applePrice
-  - getPrice 函数使用两个变量： fruit 和 price
-  - setPrice 函数使用 price
-  - 遵循规则，fruit 变量 price 保存在单独的区域中，它是一个只能被函数 getPrice 和 setPrice 访问的专有区域。也  称为闭包。
-  - discount 变量被销毁，因为没有方法持有对它的引用。
+   - 这里的内部函数是 getPrice 和 setPrice，外部函数是 applePrice
+   - getPrice 函数使用两个变量： fruit 和 price
+   - setPrice 函数使用 price
+   - 遵循规则，fruit 变量 price 保存在单独的区域中，它是一个只能被函数 getPrice 和 setPrice 访问的专有区域。 也称为闭包。
+   - discount 变量被销毁，因为没有方法持有对它的引用。
 
-  <p>
-  <img src="../res/js-closure-2.png" width="50%" />
-  </p>
+<p style="text-align: center">
+<img src="../res/js-closure-2.jpg" width="50%" />
+</p>
 
 3. 接下来，继续执行并调用 setPrice 函数。JavaScript 引擎通过作用域链查找，定位到闭包中的 price 变量，设置其值为“20”。
 
-  <p>
-  <img src="../res/js-closure-3.png" width="50%" />
-  </p>
+<p style="text-align: center">
+<img src="../res/js-closure-3.jpg" width="50%" />
+</p>
 
 4. 在最后一行，调用 getPrice 函数。同上 JavaScript 引擎通过作用域链查找，定位到闭包中的 fruit 和 price 变量，并相应地打印出“apple”和“20”。
 
-执行结束。
+5. 执行结束。
 
 借助 Chrome 调试代码，可以看到闭包 closure：
 
-<p>
+<p style="text-align: center">
 <img src="../res/js-closure-4.png" width="50%" />
 </p>
 
 #### 小结
-- 闭包是在函数被调用执行的时候才被确认创建的。
+- 闭包是在函数被调用执行的时候才被确认创建的。*（这里被调用的函数是指外部函数？）*
 - 闭包的形成，与作用域链的访问顺序有直接关系。
 - 只有内部函数访问了上层作用域链中的变量时，才会形成闭包，因此，我们可以利用闭包来访问函数内部的变量。
 - 一般函数执行完毕后，局部对象就被销毁，内存中仅仅保存全局作用域。但闭包的情况不同！这是**闭包的缺点——常驻内存**。这会增大内存使用量，使用不当很容易造成内存泄露。
 
 [代码参考](./closure.js)
 
-#### 扩展 - Chrome 开发者工具
+#### 扩展：Chrome 开发者工具
 
 - 可以查看闭包的情况
 当调用 bar.getName 的时候，右边 Scope 项就体现出了作用域链的情况：Local 就是当前的 getName 函数的作用域，Closure(foo) 是指 foo 函数的闭包，最下面的 Global 就是指全局作用域，从“Local–>Closure(foo)–>Global”就是一个完整的作用域链。
@@ -476,9 +488,9 @@ console.log(c.a()) // 'a'
 
 编译时，一个执行上下文被创建；当执行上下文准备好时，执行步骤开始——逐行运行所有的可执行代码。
 
-<p>
-<img src="../res/js-how-it-run-1.png" width="50%" />
-<div>(<a href="https://cabulous.medium.com/javascript-execution-context-part-1-from-compiling-to-execution-84c11c0660f5">source</a>)</div>
+<p style="text-align: center">
+<img src="../res/js-how-it-run-1.jpg" width="50%" /><br/>
+(<a href="https://cabulous.medium.com/javascript-execution-context-part-1-from-compiling-to-execution-84c11c0660f5">source</a>)
 </p>
 
 ### 执行上下文 execution context
@@ -489,9 +501,9 @@ console.log(c.a()) // 'a'
 - Outer 指针
 - this 指针
 
-<p>
-<img src="../res/js-how-it-run-2.png" width="50%" />
-<div>(<a href="https://cabulous.medium.com/javascript-execution-context-part-1-from-compiling-to-execution-84c11c0660f5">source</a>)</div>
+<p style="text-align: center">
+<img src="../res/js-how-it-run-2.jpg" width="50%" /><br/>
+(<a href="https://cabulous.medium.com/javascript-execution-context-part-1-from-compiling-to-execution-84c11c0660f5">source</a>)
 </p>
 
 **在编译阶段**，变量和函数会被存放到变量环境中，变量的默认值会被设置为 undefined；
@@ -603,11 +615,11 @@ function f() {...}
 
 ### 作用域及作用域链 scope & scope chain
 
-#### 什么是范围？
+#### 什么是作用域？
 
 JavaScript 中的作用域是指变量的可访问性或可见性。也就是说，程序的哪些部分可以访问变量或变量在哪里可见。
 
-#### 为什么范围很重要？
+#### 为什么作用域很重要？
 
 范围的主要好处是安全性。也就是说，只能从程序的某个区域访问变量。使用作用域，我们可以避免对程序其他部分的变量进行意外修改。
 范围还减少了命名空间冲突。也就是说，我们可以在不同的范围内使用相同的变量名。
@@ -657,7 +669,7 @@ foo()
 
 [参考](#闭包)
 
-### this 的行为
+### this
 
 同一个函数调用方式不同，得到的 this 值也不同。
 1. 普通函数的 this 值由“调用它所使用的引用”决定。当我们获取函数的表达式，它实际上返回的并非函数本身，而是一个 Reference 类型（它由两部分组成：一个对象和一个属性值）。
