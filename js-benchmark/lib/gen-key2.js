@@ -1,41 +1,41 @@
 function x() {
   var r = "0123456789abcdef".split(""),
-    o = function (n) {
+    o = function(n) {
       for (var t = "", e = 0; e < 4; e++)
         t += r[(n >> (8 * e + 4)) & 15] + r[(n >> (8 * e)) & 15];
       return t;
     },
-    u = function (n) {
+    u = function(n) {
       for (var t = n.length, e = 0; e < t; e++) n[e] = o(n[e]);
       return n.join("");
     },
-    f = function (n, t) {
+    f = function(n, t) {
       return (n + t) & 4294967295;
     },
-    i = function (n, t, e, r, o, u, i) {
-      return (function (n, t, e) {
+    i = function(n, t, e, r, o, u, i) {
+      return (function(n, t, e) {
         return f((n << o) | (n >>> (32 - o)), e);
       })(
-        (t = (function (n, t, e, r) {
+        (t = (function(n, t, e, r) {
           return f(f(t, n), f(e, r));
         })(n, t, r, u)),
         0,
         e
       );
     },
-    c = function (n, t, e, r, o, u, f, c) {
+    c = function(n, t, e, r, o, u, f, c) {
       return i((e & r) | (~e & o), t, e, u, f, c);
     },
-    a = function (n, t, e, r, o, u, f, c) {
+    a = function(n, t, e, r, o, u, f, c) {
       return i((e & o) | (r & ~o), t, e, u, f, c);
     },
-    l = function (n, t, e, r, o, u, f, c) {
+    l = function(n, t, e, r, o, u, f, c) {
       return i(e ^ r ^ o, t, e, u, f, c);
     },
-    d = function (n, t, e, r, o, u, f, c) {
+    d = function(n, t, e, r, o, u, f, c) {
       return i(r ^ (e | ~o), t, e, u, f, c);
     },
-    s = function (n, t, e) {
+    s = function(n, t, e) {
       void 0 === e && (e = f);
       var r = n[0],
         o = n[1],
@@ -438,7 +438,7 @@ function x() {
         (n[2] = e(u, n[2])),
         (n[3] = e(i, n[3]));
     },
-    p = function (n) {
+    p = function(n) {
       for (var t = [], e = 0; e < 64; e += 4)
         t[e >> 2] =
           n.charCodeAt(e) +
@@ -447,7 +447,7 @@ function x() {
           (n.charCodeAt(e + 3) << 24);
       return t;
     },
-    b = function (n, t) {
+    b = function(n, t) {
       var e,
         r = n.length,
         o = [1732584193, -271733879, -1732584194, 271733878];
@@ -463,7 +463,7 @@ function x() {
     var t;
     return (
       "5d41402abc4b2a76b9719d911017c592" !== u(b("hello")) &&
-        (t = function (n, t) {
+        (t = function(n, t) {
           var e = (65535 & n) + (65535 & t);
           return (((n >> 16) + (t >> 16) + (e >> 16)) << 16) | (65535 & e);
         }),
@@ -471,42 +471,62 @@ function x() {
     );
   }
 
-  function e(n, t) {
-    let e = t.length,
-      r = [
-        ...(function (n, t) {
-          if (n.length !== t.length) return [];
-          let e = [];
-          for (let r = 0; r < n.length; r++)
-            e.push(n.charCodeAt(r) ^ t.charCodeAt(r));
-          return e;
-        })(n, t),
+  function n(t) {
+    return t < 26
+      ? t + 65
+      : t < 52
+      ? t + 71
+      : t < 62
+      ? t - 4
+      : 62 === t
+      ? 43
+      : 63 === t
+      ? 47
+      : 65;
+  }
+  function g(t, r) {
+    let e = r.length,
+      o = [
+        ...(function(t, n) {
+          if (t.length !== n.length) return [];
+          let r = [];
+          for (let e = 0; e < t.length; e++)
+            r.push(t.charCodeAt(e) ^ n.charCodeAt(e));
+          return r;
+        })(t, r)
       ];
-    for (let n = 0; n < e; n++)
-      n < e / 2 ? r.unshift(t.charCodeAt(n)) : r.push(t.charCodeAt(n));
-    return btoa(String.fromCharCode(...r));
+    for (let t = 0; t < e; t++)
+      t < e / 2 ? o.unshift(r.charCodeAt(t)) : o.push(r.charCodeAt(t));
+    return (
+      o.unshift(0),
+      (function(t) {
+        for (var r = 2, e = "", o = t.length, u = 0, i = 0; i < o; i++)
+          (r = i % 3),
+            i > 0 && ((4 * i) / 3) % 76 == 0 && (e += "\r\n"),
+            (u |= t[i] << ((16 >>> r) & 24)),
+            (2 !== r && t.length - i != 1) ||
+              ((e += String.fromCodePoint(
+                n((u >>> 18) & 63),
+                n((u >>> 12) & 63),
+                n((u >>> 6) & 63),
+                n(63 & u)
+              )),
+              (u = 0));
+        return (
+          e.substring(0, e.length - 2 + r) +
+          (2 === r ? "" : 1 === r ? "=" : "==")
+        );
+      })(o)
+    );
   }
-
-  let lt = 0;
-  return {
-    gk1:  async function(n) {
-      let ct = Date.now();
-      return Promise.all([h(n.join("")), h(ct.toString())]).then(([x, y]) =>
-        e(x, y)
-      );
-    },
-    gk2: async function(n) {
-      let ct = Date.now();
-      return e(await h(n.join("")), await h(ct.toString()));
-    },
-
-    gk22: async function(n) {
-      let ct = Date.now();
-      if (ct === lt) ct -= 1;
-      lt = ct;
-      return e(await h(n.join("")), await h(ct.toString()));
-    }
-  }
+  let e = 0;
+  return async function(n) {
+    let o = Date.now();
+    return (
+      o === e ? (o -= 1) : (e = o),
+      g(await h(n.join("")), await h(o.toString()))
+    );
+  };
 }
 
-export default x();
+export const gk = x();

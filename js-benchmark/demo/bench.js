@@ -22,6 +22,7 @@ function some(list, predicate) {
   return false;
 }
 
+if(typeof (window) !== 'undefined') console.log('webdriver:', window.navigator.webdriver);
 suite
   .add("Array.prototype.some", () => {
     const processed = values.some((value) => value > 990000);

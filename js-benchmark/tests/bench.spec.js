@@ -1,6 +1,10 @@
 const { test } = require("@playwright/test");
 
-test("Run benchmarks", async ({ page }) => {
+// test.beforeAll( async ({ page }) => {  });
+// test.beforeEach( async ({ page }) => {});
+// test.afterAll( async ({ page }) => {  });
+
+test("Run benchmarks", async ({ page, baseURL }) => {
   let benchmarkPromise = new Promise((resolve) => {
     page.on("console", async (message) => {
       if (message.text() === "Benchmark suite complete.") {
@@ -12,7 +16,12 @@ test("Run benchmarks", async ({ page }) => {
     });
   });
 
-  await page.goto(`file://${process.cwd()}/demo.html`);
+  await page.route('./bench.js', (route, _)=>{
+    route.continue({url: `${baseURL}/demo/bench.js`});
+  });
+
+  // await page.goto(`file://${process.cwd()}/demo/index.html`);
+  await page.goto(`${baseURL}/demo/index.html`);
 
   await benchmarkPromise;
 });

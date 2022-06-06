@@ -13,10 +13,10 @@ test("Run benchmarks", async ({ page, baseURL }) => {
   });
 
   await page.route('./bench.js', (route, _)=>{
-    route.continue({url: `${baseURL}/demo2/bench.js`});
+    route.continue({url: `${baseURL}/demo3/bench.js`});
   });
 
-  await page.goto(`${baseURL}/demo2/index.html`);
+  await page.goto(`${baseURL}/demo3/index.html`);
 
   await benchmarkPromise;
 });

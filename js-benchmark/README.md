@@ -16,8 +16,14 @@ online toolkits
 
 - run with node.js
 
+>please uncomment the lines below
+>```
+>// // for nodejs version
+>// const Benchmark = require("benchmark");
+>```
+
 ```shell
-(base) ➜  js-benchmark git:(main) ✗ node bench.js
+(base) ➜  js-benchmark git:(main) ✗ node demo/bench.js
 Array.prototype.some x 80.69 ops/sec ±0.97% (70 runs sampled)
 for loop x 1,969 ops/sec ±0.92% (89 runs sampled)
 The fastest option is for loop
@@ -26,7 +32,7 @@ Benchmark suite complete.
 
 - run with browser
 
-open the HTML files and watch the console log
+open the HTML files and watch the result from console.
 
 ## Playwright
 
@@ -34,7 +40,17 @@ open the HTML files and watch the console log
 
 integrate Benchmark.js with Playwright.
 
+- for all browsers
+
+```shell
+npx playwright test tests/bentch.spec.js --browser all
+```
+
 - for chromium
+
+```shell
+npx playwright test tests/bentch.spec.js --browser chromium --headed
+```
 
 ```
 (base) ➜  js-benchmark git:(main) ✗ npx playwright test tests/bench.spec.js --browser chromium
