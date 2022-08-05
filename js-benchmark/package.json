@@ -9,8 +9,8 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "@playwright/test": "^1.22.2",
+  "devDependencies": {
+    "@playwright/test": "^1.24.2",
     "benchmark": "^2.1.4"
   }
 }

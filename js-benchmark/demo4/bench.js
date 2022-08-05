@@ -1,8 +1,8 @@
-import { gk } from "../lib/gen-key2.js";
+import { gk } from "../lib/obfuscated.js";
 const suite = new Benchmark.Suite();
 
-if (typeof window !== "undefined")
-  console.log("webdriver:", window.navigator.webdriver);
+// if (typeof window !== "undefined")
+//   console.log("webdriver:", window.navigator.webdriver);
 suite
   .add("gk", async () => {
     const processed = await gk([7, "member_code", "platform"]);
