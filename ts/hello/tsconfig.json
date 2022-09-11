@@ -5,6 +5,10 @@
     "declarationDir": "./lib/types",
     "module": "CommonJS",
     "outDir": "./lib",
+    "lib": [
+      "DOM",
+      "ESNext"
+    ],
     /* Strict Type-Checking Options */
     "alwaysStrict": false,
     "noImplicitAny": true,

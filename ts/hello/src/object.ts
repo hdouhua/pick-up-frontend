@@ -77,6 +77,23 @@
   console.log(namedPoint.name);
 }
 
+// 接口：任意属性
+{
+  interface Person {
+    name: string;
+    age?: number;
+    [prop: string]: any;
+  }
+
+  let xyz: Person = {
+    name: "dao",
+    gender: "a cat",
+    position: "IT",
+  };
+
+  console.log(xyz);
+}
+
 // 对象字面量类型 vs 接口类型
 {
   // 除了可以通过 Object 和 object 类型来描述对象之外，也可以通过对象的属性来描述对象：
