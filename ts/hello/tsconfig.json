@@ -14,10 +14,6 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "strict": true,
-    "strictBindCallApply": true,
-    "strictFunctionTypes": true,
-    "strictNullChecks": true,
-    "strictPropertyInitialization": true,
     /* Module Resolution Options */
     "baseUrl": "./",
     "paths": {

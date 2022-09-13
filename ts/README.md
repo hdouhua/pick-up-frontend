@@ -72,16 +72,62 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 下面列出一些 TS 的特性：
 
+- 静态类型检查
 - 类型推导：根据上下文自动推导
-- 类型注解：`: type`
+- 类型注解 (type annotations) ：`: <type>`
 
 ## 基本数据类型
 
-- boolean
-- number
-- string
+参考[代码](./hello/src/basic.ts)
 
-- 数组
+7 个 原始值 (primitive value, primitive data type)
+
+- string
+- number
+- bigint
+- boolean
+- symbol
+
+  ```ts
+  // 显示声明 symbol 类型，然后赋值
+  let s1: symbol = Symbol();
+  //
+  let s2 = Symbol();
+  // s1 和 s2 是不相同的
+  console.log(s1 === s2);
+  ```
+
+- null 和 undefined
+
+  _默认情况下_， null 和 undefined 是*所有类型的子类型*。即可以把 null 和 undefined 赋值给其它类型。
+
+  _strict 模式下_， null 和 undefined 只能赋值给它们各自的类型。(undefined 可以赋值给 void )
+
+  ```ts
+  // undefined (未定义), null (没有值)
+  let un: undefined = undefined;
+  let nu: null = null;
+
+  let x: number;
+  // it works when set "strictNullChecks": false in tsconfig.json
+  //@ts-ignore Error: Type 'undefined' is not assignable to type 'number'
+  x = undefined;
+  //@ts-ignore Error: Type 'null' is not assignable to type 'number'
+  x = null;
+  ```
+
+- void
+
+  表示 _没有任何类型_，它常用于描述无返回值的函数。（声明一个 void 类型的变量没有任何意义）
+
+  它们实际上并没有太大的用处，尤其是在 strict 模式下，它们是名副其实的“废柴”。
+
+  ```ts
+  // void (没有返回值)
+  let noReturn = () => {};
+  ```
+
+- Arrays 数组
 
   两种定义方式
 
@@ -97,7 +143,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 - 元组
 
-  限定了元素个数和数据类型的数组。（与数组的区别是数组所有元素是同一数据类型。）
+  限定了*元素个数*和*数据类型*的*数组*。（与数组的区别是数组所有元素是同一数据类型。）
 
   ```ts
   let tuple: [number, string] = [0, "str"];
@@ -108,66 +154,19 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
   // React Hooks useState 示例：
   const x: [State, SetState] = [state, setState];
-  const y: [SetState, State] = [setState, state];
   // useState 函数返回值
   (state: State) => [State, SetState];
   ```
 
-- null 和 undefined
-
-  _默认情况下_， null 和 undefined 是所有类型的子类型。即可以把 null 和 undefined 赋值给其它类型。
-
-  _strict 模式下_， null 和 undefined 只能赋值给它们各自的类型。(undefined 可以赋值给 void )
-
-  ```ts
-  // undefined (未定义), null (没有值)
-  let un: undefined = undefined;
-  let nu: null = null;
-  // it works when set "strictNullChecks": false in tsconfig.json
-  // num = undefined
-  ```
-
-- void
-
-  表示 _没有任何类型_，常用于描述无返回值的函数。
-
-  它们实际上并没有太大的用处，尤其是在 strict 模式下，它们是名副其实的“废柴”。
-
-  类型守卫既能通过类型缩小影响 TypeScript 的类型检测，也能保障 JavaScript 运行时的安全性，如下代码所示：
-
-  ```ts
-  // void (没有返回值)
-  let noReturn = () => {};
-
-  const userInfo: {
-    id?: number;
-    name?: null | string;
-  } = { id: 1, name: "Captain" };
-
-  if (userInfo.id !== undefined) {
-    // Type Guard
-    userInfo.id.toFixed(); // id 的类型缩小成 number
-  }
-
-  // 我们不建议随意使用非空断言
-  userInfo.id!.toFixed(); // ok，但不建议
-  userInfo.name!.toLowerCase(); // ok，但不建议
-
-  // 比非空断言更安全、类型守卫更方便的做法是使用单问号（Optional Chain）、双问号（空值合并）
-  // 我们可以使用它们来保障代码的安全性
-  userInfo.id?.toFixed(); // Optional Chain
-  const myName = userInfo.name ?? "default name"; // 空值合并
-  ```
-
 - any
 
-  any 类型代表可以是任何一种类型，所以会跳过类型检查，相当于让变量或返回值又变成弱类型。
-  选择性地忽略静态类型检测。
+  any 类型代表可以是任何一种类型——顶级类型，会跳过类型检查，相当于让变量或返回值又变成弱类型。
+  选择性地忽略静态类型检测。（使用 any 就相当于失去了使用 TS 的作用）
 
-  记住：Any is Hell!
+  记住：**Any is Hell!**
 
   ```ts
-  let x;
+  let x; // default type is any
   x = 1;
   x = [];
   x = () => {};
@@ -201,7 +200,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
   }
   ```
 
-  never 是任意类型的子类型，却没有任意类型是 never 的子类型。
+  同 null 和 undefined 一样，never 是*任何类型的子类型*，却没有类型是 never 的子类型。——除 never 外，即使是 any 也不能赋值给 never。
 
   ```ts
   let Unreachable: never = 1; // ts(2322)
@@ -234,7 +233,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
   与 any 不同的是，unknown 在类型上更安全。
 
-  - 我们可以将任意类型的值赋值给 unknown，但 unknown 类型的值只能赋值给 unknown 或 any (any 类型却可以赋值给任何类型)。
+  - 可以将任意类型的值赋值给 unknown，但 unknown 类型的值只能赋值给 unknown 或 any 。与 any 类型不同，它可以赋值给任意类型（除 never 外）。
 
   ```ts
   let result: unknown;
@@ -243,7 +242,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
   result = 1;
   result = "abc";
 
-  // unknown 类型不可以赋值给任意类型（只能赋值给 unknown 和 any 类型）
+  // unknown 类型 不可以赋值给 其它类型，只能赋值给 unknown 和 any 类型
   let num: number = result;
   let anything: any = result;
   ```
@@ -256,17 +255,6 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
     //
     result.toFixed();
   }
-  ```
-
-- symbol
-
-  ```ts
-  // 显示声明 symbol 类型，然后赋值
-  let s1: symbol = Symbol();
-  //
-  let s2 = Symbol();
-  // s1 和 s2 是不相同的
-  console.log(s1 === s2);
   ```
 
 ### 枚举
@@ -284,7 +272,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
     Guest,
   }
   console.log(Role.Owner);
-  // 看上去是 对象 类型
+  // 看上去像 对象类型
   console.log(Role);
   ```
 
@@ -308,7 +296,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
   console.log(Answer.N);
   ```
 
-- 需要被计算的枚举 (computed)
+- 被计算的枚举 (computed)
 
   表达式保留到程序执行阶段。
 
@@ -324,7 +312,8 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 - 常量枚举
 
-  用 `const` 声明的枚举，与 `computed enum` 不同，它的特点是在编译后会被移除。那么它的作用是什么呢？当我们不需要枚举，而是只需要它的值的时候就可以使用常量枚举，这样可以减少编译后的代码。
+  用 `const` 声明的枚举，与 `computed enum` 不同，它的特点是在编译后会被移除。
+  那么它的作用是什么呢？当我们不需要枚举，而是只需要它的值的时候就可以使用常量枚举，这样可以减少编译后的代码。
 
   ```ts
   const enum Month {
@@ -367,7 +356,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 ### object/Object/{}
 
-关于 object 、 Object 和 {} 参考[代码](./hello/src/object.ts)
+参考[代码](./hello/src/object.ts)
 
 - object
 
@@ -375,15 +364,16 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 - Object
 
-  代表所有拥有 toString、hasOwnProperty 方法的类型 所以所有原始类型、非原始类型都可以赋给 Object(严格模式下 null 和 undefined 不可以)
+  代表所有拥有 toString、hasOwnProperty 方法的类型，所以所有原始类型、非原始类型都可以赋给 Object(严格模式下 null 和 undefined 不可以)。
 
 - {}
 
   空对象类型，与 Object 相同。
 
-### 接口 和 类
+### 接口——对象的类型
 
-接口是对象的状态(属性)和行为(方法)的抽象(描述)；是一种约定。
+接口是对象的状态(属性)和行为(方法)的抽象(描述)。
+——一种约定。
 
 接口的作用和类型非常相似，在大多数情况下可以通用，只存在一些细小的区别。比如，同名接口可以自动合并，而类型不能。
 
@@ -394,27 +384,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 - 任意属性——索引签名
 
 ```ts
-/* 声明 */
-interface IA {
-  id: string;
-}
-type TA = {
-  id: string;
-};
-/* 继承 */
-interface IA2 extends IA {
-  name: string;
-}
-type TA2 = TA & { name: string };
-/* 实现 */
-class A implements IA {
-  id: string = "";
-}
-class A2 implements TA {
-  id: string = "";
-}
-
-// 任意属性
+// 任意属性/动态属性
 interface Person {
   name: string;
   age?: number;
@@ -422,9 +392,12 @@ interface Person {
 }
 ```
 
-#### 接口 vs 类别名
+> TypeScript 中有两种定义对象类型的方法，它们非常相似：可以使用分号或逗号作为分隔符，并且尾随分隔符是允许的，也是可选的  
+> 一旦定义了任意属性，那么确定属性和可选属性都必须是它的子属性
 
-类型别名(type)会给一个类型起个新名字。 type 有时和 interface 很像，但是可以作用于原始值（基本类型），联合类型，元组以及其它任何需要手写的类型。起别名不会新建一个类型——它创建了一个新名字来引用那个类型。
+### 类型别名
+
+type 类型别名，给一个类型起个新名字。 type 有时和 interface 很像，但是它可以作用于原始值（基本类型），联合类型，元组以及其它任何需要手写的类型。**起别名不会新建一个类型——它只是创建了一个新名字来引用那个类型。**
 
 在大多数的情况下使用接口类型和类型别名是效果等价的。
 
@@ -435,21 +408,45 @@ interface Person {
 
 - type 可以声明基本数据类型别名/联合类型/元组等，而 interface 不行
 - interface 能够合并声明，而 type 不行
-
-#### 类
-
-支持抽象类、继承和多态，类成员支持访问限制 (`public`, `private`, `protected`, `readonly`)、静态成员。
-**类中定义的属性是实例属性而不是原型属性，方法是原型方法**。实例属性必须在构造函数中赋值，或者被定义为可选属性。
-
-- 类的链式操作。(return this)
-- 类实现接口时必须实现接口中的所有操作。
-- 接口只能约束类的**公有成员**。(接口不能约束类的构造函数)
-- 接口的继承：一个接口可以继承多个接口。
-- TS 的接口可以继承类。（好绕）
-
-### 函数
+- type 支持映射类型
+- interface 支持 `this`
 
 ```ts
+/* 声明 */
+interface IA {
+  id: string;
+}
+type TA = {
+  id: string;
+};
+
+/* 继承 */
+interface IA2 extends IA {
+  name: string;
+}
+type TA2 = TA & { name: string };
+
+/* 实现 */
+class A implements IA {
+  id: string = "";
+}
+class A2 implements TA {
+  id: string = "";
+}
+```
+
+## 函数
+
+```ts
+// 函数声明
+function add(x: number, y: number): number {
+  return x + y;
+}
+// 函数表达式
+let add = function (x: number, y: number): number {
+  return x + y;
+};
+// 箭头函数
 let add = (x: number, y: number): number => x + y;
 // 或者，省略返回值类型，运用了 TS 的类型推断功能
 let add = (x: number, y: number) => x + y;
@@ -466,18 +463,118 @@ console.log(compute(1, 2));
 
 - 可选参数（定义放最后）
 - 默认参数（在必选参数前，不可省略，可以传入 undefined；在必选参数后，可以省略）
-- 剩余参数
+- 剩余参数（...rest）
 - 函数重载
   - 为同一个函数提供多个函数类型定义来进行函数重载
   - 重载时函数名称相同，参数数量或类型不同，或者参数数量相同但参数顺序不同。
 
-## 类型推断
+## 类型操作
+
+### 类型组合
+
+类型组合就是把现有的多种类型叠加到一起，组合成一种新的类型
+
+- 交叉：将多个类型合并为一个类型，操作符为 “&” 。
+- 联合：表示符合多种类型中的任意一个，不同类型通过操作符“|”连接。
+
+```ts
+type Admin = Student & Teacher;
+
+type A = {
+  a: string;
+};
+type B = {
+  b: number;
+};
+type AorB = A | B;
+type AandB = A & B;
+
+// usage
+let v: AorB = { b: 123 };
+let vv: AandB = { a: "dao", b: 123 };
+if ((<A>v).a) {
+  //...
+}
+if ((<B>v).b) {
+  //...
+}
+```
+
+### 类型别名([参考](./README.md#接口类及类型别名))
+
+### 类型引用
+
+### 索引类型
+
+目的是让 TypeScript 编译器检查出使用了动态属性名的类型，需要通过索引类型查询和索引类型访问来实现。
+
+```ts
+// 泛型变量 K 继承了泛型变量 T 的属性名联合，这里的 keyof 就是索引类型查询操作符；返回值 T[K] 就是索引访问操作符的使用方式。
+function getValue<T, K extends keyof T>(o: T, name: K): T[K] {
+  return o[name]; // o[name] is of type T[K]
+}
+let cat = {
+  name: "Tom",
+  id: 123,
+};
+let id: number = getValue(cat, "id");
+let no = getValue(cat, "no");
+```
+
+### 映射类型
+
+目的是从已有类型中创建新的类型。TypeScript 预定义了一些类型，比如最常用的 Pick 和 Omit。
+
+```ts
+// From T, pick a set of properties whose keys are in the union K
+type Pick<T, K extends keyof T> = {
+  [P in K]: T[P];
+};
+
+interface task {
+  title: string;
+  description: string;
+  status: string;
+}
+// new type simpleTask {title: string;description: string}
+type simpleTask = Pick<task, "title" | "description">;
+```
+
+### 字面量类型
+
+字面量不仅可以表示值，还可以表示类型，即所谓的字面量类型。
+TypeScript 支持 3 种字面量类型：
+
+- 字符串字面量类型: 字符串字面量
+- 数字字面量类型：数字字面量
+- 布尔字面量类型：布尔字面量
+
+```ts
+let specifiedStr: "this is string" = "this is string";
+let specifiedNum: 1 = 1;
+let specifiedBoolean: true = true;
+```
+
+字面量类型是集合类型的*子类型*，它是集合类型的一种更具体的表达。
+比如， 'this is string' （这里表示一个字符串字面量类型）类型是 string 类型（确切地说是 string 类型的子类型），而 string 类型不一定是 'this is string'字符串字面量类型。如下示例：
+
+```ts
+let specifiedStr: "this is string" = "this is string";
+let str: string = "any string";
+//Error: Type 'string' is not assignable to type '"this is string"'
+specifiedStr = str;
+str = specifiedStr; // ok
+```
+
+相较于直接使用 string 类型，使用字符串字面量类型（组合的联合类型）可以将函数的参数限定为更具体的类型。这不仅提升了程序的可读性，还保证了函数的参数类型，可谓一举两得。
+
+### 类型推断
+
+基于赋值表达式推断类型的能力称之为“类型推断”。
 
 有时我们不需要指定变量的类型或者函数的返回值类型，TS 可以根据某些规则自动为其推断出一个类型。
 
 赋值表达式的「右侧推断左侧」，事件绑定表达式的「左侧推断右侧」；函数「返回值」的类型推断。
-
-基于赋值表达式推断类型的能力称之为“类型推断”。
 
 如果定义的时候没有赋值，不管之后有没有赋值，都会被推断成 any 类型而完全不被类型检查：
 
@@ -487,25 +584,25 @@ x = 1; // Ok
 x = true; // Ok
 ```
 
-## 类型断言
+### 类型断言
 
 两种方式：
 
 - 使用 as 语法做类型断言
 
   ```ts
-  const arrayNumber: number[] = [1, 2, 3, 4];
-  const greaterThan2: number = arrayNumber.find((num) => num > 2) as number;
+  const arr: number[] = [1, 2, 3, 4];
+  const greaterThan2: number = arr.find((num) => num > 2) as number;
   ```
 
 - 使用尖括号 + 类型的格式
 
   ```ts
-  const arrayNumber: number[] = [1, 2, 3, 4];
-  const greaterThan2: number = <number>arrayNumber.find((num) => num > 2);
+  const arr: number[] = [1, 2, 3, 4];
+  const greaterThan2: number = <number>arr.find((num) => num > 2);
   ```
 
-### 非空断言
+#### 非空断言
 
 在上下文中当类型检查器无法断定类型时，可以使用后缀表达式操作符 `!` 进行断言操作对象是非 null 和非 undefined 的类型，即`x!`的值不会为 null 或 undefined。
 
@@ -515,17 +612,78 @@ console.log(user!.toUpperCase()); // Ok
 console.log(user.toUpperCase()); // Error
 ```
 
-### 确定赋值断言
+#### 确定赋值断言
 
 定义了变量, 没有赋值就使用，则会报错。如果通过 `let x!: number;` 确定赋值断言，编译器会知道该属性会被明确地赋值。
 
 ```ts
-let value: number;
+let value: number; // Variable 'value' is used before being assigned
 let value!: number;
 console.log(value);
 ```
 
+### 类型守卫
+
+类型保护可以保证一个字符串是一个字符串，尽管它的值也可以是一个数值。类型保护与特性检测并不是完全不同，其主要思想是尝试检测属性、方法或原型，以确定如何处理值。
+换句话说：类型守卫是运行时检查，确保一个值在声明的类型的范围内。
+
+四种主要的方式实现类型保护：
+
+- in
+- typeof
+- instanceof
+- 自定义类型保护谓词
+
+_类型守卫_ 既能通过类型缩小影响 TypeScript 的类型检测，也能保障 JavaScript 运行时的安全性，如下代码所示：
+
+```ts
+const userInfo: {
+  id?: number;
+  name?: null | string;
+} = { id: 1, name: "Captain" };
+
+if (userInfo.id !== undefined) {
+  // Type Guard
+  userInfo.id.toFixed(); // id 的类型缩小成 number
+}
+
+// 我们不建议随意使用'非空断言'
+userInfo.id!.toFixed(); // ok，但不建议
+userInfo.name!.toLowerCase(); // ok，但不建议
+
+// 比非空断言更安全、类型守卫更方便的做法是使用 '单问号（Optional Chain）'、'双问号（空值合并）'
+// 我们可以使用它们来保障代码的安全性
+userInfo.id?.toFixed(); // Optional Chain
+const myName = userInfo.name ?? "default name"; // 空值合并
+```
+
+### 类型兼容性
+
+当一个类型 Y 可以被赋值给另一个类型 X 时，我们可以说 X 类型兼容 Y 类型。
+
+X 兼容 Y： X（目标类型） =（赋值）Y（源类型）
+
+- 接口兼容
+  成员少的兼容成员多的
+
+- 函数兼容
+
+- 枚举兼容
+
+  - 枚举类型和数字类型相互兼容
+  - 枚举类型之间不兼容
+
+- 类兼容
+
+  - 静态成员和构造函数不在比较范围
+  - 两个类具有相同实例成员
+  - 类中包含私有成员或受保护的成员
+
+- 泛型兼容
+
 ## 泛型
+
+参考[代码](./hello/src/generic.ts)
 
 为了函数参数/返回值可以支持多种类型，可以使用函数重载、联合类型、any 类型，泛型。
 
@@ -567,140 +725,16 @@ console.log(value);
 1. Parameters
 1. InstanceType
 
-## 高级类型
+## 类
 
-- 类型组合
+支持抽象类、继承和多态，类成员支持访问限制 (`public`, `private`, `protected`, `readonly`)、静态成员（属性/方法）及 get/set 访问器。
+**类中定义的属性是实例属性而不是原型属性，方法是原型方法**。实例属性必须在构造函数中赋值，或者被定义为可选属性。
 
-  类型组合就是把现有的多种类型叠加到一起，组合成一种新的类型
-
-  - 交叉：将多个类型合并为一个类型，操作符为 “&” 。
-  - 联合：表示符合多种类型中的任意一个，不同类型通过操作符“|”连接。
-
-  ```ts
-  type Admin = Student & Teacher;
-
-  type A = {
-    a: string;
-  };
-  type B = {
-    b: number;
-  };
-  type AorB = A | B;
-  type AandB = A & B;
-
-  // usage
-  let v: AorB = { b: 123 };
-  let vv: AandB = { a: "dao", b: 123 };
-  if ((<A>v).a) {
-    //...
-  }
-  if ((<B>v).b) {
-    //...
-  }
-  ```
-
-- 类型别名
-
-  类型别名用来给一个类型起个新名字。它只是起了一个新名字，并没有创建新类型。类型别名常用于联合类型。
-
-  ```ts
-  type count = number | number[];
-  function hello(value: count) {}
-  ```
-
-- 类型引用
-- 索引类型：目的是让 TypeScript 编译器检查出使用了动态属性名的类型，需要通过索引类型查询和索引类型访问来实现。
-
-  ```ts
-  // 泛型变量 K 继承了泛型变量 T 的属性名联合，这里的 keyof 就是索引类型查询操作符；返回值 T[K] 就是索引访问操作符的使用方式。
-  function getValue<T, K extends keyof T>(o: T, name: K): T[K] {
-    return o[name]; // o[name] is of type T[K]
-  }
-  let cat = {
-    name: "Tom",
-    id: 123,
-  };
-  let id: number = getValue(cat, "id");
-  let no = getValue(cat, "no");
-  ```
-
-- 映射类型：指从已有类型中创建新的类型。TypeScript 预定义了一些类型，比如最常用的 Pick 和 Omit。
-
-  ```ts
-  type Pick<T, K extends keyof T> = {
-    [P in K]: T[P];
-  };
-  interface task {
-    title: string;
-    description: string;
-    status: string;
-  }
-  // new type simpleTask {title: string;description: string}
-  type simpleTask = Pick<task, "title" | "description">;
-  ```
-
-- 字面量类型
-
-  字面量不仅可以表示值，还可以表示类型，即所谓的字面量类型。
-  TypeScript 支持 3 种字面量类型：字符串字面量类型、数字字面量类型、布尔字面量类型，对应的字符串字面量、数字字面量、布尔字面量分别拥有与其值一样的字面量类型
-
-  ```ts
-  let specifiedStr: "this is string" = "this is string";
-  let specifiedNum: 1 = 1;
-  let specifiedBoolean: true = true;
-  ```
-
-  字面量类型是集合类型的子类型，它是集合类型的一种更具体的表达。
-  比如 'this is string' （这里表示一个字符串字面量类型）类型是 string 类型（确切地说是 string 类型的子类型），而 string 类型不一定是 'this is string'（这里表示一个字符串字面量类型）类型，如下具体示例：
-
-  ```ts
-  {
-    let specifiedStr: "this is string" = "this is string";
-    let str: string = "any string";
-    specifiedStr = str; // ts(2322) 类型 '"this is string"' 不能赋值给类型 'string'
-    str = specifiedStr; // ok
-  }
-  ```
-
-相较于直接使用 string 类型，使用字符串字面量类型（组合的联合类型）可以将函数的参数限定为更具体的类型。这不仅提升了程序的可读性，还保证了函数的参数类型，可谓一举两得。
-
-## 类型守卫
-
-类型保护可以保证一个字符串是一个字符串，尽管它的值也可以是一个数值。类型保护与特性检测并不是完全不同，其主要思想是尝试检测属性、方法或原型，以确定如何处理值。
-换句话说：类型守卫是运行时检查，确保一个值在声明的类型的范围内。
-
-四种主要的方式实现类型保护：
-
-- in
-- typeof
-- instanceof
-- 自定义类型保护谓词
-
-## 类型检查机制
-
-### 类型兼容性
-
-当一个类型 Y 可以被赋值给另一个类型 X 时，我们可以说 X 类型兼容 Y 类型。
-
-X 兼容 Y： X（目标类型） =（赋值）Y（源类型）
-
-- 接口兼容
-  成员少的兼容成员多的
-
-- 函数兼容
-
-- 枚举兼容
-
-  - 枚举类型和数字类型相互兼容
-  - 枚举类型之间不兼容
-
-- 类兼容
-
-  - 静态成员和构造函数不在比较范围
-  - 两个类具有相同实例成员
-  - 类中包含私有成员或受保护的成员
-
-- 泛型兼容
+- 类的链式操作。(return this)
+- 类实现接口时必须实现接口中的所有操作。
+- 接口只能约束类的**公有成员**。(接口不能约束类的构造函数)
+- 接口的继承：一个接口可以继承多个接口。
+- TS 的接口也可以继承类。（好绕）
 
 ## TS 模块化
 

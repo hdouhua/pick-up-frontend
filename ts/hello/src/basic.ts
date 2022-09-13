@@ -1,53 +1,37 @@
-// enum
+/**
+ * TS basic data type
+ */
+
+// Array
 {
-  enum Role {
-    Reporter = 1,
-    Developer,
-    Maintainer,
-    Owner,
-    Guest,
-  }
-  console.log(Role.Owner);
-  // 看上去是 对象 类型
-  console.log(Role);
+  // type[]
+  let numArr: number[] = [1, 2, 3];
+  let strArr: string[] = ["x", "y", "z"];
+
+  // 使用 Array 泛型
+  let numArrWithGeneric: Array<number> = [1, 2, 3];
+  let strArrWithGeneric: Array<string> = ["x", "y", "z"];
 }
 
+// Tuple
 {
-  const enum Month {
-    Jan,
-    Feb,
-    Mar,
-  }
-  // 常量枚举只可以使用属性
-  // console.log(Month); //error TS2475
-  console.log(Month.Jan);
+  let tuple: [number, string] = [0, "str"];
+  // 越界了
+  tuple.push(2);
+  console.log(tuple);
+  //@ts-ignore Error: Tuple type '[number, string]' of length '2' has no element at index '2'
+  console.log(tuple[2]);
 }
 
+// null / undefined
 {
-  enum Message {
-    Success = "Congratulations",
-    Fail = "Sorry",
-  }
-  console.log(Message.Success);
-}
+  let un: undefined = undefined;
+  let nu: null = null;
 
-{
-  enum Char {
-    a,
-    b = Char.a,
-    c = 1 + 3,
-    d = Math.random(),
-  }
-  console.log(Char);
-}
-
-//
-{
   let x: number;
-  x = 1; // OK
-  //@ts-ignore Error: Type 'null' is not assignable to type 'number'
+  //@ts-ignore Error: Type 'undefined' is not assignable to type 'number'
   x = undefined;
-  //@ts-ignore
+  //@ts-ignore Error: Type 'null' is not assignable to type 'number'
   x = null;
 }
 
@@ -65,7 +49,6 @@
     let temp: never = u;
   }
 }
-
 {
   let Unreachable: never = 1; // ts(2322)
   Unreachable = "string"; // ts(2322)
@@ -73,6 +56,17 @@
   let num: number = Unreachable; // ok
   let str: string = Unreachable; // ok
   let bool: boolean = Unreachable; // ok
+}
+// 此处是 never 用于实现全面性检测的例子， 如果 Type 被修改，代码会编译错误
+{
+  type Type = string | number;
+  function inspectWithNever(param: Type) {
+    if (typeof param === "string") {
+    } else if (typeof param === "number") {
+    } else {
+      const check: never = param;
+    }
+  }
 }
 
 // unknown
@@ -83,115 +77,94 @@
   result = 1;
   result = "abc";
 
-  // unknown 类型不可以赋值给任意类型（只能赋值给 unknown 和 any 类型）
+  // unknown 类型 不可以赋值给其它类型（只能赋值给 unknown 和 any 类型）
+  //@ts-ignore Error: Type 'unknown' is not assignable to type 'number'
   let num: number = result;
   let anything: any = result;
 }
-
-// 函数
 {
-  // 定义函数类型
-  let compute: (x: number, y: number) => number;
-  // 实现函数
-  compute = (a, b) => a + b;
-  console.log(compute(1, 2));
-}
-
-// 类型推断
-{
-  let x;
-  x = 1; // Ok
-  x = true; // Ok
-}
-
-// 类型断言
-{
-  const arrayNumber: number[] = [1, 2, 3, 4];
-  // const greaterThan2: number = <number>arrayNumber.find((num) => num > 2);
-  const greaterThan2: number = arrayNumber.find((num) => num > 2) as number;
-  console.log(greaterThan2);
-}
-
-// 非空断言
-{
-  let user: string | null | undefined;
-  console.log(user!.toUpperCase()); // Ok
-  // Error: Object is possibly 'null' or 'undefined'
-  console.log(user.toUpperCase());
-}
-
-// 确定赋值断言
-{
-  // let value: number;
-  let value!: number;
-  console.log(value);
-}
-
-// 类型组合
-{
-  type A = {
-    a: string;
-  };
-  type B = {
-    b: number;
-  };
-  type AorB = A | B;
-
-  // usage
-  let v: AorB = { b: 123 };
-  let vv = v as unknown;
-  if ((<A>vv).a) {
-    console.log("v is an instance of A");
-  }
-  if ((<B>vv).b) {
-    console.log("v is an instance of B");
-  }
-}
-{
-  type A = {
-    a: string;
-  };
-  type B = {
-    b: number;
-  };
-  type AandB = A & B;
-
-  // usage
-  let v: AandB = { a: "dao", b: 123 };
-  if ((<A>v).a && (<B>v).b) {
-    console.log("v is an instance of A&B");
+  let result: unknown;
+  if (typeof result === "number") {
+    //
+    result.toFixed();
   }
 }
 
-// 类型守卫
+// Enum
 {
-  interface A {
-    a: string;
+  enum Role {
+    Reporter = 1,
+    Developer,
+    Maintainer,
+    Owner,
+    Guest,
   }
-  interface B {
-    b: number;
+  console.log(Role.Owner);
+  // 看上去像 对象类型
+  console.log(Role);
+}
+// 字符串枚举
+{
+  enum Message {
+    Success = "Congratulations",
+    Fail = "Sorry",
   }
-  class AandB implements A, B {
-    a: string;
-    b: number;
-    constructor(a: string, b: number) {
-      this.a = a;
-      this.b = b;
-    }
+  console.log(Message.Success);
+}
+// 异构枚举
+{
+  enum Answer {
+    N,
+    Y = "Yes",
+  }
+  console.log(Answer.N);
+  console.log(Answer);
+}
+// 常量枚举：只可以使用属性
+{
+  const enum Month {
+    Jan,
+    Feb,
+    Mar,
+  }
+  // console.log(Month); //error TS2475
+  console.log(Month.Jan);
+}
+// 被计算的枚举
+{
+  enum Char {
+    a,
+    b = Char.a,
+    c = 1 + 3,
+    d = Math.random(),
+  }
+  console.log(Char);
+}
+// 枚举类型
+{
+  enum E {
+    a,
+    b,
+  }
+  enum F {
+    a = 1,
+    b,
+  }
+  enum G {
+    a = "banana",
+    b = "apple",
   }
 
-  // usage
-  let v: AandB = new AandB("dao", 124);
+  // 定义枚举变量，赋值可以超出枚举限制
+  let e: E = 3;
+  console.log(e);
 
-  if ("a" in v) {
-    console.log("a exists in v");
-  }
+  // 不同类型的枚举不可以进行比较
+  let f: F = 3;
+  //@ts-ignore Error: Types 'E' and 'F' have no overlap
+  console.log(e === f);
 
-  if (typeof v.a === "string") {
-    console.log("v.a is type of string");
-  }
-
-  if (v instanceof AandB) {
-    console.log("v is an instance of A&B");
-  }
+  // 可以定义枚举成员类型
+  let ea: E.a;
+  let eb: E.b;
 }
