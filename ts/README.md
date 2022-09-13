@@ -813,3 +813,4 @@ tsconfig.json 包含 TypeScript 编译的相关配置，通过更改编译配置
 ## 参考
 
 - [一份不可多得的 TS 学习指南](https://juejin.cn/post/6872111128135073806)
+- [Cheat Sheet of TS](../res//ts-CheatSheet.webp)
