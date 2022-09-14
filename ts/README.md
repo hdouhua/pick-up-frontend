@@ -257,106 +257,106 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
   }
   ```
 
-### 枚举
+## 枚举
 
 有名字的常量集合
 
-- 数字枚举
+### 数字枚举
 
-  ```ts
-  enum Role {
-    Reporter = 1,
-    Developer,
-    Maintainer,
-    Owner,
-    Guest,
-  }
-  console.log(Role.Owner);
-  // 看上去像 对象类型
-  console.log(Role);
-  ```
+```ts
+enum Role {
+  Reporter = 1,
+  Developer,
+  Maintainer,
+  Owner,
+  Guest,
+}
+console.log(Role.Owner);
+// 看上去像 对象类型
+console.log(Role);
+```
 
-- 字符串枚举
+### 字符串枚举
 
-  ```ts
-  enum Message {
-    Success = "Congratulations",
-    Fail = "Sorry",
-  }
-  console.log(Message.Success);
-  ```
+```ts
+enum Message {
+  Success = "Congratulations",
+  Fail = "Sorry",
+}
+console.log(Message.Success);
+```
 
-- 异构枚举
+### 异构枚举
 
-  ```ts
-  enum Answer {
-    N,
-    Y = "Yes",
-  }
-  console.log(Answer.N);
-  ```
+```ts
+enum Answer {
+  N,
+  Y = "Yes",
+}
+console.log(Answer.N);
+```
 
-- 被计算的枚举 (computed)
+### 被计算的枚举 (computed)
 
-  表达式保留到程序执行阶段。
+表达式保留到程序执行阶段。
 
-  ```ts
-  enum Char {
-    a,
-    b = Char.a,
-    c = 1 + 3,
-    d = Math.random(),
-  }
-  console.log(Char);
-  ```
+```ts
+enum Char {
+  a,
+  b = Char.a,
+  c = 1 + 3,
+  d = Math.random(),
+}
+console.log(Char);
+```
 
-- 常量枚举
+### 常量枚举
 
-  用 `const` 声明的枚举，与 `computed enum` 不同，它的特点是在编译后会被移除。
-  那么它的作用是什么呢？当我们不需要枚举，而是只需要它的值的时候就可以使用常量枚举，这样可以减少编译后的代码。
+用 `const` 声明的枚举，与 `computed enum` 不同，它的特点是在编译后会被移除。
+那么它的作用是什么呢？当我们不需要枚举，而是只需要它的值的时候就可以使用常量枚举，这样可以减少编译后的代码。
 
-  ```ts
-  const enum Month {
-    Jan,
-    Feb,
-    Mar,
-  }
-  // 常量枚举只可以使用属性
-  // console.log(Month) //error TS2475
-  console.log(Month.Jan);
-  ```
+```ts
+const enum Month {
+  Jan,
+  Feb,
+  Mar,
+}
+// 常量枚举只可以使用属性
+// console.log(Month) //error TS2475
+console.log(Month.Jan);
+```
 
-- 枚举类型
+### 枚举类型
 
-  ```ts
-  enum E {
-    a,
-    b,
-  }
-  enum F {
-    a = 1,
-    b,
-  }
-  enum G {
-    a = "banana",
-    b = "apple",
-  }
-  // 定义枚举变量，赋值可以超出枚举限制
-  let e: E = 3;
-  console.log(e);
-  // 不同类型的枚举不可以进行比较
-  let f: F = 3;
-  // console.log(e === f)//error TS2367
-  // 可以定义枚举成员类型
-  let ea: E.a;
-  let eb: E.b;
-  ```
+```ts
+enum E {
+  a,
+  b,
+}
+enum F {
+  a = 1,
+  b,
+}
+enum G {
+  a = "banana",
+  b = "apple",
+}
+// 定义枚举变量，赋值可以超出枚举限制
+let e: E = 3;
+console.log(e);
+// 不同类型的枚举不可以进行比较
+let f: F = 3;
+// console.log(e === f)//error TS2367
+// 可以定义枚举成员类型
+let ea: E.a;
+let eb: E.b;
+```
 
 ## 对象类型
 
-### object/Object/{}
-
 参考[代码](./hello/src/object.ts)
+
+### object、Object 及 {}
 
 - object
 
@@ -394,46 +394,6 @@ interface Person {
 
 > TypeScript 中有两种定义对象类型的方法，它们非常相似：可以使用分号或逗号作为分隔符，并且尾随分隔符是允许的，也是可选的  
 > 一旦定义了任意属性，那么确定属性和可选属性都必须是它的子属性
-
-### 类型别名
-
-type 类型别名，给一个类型起个新名字。 type 有时和 interface 很像，但是它可以作用于原始值（基本类型），联合类型，元组以及其它任何需要手写的类型。**起别名不会新建一个类型——它只是创建了一个新名字来引用那个类型。**
-
-在大多数的情况下使用接口类型和类型别名是效果等价的。
-
-- 都允许扩展
-
-  - interface 用 extends 来实现扩展
-  - type 使用 & 实现扩展
-
-- type 可以声明基本数据类型别名/联合类型/元组等，而 interface 不行
-- interface 能够合并声明，而 type 不行
-- type 支持映射类型
-- interface 支持 `this`
-
-```ts
-/* 声明 */
-interface IA {
-  id: string;
-}
-type TA = {
-  id: string;
-};
-
-/* 继承 */
-interface IA2 extends IA {
-  name: string;
-}
-type TA2 = TA & { name: string };
-
-/* 实现 */
-class A implements IA {
-  id: string = "";
-}
-class A2 implements TA {
-  id: string = "";
-}
-```
 
 ## 函数
 
@@ -500,7 +460,45 @@ if ((<B>v).b) {
 }
 ```
 
-### 类型别名([参考](./README.md#接口类及类型别名))
+### 类型别名
+
+type 类型别名，给一个类型起个新名字。 type 有时和 interface 很像，但是它可以作用于原始值（基本类型），联合类型，元组以及其它任何需要手写的类型。**起别名不会新建一个类型——它只是创建了一个新名字来引用那个类型。**
+
+在大多数的情况下使用接口类型和类型别名是效果等价的。
+
+- 都允许扩展
+
+  - interface 用 extends 来实现扩展
+  - type 使用 & 实现扩展
+
+- interface 能够合并声明，而 type 不行
+- interface 支持 `this`
+- type 可以声明基本数据类型别名/联合类型/元组等，而 interface 不行
+- type 支持映射类型
+
+```ts
+/* 声明 */
+interface IA {
+  id: string;
+}
+type TA = {
+  id: string;
+};
+
+/* 继承 */
+interface IA2 extends IA {
+  name: string;
+}
+type TA2 = TA & { name: string };
+
+/* 实现 */
+class A implements IA {
+  id: string = "";
+}
+class A2 implements TA {
+  id: string = "";
+}
+```
 
 ### 类型引用
 
@@ -664,6 +662,7 @@ const myName = userInfo.name ?? "default name"; // 空值合并
 X 兼容 Y： X（目标类型） =（赋值）Y（源类型）
 
 - 接口兼容
+
   成员少的兼容成员多的
 
 - 函数兼容
@@ -694,34 +693,79 @@ X 兼容 Y： X（目标类型） =（赋值）Y（源类型）
 
 泛型可以对函数成员或类成员产生约束关系。但是泛型不可以约束类的静态成员。
 
-泛型的应用：
+### 泛型的应用
 
 - 泛型函数
 - 泛型接口
 - 泛型类
 - 泛型约束
 
-泛型工具类型
+### 泛型工具
 
 1. typeof
+
+   在泛型上下文中获取变量或属性的类型，也可以用来获取函数的类型
+
 1. keyof
+
+   用来获取类型的所有键，其返回值是联合类型
+
 1. in
+
+   遍历类型的所有键
+
 1. infer
+
+   类型推断
+
 1. extends
+
+   添加泛型约束
+
 1. []
 
-泛型内置工具类
+### 泛型内置工具类
 
 1. Required
+
+   将属性变成必选的
+
 1. Partial
+
+   将属性变成可选的
+
 1. Exclude
+
+   从 T 中移除 U ：`Exclude<T, U>`
+
 1. Extract
+
+   从 T 中提取 U ： `Extract<T, U>`
+
 1. Readonly
+
+   将属性变成只读的
+
 1. Record
+
+   将 K 中所有属性转换为 T 类型 ： `Record<K extends keyof any, T>`
+
 1. Pick
+
+   从对象结构的类型中挑选出一些指定属性来构造一个新的类型
+
 1. Omit
+
+   从对象结构的类型中排除掉指定的属性，从而构造一个新的类型
+
 1. NonNullable
+
+   过滤掉类型中的 null 和 undefined 类型
+
 1. ReturnType
+
+   获取函数的返回值类型
+
 1. Parameters
 1. InstanceType
 
