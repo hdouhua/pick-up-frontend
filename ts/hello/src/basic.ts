@@ -37,7 +37,19 @@
 
 // never
 {
-  let u: "a" | "b" | "c";
+  // Error: Type 'number' is not assignable to type 'never'
+  let Unreachable: never = 1;
+  Unreachable = "string";
+  Unreachable = true;
+
+  let num: number = Unreachable; // ok
+  let str: string = Unreachable; // ok
+  let bool: boolean = Unreachable; // ok
+}
+// 此处是 never 用于实现全面性检测的例子， 如果 Type 被修改，代码会编译错误
+{
+  type CheckType = "a" | "b";
+  let u!: CheckType;
   // u = "c";
   //...
   if (u === "a") {
@@ -47,25 +59,6 @@
   } else {
     //Error: Type 'string' is not assignable to type 'never'.
     let temp: never = u;
-  }
-}
-{
-  let Unreachable: never = 1; // ts(2322)
-  Unreachable = "string"; // ts(2322)
-  Unreachable = true; // ts(2322)
-  let num: number = Unreachable; // ok
-  let str: string = Unreachable; // ok
-  let bool: boolean = Unreachable; // ok
-}
-// 此处是 never 用于实现全面性检测的例子， 如果 Type 被修改，代码会编译错误
-{
-  type Type = string | number;
-  function inspectWithNever(param: Type) {
-    if (typeof param === "string") {
-    } else if (typeof param === "number") {
-    } else {
-      const check: never = param;
-    }
   }
 }
 

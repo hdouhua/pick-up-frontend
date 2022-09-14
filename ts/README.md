@@ -2,9 +2,24 @@
 
 现阶段，TypeScript 是一门中间语言，最终它还需要转译为纯 JavaScript，再交给各种终端解释、执行。
 
+典型的 TS 工作流程： TS - (compiled) -> JS - (bundled) -> Browser / other JS VM
+
+TS 是 由微软开发的自由和开源的编程语言，是 ECMAScript 的超集。
+
+| TypeScript                              | JavaScript                   |
+| --------------------------------------- | ---------------------------- |
+| JS 的超集，用于解决大型项目代码的复杂度 | 多用于网页                   |
+| 在编译期间发现并纠正错误                | 解释语言，只能运行时发现错误 |
+| 强类型，支持静态和动态类型              | 弱类型，没有静态类型的选项   |
+| 编译成 JS 才可在浏览器中运行            | 可直接在浏览器中运行         |
+| 支持模块、泛型、接口和函数重载          | 不支持泛型、接口及重载       |
+| 社区支持丰富                            | 同 TS                        |
+
 ## get started
 
-install typescript support
+[online playground](https://www.typescriptlang.org/play)
+
+install TypeScript support
 
 ```
 npm i -g typescript
@@ -80,160 +95,166 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
 
 参考[代码](./hello/src/basic.ts)
 
-7 个 原始值 (primitive value, primitive data type)
+### 7 个 原始值
 
-- string
-- number
-- bigint
-- boolean
-- symbol
+primitive value, primitive data type
 
-  ```ts
-  // 显示声明 symbol 类型，然后赋值
-  let s1: symbol = Symbol();
-  //
-  let s2 = Symbol();
-  // s1 和 s2 是不相同的
-  console.log(s1 === s2);
-  ```
+#### string
 
-- null 和 undefined
+#### number
 
-  _默认情况下_， null 和 undefined 是*所有类型的子类型*。即可以把 null 和 undefined 赋值给其它类型。
+#### bigint
 
-  _strict 模式下_， null 和 undefined 只能赋值给它们各自的类型。(undefined 可以赋值给 void )
+#### boolean
 
-  ```ts
-  // undefined (未定义), null (没有值)
-  let un: undefined = undefined;
-  let nu: null = null;
+#### symbol
 
-  let x: number;
-  // it works when set "strictNullChecks": false in tsconfig.json
-  //@ts-ignore Error: Type 'undefined' is not assignable to type 'number'
-  x = undefined;
-  //@ts-ignore Error: Type 'null' is not assignable to type 'number'
-  x = null;
-  ```
+```ts
+// 显示声明 symbol 类型，然后赋值
+let s1: symbol = Symbol();
+//
+let s2 = Symbol();
+// s1 和 s2 是不相同的
+console.log(s1 === s2);
+```
 
-- void
+#### null 和 undefined
 
-  表示 _没有任何类型_，它常用于描述无返回值的函数。（声明一个 void 类型的变量没有任何意义）
+_默认情况下_， null 和 undefined 是*所有类型的子类型*。即可以把 null 和 undefined 赋值给其它类型。
 
-  它们实际上并没有太大的用处，尤其是在 strict 模式下，它们是名副其实的“废柴”。
+_strict 模式下_， null 和 undefined 只能赋值给它们各自的类型。(undefined 可以赋值给 void )
 
-  ```ts
-  // void (没有返回值)
-  let noReturn = () => {};
-  ```
+```ts
+// undefined (未定义), null (没有值)
+let un: undefined = undefined;
+let nu: null = null;
 
-- Arrays 数组
+let x: number;
+// it works when set "strictNullChecks": false in tsconfig.json
+//@ts-ignore Error: Type 'undefined' is not assignable to type 'number'
+x = undefined;
+//@ts-ignore Error: Type 'null' is not assignable to type 'number'
+x = null;
+```
 
-  两种定义方式
+### void
 
-  ```ts
-  // type[]
-  let numArr: number[] = [1, 2, 3];
-  let strArr: string[] = ["x", "y", "z"];
+表示 _没有任何类型_ （与 any 相反），它常用于描述无返回值的函数。（声明一个 void 类型的变量没有任何意义）
 
-  // 使用 Array 泛型
-  let numArrWithGeneric: Array<number> = [1, 2, 3];
-  let strArrWithGeneric: Array<string> = ["x", "y", "z"];
-  ```
+它们实际上并没有太大的用处，尤其是在 strict 模式下，它们是名副其实的“废柴”。
 
-- 元组
+```ts
+// void (没有返回值)
+let noReturn = () => {};
+```
 
-  限定了*元素个数*和*数据类型*的*数组*。（与数组的区别是数组所有元素是同一数据类型。）
+### Arrays 数组
 
-  ```ts
-  let tuple: [number, string] = [0, "str"];
-  // 越界了
-  tuple.push(2);
-  console.log(tuple);
-  console.log(tuple[2]); //error TS2493
+两种定义方式
 
-  // React Hooks useState 示例：
-  const x: [State, SetState] = [state, setState];
-  // useState 函数返回值
-  (state: State) => [State, SetState];
-  ```
+```ts
+// type[]
+let numArr: number[] = [1, 2, 3];
+let strArr: string[] = ["x", "y", "z"];
 
-- any
+// 使用 Array 泛型
+let numArrWithGeneric: Array<number> = [1, 2, 3];
+let strArrWithGeneric: Array<string> = ["x", "y", "z"];
+```
 
-  any 类型代表可以是任何一种类型——顶级类型，会跳过类型检查，相当于让变量或返回值又变成弱类型。
-  选择性地忽略静态类型检测。（使用 any 就相当于失去了使用 TS 的作用）
+### 元组
 
-  记住：**Any is Hell!**
+限定了*元素个数*和*数据类型*的*数组*。（与数组的区别是数组所有元素是同一数据类型。）
 
-  ```ts
-  let x; // default type is any
-  x = 1;
-  x = [];
-  x = () => {};
-  ```
+```ts
+let tuple: [number, string] = [0, "str"];
+// 越界了
+tuple.push(2);
+console.log(tuple);
+console.log(tuple[2]); //error TS2493
 
-- never
+// React Hooks useState 示例：
+const x: [State, SetState] = [state, setState];
+// useState 函数返回值
+(state: State) => [State, SetState];
+```
 
-  表示用于永远不会发生的值的类型，一般用作执行不到 return 的函数的返回值的类型。
+### any
 
-  ```ts
-  // 抛出异常：never 永远不会有返回值的类型
-  let error = () => {
-    throw new Error();
-  };
-  // 死循环：
-  let endless = () => {
-    while (true) {
-      //
-    }
-  };
+any 类型代表可以是任何一种类型——顶级类型，会跳过类型检查，相当于让变量或返回值又变成弱类型。
+选择性地忽略静态类型检测。（使用 any 就相当于失去了使用 TS 的作用）
 
-  let u: "a" | "b" | "c";
-  //...
-  if (u === "a") {
-    //...
-  } else if (u === "b") {
-    //...
-  } else {
-    //Error: Type 'string' is not assignable to type 'never'.
-    let temp: never = u;
+记住：**Any is Hell!**
+
+```ts
+let x; // default type is any
+x = 1;
+x = [];
+x = () => {};
+```
+
+### never
+
+表示用于永远不会发生的值的类型，一般用作执行不到 return 的函数的返回值的类型。
+
+```ts
+// 抛出异常：never 永远不会有返回值的类型
+let error = () => {
+  throw new Error();
+};
+// 死循环：
+let endless = () => {
+  while (true) {
+    //
   }
-  ```
+};
 
-  同 null 和 undefined 一样，never 是*任何类型的子类型*，却没有类型是 never 的子类型。——除 never 外，即使是 any 也不能赋值给 never。
+// never 类型用于全面性检查
+let u: "a" | "b" | "c";
+//...
+if (u === "a") {
+  //...
+} else if (u === "b") {
+  //...
+} else {
+  //Error: Type 'string' is not assignable to type 'never'.
+  let temp: never = u;
+}
+```
 
-  ```ts
-  let Unreachable: never = 1; // ts(2322)
-  Unreachable = "string"; // ts(2322)
-  Unreachable = true; // ts(2322)
-  //它可以给所有类型赋值
-  let num: number = Unreachable; // ok
-  let str: string = Unreachable; // ok
-  let bool: boolean = Unreachable; // ok
-  ```
+同 null 和 undefined 一样，never 是*任何类型的子类型*，却没有类型是 never 的子类型。——除 never 外，即使是 any 也不能赋值给 never。
 
-  基于 never 的特性，我们可以把 never 作为接口类型下的属性类型，用来禁止写接口下特定的属性（那么这样有什么用？）
+```ts
+let Unreachable: never = 1; // Error
+Unreachable = "string"; // Error
+Unreachable = true; // Error
+//它可以给所有类型赋值
+let num: number = Unreachable; // ok
+let str: string = Unreachable; // ok
+let bool: boolean = Unreachable; // ok
+```
 
-  ```ts
-  const props: {
-    id: number;
-    //实际效果等同于 name 只读
-    name?: never;
-  } = {
-    id: 1,
-  };
-  props.name = null; // ts(2322))
-  props.name = "str"; // ts(2322)
-  props.name = 1; // ts(2322)
-  ```
+基于 never 的特性，我们可以把 never 作为接口类型下的属性类型，用来禁止写接口下特定的属性（那么这样有什么用？）
 
-- unknown
+```ts
+const props: {
+  id: number;
+  //实际效果等同于 name 只读
+  name?: never;
+} = {
+  id: 1,
+};
+props.name = null; // Error
+props.name = "str"; // Error
+props.name = 1; // Error
+```
 
-  是 TypeScript 3.0 中添加的一个类型，它主要用来描述类型并不确定的变量。
+### unknown
 
-  与 any 不同的是，unknown 在类型上更安全。
+是 TypeScript 3.0 中添加的一个类型，它主要用来描述类型并不确定的变量。
+与 any 不同的是，unknown 在类型上更安全。
 
-  - 可以将任意类型的值赋值给 unknown，但 unknown 类型的值只能赋值给 unknown 或 any 。与 any 类型不同，它可以赋值给任意类型（除 never 外）。
+- 可以将任意类型的值赋值给 unknown，但 unknown 类型的值只能赋值给 unknown 或 any 。与 any 类型不同，它可以赋值给任意类型（除 never 外）。
 
   ```ts
   let result: unknown;
@@ -247,7 +268,7 @@ TypeScript 在 JavaScript 原生类型的基础上进行了扩展，但为了和
   let anything: any = result;
   ```
 
-  - 而所有的类型缩小(Type Narrowing)手段对 unknown 都有效
+- 而所有的类型缩小(Type Narrowing)手段对 unknown 都有效
 
   ```ts
   let result: unknown;
@@ -381,7 +402,7 @@ let eb: E.b;
 
 - 可选
 - 只读
-- 任意属性——索引签名
+- 动态属性——索引签名
 
 ```ts
 // 任意属性/动态属性
@@ -393,7 +414,15 @@ interface Person {
 ```
 
 > TypeScript 中有两种定义对象类型的方法，它们非常相似：可以使用分号或逗号作为分隔符，并且尾随分隔符是允许的，也是可选的  
-> 一旦定义了任意属性，那么确定属性和可选属性都必须是它的子属性
+> 一旦定义了 _动态属性_ ，那么 _确定属性_ 和 _可选属性_ 都必须是它的 _子属性_
+
+接口中，可以使用 `new` 关键字来描述构造函数
+
+```ts
+interface Point {
+  new (x: number, y: number): Point;
+}
+```
 
 ## 函数
 
@@ -426,7 +455,8 @@ console.log(compute(1, 2));
 - 剩余参数（...rest）
 - 函数重载
   - 为同一个函数提供多个函数类型定义来进行函数重载
-  - 重载时函数名称相同，参数数量或类型不同，或者参数数量相同但参数顺序不同。
+  - 重载时函数名称相同，参数数量或类型不同，或者参数数量相同但参数顺序不同
+  - 当编译器处理函数重载时，会查找重载列表，尝试使用第一个重载定义
 
 ## 类型操作
 
@@ -434,8 +464,8 @@ console.log(compute(1, 2));
 
 类型组合就是把现有的多种类型叠加到一起，组合成一种新的类型
 
-- 交叉：将多个类型合并为一个类型，操作符为 “&” 。
-- 联合：表示符合多种类型中的任意一个，不同类型通过操作符“|”连接。
+- 交叉：将多个类型合并为一个类型，操作符为 `&` 。
+- 联合：表示符合多种类型中的任意一个，不同类型通过操作符`|`连接。
 
 ```ts
 type Admin = Student & Teacher;
@@ -451,7 +481,7 @@ type AandB = A & B;
 
 // usage
 let v: AorB = { b: 123 };
-let vv: AandB = { a: "dao", b: 123 };
+let vv: AandB = { a: "xyz", b: 123 };
 if ((<A>v).a) {
   //...
 }
@@ -471,7 +501,7 @@ type 类型别名，给一个类型起个新名字。 type 有时和 interface �
   - interface 用 extends 来实现扩展
   - type 使用 & 实现扩展
 
-- interface 能够合并声明，而 type 不行
+- interface 能够合并声明 (declaring merging)，而 type 不行
 - interface 支持 `this`
 - type 可以声明基本数据类型别名/联合类型/元组等，而 interface 不行
 - type 支持映射类型
@@ -584,6 +614,8 @@ x = true; // Ok
 
 ### 类型断言
 
+类型断言是告诉编译器：“相信我，我知道自己在做什么”。与其它编程语言的类型转换相似，但它只是在编译阶段起作用，不影响运行效率。
+
 两种方式：
 
 - 使用 as 语法做类型断言
@@ -602,13 +634,16 @@ x = true; // Ok
 
 #### 非空断言
 
-在上下文中当类型检查器无法断定类型时，可以使用后缀表达式操作符 `!` 进行断言操作对象是非 null 和非 undefined 的类型，即`x!`的值不会为 null 或 undefined。
+在上下文中当类型检查器无法断定类型时，可以使用后缀表达式操作符 `!` 进行断言操作，断言对象是非 null 和非 undefined 的类型，即`x!`的值不会为 null 或 undefined 。
 
 ```ts
 let user: string | null | undefined;
 console.log(user!.toUpperCase()); // Ok
 console.log(user.toUpperCase()); // Error
 ```
+
+> 注意
+> 非空断言操作符 `!` 编译后会被移除，注意代码安全
 
 #### 确定赋值断言
 
@@ -622,17 +657,19 @@ console.log(value);
 
 ### 类型守卫
 
-类型保护可以保证一个字符串是一个字符串，尽管它的值也可以是一个数值。类型保护与特性检测并不是完全不同，其主要思想是尝试检测属性、方法或原型，以确定如何处理值。
+类型保护可以保证一个字符串是一个字符串，尽管它的值也可以是一个数值。
+类型保护与特性检测并不是完全不同，其主要思想是尝试检测属性、方法或原型，以确定如何处理值。
+
 换句话说：类型守卫是运行时检查，确保一个值在声明的类型的范围内。
 
-四种主要的方式实现类型保护：
+四种主要的方式来实现类型保护：
 
 - in
 - typeof
 - instanceof
 - 自定义类型保护谓词
 
-_类型守卫_ 既能通过类型缩小影响 TypeScript 的类型检测，也能保障 JavaScript 运行时的安全性，如下代码所示：
+_类型守卫_ 既能通过类型缩小 (type narrowing) 影响 TypeScript 的类型检测，也能保障 JavaScript 运行时的安全性，如下代码所示：
 
 ```ts
 const userInfo: {
@@ -699,6 +736,23 @@ X 兼容 Y： X（目标类型） =（赋值）Y（源类型）
 - 泛型接口
 - 泛型类
 - 泛型约束
+- 泛型参数默认类型
+
+  - 有默认类型的参数被认为是可选的
+  - 指定了默认类型的参数，当类型推断无法选择一个候选类型时，使用默认类型
+
+  ```ts
+  interface A<T = string> {
+    name: T;
+  }
+
+  let x: A = {
+    name: "xyz",
+  };
+  let y: A<number> = {
+    name: 123,
+  };
+  ```
 
 ### 泛型工具
 
@@ -716,7 +770,7 @@ X 兼容 Y： X（目标类型） =（赋值）Y（源类型）
 
 1. infer
 
-   类型推断
+   在条件语句中，用 infer 声明一个类型变量并使用这个类型变量
 
 1. extends
 
@@ -771,14 +825,45 @@ X 兼容 Y： X（目标类型） =（赋值）Y（源类型）
 
 ## 类
 
-支持抽象类、继承和多态，类成员支持访问限制 (`public`, `private`, `protected`, `readonly`)、静态成员（属性/方法）及 get/set 访问器。
+支持抽象类(abstract)、继承和多态，类成员支持访问限制 (`public`, `private`, `protected`, `readonly`)、静态成员（属性/方法）及 getter/setter 访问器。
 **类中定义的属性是实例属性而不是原型属性，方法是原型方法**。实例属性必须在构造函数中赋值，或者被定义为可选属性。
 
 - 类的链式操作。(return this)
-- 类实现接口时必须实现接口中的所有操作。
+- 类实现接口时必须实现接口中的所有操作。(implements)
 - 接口只能约束类的**公有成员**。(接口不能约束类的构造函数)
-- 接口的继承：一个接口可以继承多个接口。
+- 接口的继承：一个接口可以继承多个接口。(extends)
 - TS 的接口也可以继承类。（好绕）
+
+## 装饰器
+
+- 是一个表达式
+- 表达式被执行后，返回一个函数
+- 函数的入参分别为 target 、 name 和 descriptor
+- 执行函数后，可能返回 descriptor 对象，用于配置 target 对象
+
+### 装饰器的分类
+
+- 类装饰器
+- 属性装饰器
+- 方法装饰器
+- 参数装饰器
+
+若启用装饰器，必须启用选项 `--experimentalDecorators`。
+
+```shell
+tsc --target ES5 --experimentalDecorators
+```
+
+tsconfig.json
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "experimentalDecorators": true
+  }
+}
+```
 
 ## TS 模块化
 
@@ -818,7 +903,14 @@ TS 命名空间转换成 JS 代码时使用的是 变量 + 闭包 形式。因�
 
 ## 配置 tsconfig
 
-tsconfig.json 包含 TypeScript 编译的相关配置，通过更改编译配置项，可以让 TypeScript 编译出 ES6 、 ES5 、 node 等代码。
+tsconfig.json 包含
+
+- 项目根路径
+- 配置编译器
+
+  通过更改编译配置项，可以让 TypeScript 编译出 ES6 、 ES5 、 node 等代码。
+
+- 指定编译文件
 
 关注配置项：
 
@@ -826,6 +918,10 @@ tsconfig.json 包含 TypeScript 编译的相关配置，通过更改编译配置
 - include ： 设置需要进行编译的文件，支持路径模式匹配；
 - exclude ：设置无需进行编译的文件，支持路径模式匹配；
 - compilerOptions ：设置与编译流程相关的选项。
+  - baseUrl
+  - target
+  - moduleResolution
+  - lib
 
 [参考代码](./demo01/tsconfig.json)
 
@@ -858,3 +954,13 @@ tsconfig.json 包含 TypeScript 编译的相关配置，通过更改编译配置
 
 - [一份不可多得的 TS 学习指南](https://juejin.cn/post/6872111128135073806)
 - [Cheat Sheet of TS](../res//ts-CheatSheet.webp)
+- [Awesome TypeScript](https://github.com/semlinker/awesome-typescript)
+- [Learn TypeScript](https://learntypescript.dev/)
+
+## 一些工具
+
+- [代码文档化 - TypeDoc](https://typedoc.org/guides/overview/)
+- [TypeScript AST](https://ts-ast-viewer.com/)
+- [JSON to TypeScript](https://transform.tools/json-to-typescript)
+- [TypeScript to UML](https://tsuml-demo.firebaseapp.com/)
+- [SQL database schema to TS - Schemats](https://github.com/SweetIQ/schemats)

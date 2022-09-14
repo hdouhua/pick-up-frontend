@@ -60,18 +60,18 @@
     y: 4,
   };
 }
-// interface ：任意属性
+// interface ：动态属性
 {
   interface Person {
     name: string;
     age?: number;
-    // 一旦定义了任意属性，那么确定属性和可选属性都必须是它的子属性
+    // 一旦定义了 动态属性 ，那么 确定属性 和 可选属性 都必须是它的 子属性
     // [prop: string]: string;
     [prop: string]: any;
   }
 
   let xyz: Person = {
-    name: "dao",
+    name: "x y z",
     age: 1,
     gender: "a cat",
     position: "IT",
@@ -210,36 +210,24 @@
   // 实现函数
   compute = (a, b) => a + b;
   console.log(compute(1, 2));
-}
 
-// 类型推断
-{
-  let x;
-  x = 1; // Ok
-  x = true; // Ok
-}
-
-// 类型断言
-{
-  const arr: number[] = [1, 2, 3, 4];
-  const greaterThan2: number = arr.find((num) => num > 2) as number;
-  const greaterThan2_2: number = <number>arr.find((num) => num > 2);
-  console.log(greaterThan2, greaterThan2_2);
-}
-
-// 非空断言
-{
-  let user: string | null | undefined;
-  console.log(user!.toUpperCase()); // Ok
-  // Error: Object is possibly 'null' or 'undefined'
-  console.log(user.toUpperCase());
-}
-
-// 确定赋值断言
-{
-  let value: number;
-  // let value!: number;
-  console.log(value);
+  // 重载
+  type Combinable = string | number;
+  class Calculator {
+    add(a: number, b: number): number;
+    add(a: string, b: string): string;
+    add(a: string, b: number): string;
+    add(a: number, b: string): string;
+    add(a: Combinable, b: Combinable) {
+      if (typeof a === "string" || typeof b === "string") {
+        return a.toString() + b.toString();
+      }
+      return a + b;
+    }
+  }
+  const calc = new Calculator();
+  const result = calc.add("hello", " world");
+  console.log(result);
 }
 
 // 类型组合
@@ -272,7 +260,7 @@
   type AandB = A & B;
 
   // usage
-  let v: AandB = { a: "dao", b: 123 };
+  let v: AandB = { a: "xyz", b: 123 };
   if ((<A>v).a && (<B>v).b) {
     console.log("v is an instance of A&B");
   }
@@ -320,6 +308,36 @@
   str = specifiedStr; // ok
 }
 
+// 类型推断
+{
+  let x;
+  x = 1; // Ok
+  x = true; // Ok
+}
+
+// 类型断言
+{
+  const arr: number[] = [1, 2, 3, 4];
+  const greaterThan2: number = arr.find((num) => num > 2) as number;
+  const greaterThan2_2: number = <number>arr.find((num) => num > 2);
+  console.log(greaterThan2, greaterThan2_2);
+}
+
+// 非空断言
+{
+  let user: string | null | undefined;
+  console.log(user!.toUpperCase()); // Ok
+  // Error: Object is possibly 'null' or 'undefined'
+  console.log(user.toUpperCase());
+}
+
+// 确定赋值断言
+{
+  let value: number;
+  // let value!: number;
+  console.log(value);
+}
+
 // 类型守卫
 {
   interface A {
@@ -338,17 +356,26 @@
   }
 
   // usage
-  let v: AandB = new AandB("dao", 124);
+  let v: AandB = new AandB("xyz", 124);
 
+  // in
   if ("a" in v) {
     console.log("a exists in v");
   }
 
+  // typeof
+  // typeof x === <typename> : typename is one of "string" | "number" | "boolean" | "symbole"
   if (typeof v.a === "string") {
     console.log("v.a is type of string");
   }
 
+  // instanceof
   if (v instanceof AandB) {
     console.log("v is an instance of A&B");
+  }
+
+  // 自定义类型保护谓词
+  function isNumber(x: any): x is number {
+    return typeof x === "number";
   }
 }

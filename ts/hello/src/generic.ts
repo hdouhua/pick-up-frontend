@@ -297,3 +297,28 @@
     type A = NonNullable<string | null | undefined>;
   }
 }
+
+// 泛型参数默认类型
+{
+  interface A<T = string> {
+    name: T;
+  }
+
+  let x: A = {
+    name: "xyz",
+  };
+  let y: A<number> = {
+    name: 123,
+  };
+}
+
+// automatically infer the type
+{
+  function identity<T>(value: T): T {
+    return value;
+  }
+
+  console.log(identity("xyz"));
+  console.log(identity(123));
+  console.log(identity([1, 2, 3]));
+}
