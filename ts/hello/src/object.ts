@@ -366,6 +366,7 @@
   // typeof
   // typeof x === <typename> : typename is one of "string" | "number" | "boolean" | "symbole"
   if (typeof v.a === "string") {
+    // narrowing type guard
     console.log("v.a is type of string");
   }
 
@@ -374,8 +375,19 @@
     console.log("v is an instance of A&B");
   }
 
-  // 自定义类型保护谓词
+  /**
+   * 自定义类型保护谓词 custom type guard with predicate
+   * - custom type guard is basically a function that's return type is a type predicate.
+   * - for example, `x is number`
+   * @param x
+   * @returns
+   */
   function isNumber(x: any): x is number {
     return typeof x === "number";
   }
+
+  let x = 1;
+  console.log(isNumber(x));
+  let y = "abc";
+  console.log(isNumber(y));
 }

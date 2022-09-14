@@ -669,6 +669,8 @@ console.log(value);
 - instanceof
 - 自定义类型保护谓词
 
+  custom type guard with predicate
+
 _类型守卫_ 既能通过类型缩小 (type narrowing) 影响 TypeScript 的类型检测，也能保障 JavaScript 运行时的安全性，如下代码所示：
 
 ```ts
@@ -957,7 +959,7 @@ tsconfig.json 包含
 - [Awesome TypeScript](https://github.com/semlinker/awesome-typescript)
 - [Learn TypeScript](https://learntypescript.dev/)
 
-## 一些工具
+## 开发辅助工具
 
 - [代码文档化 - TypeDoc](https://typedoc.org/guides/overview/)
 - [TypeScript AST](https://ts-ast-viewer.com/)
