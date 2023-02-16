@@ -6,14 +6,13 @@ test("Run benchmarks", async ({ page, baseURL }) => {
       if (message.text() === "Benchmark suite complete.") {
         resolve();
       } else {
-        // pipe through any other console output
         console[message.type()](message);
       }
     });
   });
 
-  await page.route('./bench.js', (route, _)=>{
-    route.continue({url: `${baseURL}/demo3/bench.js`});
+  await page.route("./bench.js", (route, _) => {
+    route.continue({ url: `${baseURL}/demo3/bench.js` });
   });
 
   await page.goto(`${baseURL}/demo3/index.html`);

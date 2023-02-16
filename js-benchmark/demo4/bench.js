@@ -6,6 +6,7 @@ const suite = new Benchmark.Suite();
 suite
   .add("gk", async () => {
     const processed = await gk([7, "member_code", "platform"]);
+    console.log(processed);
   })
   .on("cycle", (event) => {
     console.log(String(event.target));

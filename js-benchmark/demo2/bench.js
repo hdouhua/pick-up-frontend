@@ -3,7 +3,13 @@ const suite = new Benchmark.Suite();
 
 const { gk1, gk2, gk22 } = gk;
 
-if(typeof (window) !== 'undefined') console.log('webdriver:', window.navigator.webdriver);
+if (typeof window !== "undefined") {
+  console.log("webdriver:", window.navigator.webdriver);
+  window.global = {
+    platform: 1,
+  };
+}
+
 suite
   // .add("gk1", async () => {
   //   let z = await gk1([7, "member_code1", "platform1"]);
